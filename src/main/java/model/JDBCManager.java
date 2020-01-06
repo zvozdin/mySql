@@ -18,16 +18,6 @@ public class JDBCManager {
         jdbcManager.getTablesNames();
     }
 
-    public List getTablesNames() throws SQLException {
-        DatabaseMetaData data = connection.getMetaData();
-        ResultSet tables = data.getTables(null, null, "%", null);
-        List result = new ArrayList<String>();
-        while (tables.next()) {
-            result.add(tables.getString("TABLE_NAME"));
-        }
-        return result;
-    }
-
     public void connect(String database, String user, String password) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -44,6 +34,22 @@ public class JDBCManager {
             connection = null;
             throw new RuntimeException(String.format("Can't get connection for database: %s, user: %s ",
                     database, user), e);
+        }
+    }
+
+    public List getTablesNames() {
+        List result = new ArrayList<String>();
+        try {
+            DatabaseMetaData data = connection.getMetaData();
+            ResultSet tables = data.getTables(null, null, "%", null);
+            while (tables.next()) {
+                result.add(tables.getString("TABLE_NAME"));
+            }
+            tables.close();
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return result;
         }
     }
 }
