@@ -1,22 +1,11 @@
 package model;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class JDBCManager {
 
     private Connection connection;
-
-    public static void main(String[] args) throws SQLException {
-        JDBCManager jdbcManager = new JDBCManager();
-
-        String database = "business";
-        String user = "root";
-        String password = "root";
-        jdbcManager.connect(database, user, password);
-        jdbcManager.getTablesNames();
-    }
 
     public void connect(String database, String user, String password) {
         try {
@@ -38,7 +27,7 @@ public class JDBCManager {
     }
 
     public List getTablesNames() {
-        List result = new ArrayList<String>();
+        List result = new LinkedList();
         try {
             DatabaseMetaData data = connection.getMetaData();
             ResultSet tables = data.getTables(null, null, "%", null);
@@ -46,6 +35,27 @@ public class JDBCManager {
                 result.add(tables.getString("TABLE_NAME"));
             }
             tables.close();
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return result;
+        }
+    }
+
+    public List<DataSet> getTableData(String tableName) {
+        List<DataSet> result = new ArrayList<>();
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("select * from " + tableName))
+        {
+            ResultSetMetaData metaData = resultSet.getMetaData();
+
+            while (resultSet.next()) {
+                DataSet dataSet = new DataSet();
+                result.add(dataSet);
+                for (int i = 0; i < metaData.getColumnCount(); i++) {
+                    dataSet.put(metaData.getColumnName(i + 1), resultSet.getObject(i + 1));
+                }
+            }
             return result;
         } catch (SQLException e) {
             e.printStackTrace();
