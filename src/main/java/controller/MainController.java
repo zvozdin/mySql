@@ -1,14 +1,26 @@
 package controller;
 
 import model.DatabaseManager;
-import model.JDBCDatabaseManager;
-import view.Console;
 import view.View;
 
 public class MainController {
-    public static void main(String[] args) {
-        View view = new Console();
-        DatabaseManager manager = new JDBCDatabaseManager();
+
+    private View view;
+    private DatabaseManager manager;
+
+    public MainController(View view, DatabaseManager manager) {
+        this.view = view;
+        this.manager = manager;
+    }
+
+    public void run() {
+        connectToDB();
+        //
+        //
+        //
+    }
+
+    private void connectToDB() {
         view.write("Hello, User!");
         view.write("Enter the Database name, Username and Password in the format: connect|database|user|password");
 
