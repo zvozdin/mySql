@@ -2,10 +2,10 @@ package model;
 
 import static org.junit.Assert.*;
 
-public class JDBCDatabaseManagerTest extends DatabaseManagerTest {
+public class InMemoryDatabaseManagerTest extends DatabaseManagerTest{
 
     @Override
     public DatabaseManager getDatabaseManager() {
-        return new JDBCDatabaseManager();
+        return new InMemoryDatabaseManager();
     }
 }
