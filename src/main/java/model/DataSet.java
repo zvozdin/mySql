@@ -27,6 +27,12 @@ public class DataSet {
     }
 
     public void put(String columnName, Object object) {
+        for (Data elementDataSet : data) {
+            if (elementDataSet.getName().equals(columnName)) {
+                elementDataSet.value = object;
+                return;
+            }
+        }
         data.add(new Data(columnName, object));
     }
 
@@ -44,6 +50,23 @@ public class DataSet {
             result.add(elementDataSet.getValue());
         }
         return result;
+    }
+
+    public Object get(String columnName) {
+        for (Data elementDataSet : data) {
+            if (elementDataSet.getName().equals(columnName)) {
+                return elementDataSet.getValue();
+            }
+        }
+        return null;
+    }
+
+    public void update(DataSet newValue) {
+        List<String> columnNames = newValue.getNames();
+        for (String name : columnNames) {
+            Object data = newValue.get(name);
+            put(name, data);
+        }
     }
 
     @Override
