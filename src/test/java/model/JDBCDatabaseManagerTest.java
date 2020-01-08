@@ -9,11 +9,12 @@ import static org.junit.Assert.assertEquals;
 
 public class JDBCDatabaseManagerTest {
 
-    private JDBCDatabaseManager manager;
+    private DatabaseManager manager;
 
     @Before
     public void setup() {
-        manager = new JDBCDatabaseManager();
+//        manager = new JDBCDatabaseManager();
+        manager = new InMemoryDatabaseManager();
         manager.connect("business", "root", "root");
     }
 
@@ -50,8 +51,8 @@ public class JDBCDatabaseManagerTest {
         manager.create("users", input);
 
         DataSet newValue = new DataSet();
-        newValue.put("password", "0000");
         newValue.put("name", "Sasha");
+        newValue.put("password", "0000");
         manager.update("users", newValue, 1);
 
         List<DataSet> tableData = manager.getTableData("users");
