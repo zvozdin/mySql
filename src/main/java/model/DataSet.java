@@ -24,7 +24,6 @@ public class DataSet {
         public Object getValue() {
             return value;
         }
-
     }
 
     public void put(String columnName, Object object) {
@@ -49,7 +48,7 @@ public class DataSet {
 
     @Override
     public String toString() {
-        return "columnNames | " + getNames() + "\n" +
-                "values | " + getValues() + "\n";
+        return "" + getNames() + "\n" +
+                "" + getValues();
     }
 }

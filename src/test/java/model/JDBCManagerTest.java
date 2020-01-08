@@ -18,19 +18,24 @@ public class JDBCManagerTest {
     }
 
     @Test
-    public void getTablesNames() {
+    public void testGetTablesNames() {
         List tables = manager.getTablesNames();
         assertEquals("[products, shops, users]", tables.toString());
     }
 
     @Test
-    public void getTableData() {
-        List<DataSet> tableData = manager.getTableData("products");
+    public void testGetTableData() {
+        manager.clear("users");
+
+        DataSet input = new DataSet();
+        input.put("id", "1");
+        input.put("name", "Alex");
+        input.put("password", "1111");
+        manager.create("users", input);
+
+        List<DataSet> tableData = manager.getTableData("users");
         assertEquals("[" +
-                "columnNames | [products_id, products_name, price, shop_id]\n" +
-                "values | [1, Kolbasa, 150, 1]\n, " +
-                "columnNames | [products_id, products_name, price, shop_id]\n" +
-                "values | [2, Cheese, 100, 1]\n" +
-                "]", tableData.toString());
+                "[id, name, password]\n" +
+                "[1, Alex, 1111]]", tableData.toString());
     }
 }

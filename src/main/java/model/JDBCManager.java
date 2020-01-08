@@ -48,7 +48,6 @@ public class JDBCManager {
              ResultSet resultSet = statement.executeQuery("select * from " + tableName))
         {
             ResultSetMetaData metaData = resultSet.getMetaData();
-
             while (resultSet.next()) {
                 DataSet dataSet = new DataSet();
                 result.add(dataSet);
@@ -59,7 +58,45 @@ public class JDBCManager {
             return result;
         } catch (SQLException e) {
             e.printStackTrace();
-            return result;
+            return new ArrayList<>();
         }
+    }
+
+    public void clear(String tableName) {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("delete from " + tableName);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void create(String tableName, DataSet input) {
+        try (Statement statement = connection.createStatement()) {
+            String nameFormated = getNameFormated(input);
+            String valuesFormated = getValuesFormated(input);
+            statement.executeUpdate("insert into " + tableName + " (" + nameFormated + ") values (" +
+                    valuesFormated +
+                    ")");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getNameFormated(DataSet input) {
+        String result = "";
+        List<String> columnNames = input.getNames();
+        for (String column : columnNames) {
+            result += column + ", ";
+        }
+        return result.substring(0, result.length() - 2);
+    }
+
+    private String getValuesFormated(DataSet input) {
+        String result = "'";
+        List<Object> values = input.getValues();
+        for (Object elementData : values) {
+            result += elementData.toString() + "', '";
+        }
+        return result.substring(0, result.length() - 3);
     }
 }
