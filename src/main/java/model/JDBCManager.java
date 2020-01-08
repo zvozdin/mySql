@@ -72,9 +72,9 @@ public class JDBCManager {
 
     public void create(String tableName, DataSet input) {
         try (Statement statement = connection.createStatement()) {
-            String nameFormated = getNameFormated(input);
+            String columnNames = getColumnNamesFormated(input, "%s, ");
             String valuesFormated = getValuesFormated(input);
-            statement.executeUpdate("insert into " + tableName + " (" + nameFormated + ") values (" +
+            statement.executeUpdate("insert into " + tableName + " (" + columnNames + ") values (" +
                     valuesFormated +
                     ")");
         } catch (SQLException e) {
@@ -82,11 +82,27 @@ public class JDBCManager {
         }
     }
 
-    private String getNameFormated(DataSet input) {
+    public void update(String tableName, DataSet newValue, int id) {
+        String columnNames = getColumnNamesFormated(newValue, "%s = ?, ");
+        String sql = "update " + tableName + " set " + columnNames + " WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            int index = 1;
+            List<Object> values = newValue.getValues();
+            for (Object elementData : values) {
+                statement.setObject(index++, elementData);
+            }
+            statement.setInt(index, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getColumnNamesFormated(DataSet input, String format) {
         String result = "";
         List<String> columnNames = input.getNames();
         for (String column : columnNames) {
-            result += column + ", ";
+            result += String.format(format, column);
         }
         return result.substring(0, result.length() - 2);
     }
@@ -95,7 +111,7 @@ public class JDBCManager {
         String result = "'";
         List<Object> values = input.getValues();
         for (Object elementData : values) {
-            result += elementData.toString() + "', '";
+            result += elementData + "', '";
         }
         return result.substring(0, result.length() - 3);
     }

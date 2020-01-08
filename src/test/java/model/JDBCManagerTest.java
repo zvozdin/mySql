@@ -38,4 +38,25 @@ public class JDBCManagerTest {
                 "[id, name, password]\n" +
                 "[1, Alex, 1111]]", tableData.toString());
     }
+
+    @Test
+    public void testUpdateTableData() {
+        manager.clear("users");
+
+        DataSet input = new DataSet();
+        input.put("id", "1");
+        input.put("name", "Alex");
+        input.put("password", "1111");
+        manager.create("users", input);
+
+        DataSet newValue = new DataSet();
+        newValue.put("password", "0000");
+        newValue.put("name", "Sasha");
+        manager.update("users", newValue, 1);
+
+        List<DataSet> tableData = manager.getTableData("users");
+        assertEquals("[" +
+                "[id, name, password]\n" +
+                "[1, Sasha, 0000]]", tableData.toString());
+    }
 }
