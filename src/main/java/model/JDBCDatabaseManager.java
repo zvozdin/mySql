@@ -3,10 +3,11 @@ package model;
 import java.sql.*;
 import java.util.*;
 
-public class JDBCManager {
+public class JDBCDatabaseManager implements DatabaseManager {
 
     private Connection connection;
 
+    @Override
     public void connect(String database, String user, String password) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -26,6 +27,7 @@ public class JDBCManager {
         }
     }
 
+    @Override
     public List getTablesNames() {
         List result = new LinkedList();
         try {
@@ -42,6 +44,7 @@ public class JDBCManager {
         }
     }
 
+    @Override
     public List<DataSet> getTableData(String tableName) {
         List<DataSet> result = new ArrayList<>();
         try (Statement statement = connection.createStatement();
@@ -62,6 +65,7 @@ public class JDBCManager {
         }
     }
 
+    @Override
     public void clear(String tableName) {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("delete from " + tableName);
@@ -70,6 +74,7 @@ public class JDBCManager {
         }
     }
 
+    @Override
     public void create(String tableName, DataSet input) {
         try (Statement statement = connection.createStatement()) {
             String columnNames = getColumnNamesFormated(input, "%s, ");
@@ -82,6 +87,7 @@ public class JDBCManager {
         }
     }
 
+    @Override
     public void update(String tableName, DataSet newValue, int id) {
         String columnNames = getColumnNamesFormated(newValue, "%s = ?, ");
         String sql = "update " + tableName + " set " + columnNames + " WHERE id = ?";

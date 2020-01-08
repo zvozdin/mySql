@@ -7,13 +7,13 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class JDBCManagerTest {
+public class JDBCDatabaseManagerTest {
 
-    private JDBCManager manager;
+    private JDBCDatabaseManager manager;
 
     @Before
     public void setup() {
-        manager = new JDBCManager();
+        manager = new JDBCDatabaseManager();
         manager.connect("business", "root", "root");
     }
 
