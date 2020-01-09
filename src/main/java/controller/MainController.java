@@ -2,6 +2,8 @@ package controller;
 
 import controller.command.Command;
 import controller.command.Exit;
+import controller.command.Help;
+import controller.command.Tables;
 import model.DataSet;
 import model.DatabaseManager;
 import view.View;
@@ -17,7 +19,10 @@ public class MainController {
     public MainController(View view, DatabaseManager manager) {
         this.view = view;
         this.manager = manager;
-        this.commands = new Command[]{new Exit(view)};
+        this.commands = new Command[]{
+                new Exit(view),
+                new Help(view),
+                new Tables(manager, view)};
     }
 
     public void run() {
@@ -25,10 +30,10 @@ public class MainController {
         while (true) {
             view.write("Enter a command or help");
             String command = view.read();
-            if (command.equals("list")) {
-                doList();
-            } else if (command.equals("help")) {
-                doHelp();
+            if (commands[2].canProcess(command)) {
+                commands[2].process(command);
+            } else if (commands[1].canProcess(command)) {
+                commands[1].process(command);
             } else if (commands[0].canProcess(command)) {
                 commands[0].process(command);
             } else if (command.startsWith("find|")) {
@@ -68,26 +73,6 @@ public class MainController {
             }
             view.write(result);
         }
-    }
-
-    private void doList() {
-        List tablesNames = manager.getTablesNames();
-        view.write(tablesNames.toString());
-    }
-
-    private void doHelp() {
-        view.write("Existing commands:");
-        view.write("\tlist");
-        view.write("\t\tto display a list of tables");
-
-        view.write("\thelp");
-        view.write("\t\tto display a list of commands");
-
-        view.write("\tfind|tableName");
-        view.write("\t\tto retrieve content from the 'tableName'");
-
-        view.write("\texit");
-        view.write("\t\tto exit from the programm");
     }
 
     private void connectToDB() {
