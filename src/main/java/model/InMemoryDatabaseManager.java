@@ -49,4 +49,9 @@ public class InMemoryDatabaseManager implements DatabaseManager {
             }
         }
     }
+
+    @Override
+    public boolean isConnected() {
+        return true;
+    }
 }

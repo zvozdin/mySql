@@ -55,8 +55,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
 
         try (ResultSet columnsNames = data.getColumns(
-                null, null, /*"%"*/tableName, null))
-        {
+                null, null, /*"%"*/tableName, null)) {
             while (columnsNames.next()) {
                 result.add(columnsNames.getString(4));
             }
@@ -71,8 +70,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public List<DataSet> getTableData(String tableName) {
         List<DataSet> result = new ArrayList<>();
         try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("select * from " + tableName))
-        {
+             ResultSet resultSet = statement.executeQuery("select * from " + tableName)) {
             ResultSetMetaData metaData = resultSet.getMetaData();
             while (resultSet.next()) {
                 DataSet dataSet = new DataSet();
@@ -125,6 +123,11 @@ public class JDBCDatabaseManager implements DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean isConnected() {
+        return connection != null;
     }
 
     private String getColumnNamesFormated(DataSet input, String format) {
