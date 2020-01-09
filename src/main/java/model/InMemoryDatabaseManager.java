@@ -22,6 +22,11 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     }
 
     @Override
+    public List<String> getTableColumns(String tableName) {
+        return Arrays.asList(new String[]{"id", "name", "password"});
+    }
+
+    @Override
     public List<DataSet> getTableData(String tableName) {
         return data;
     }

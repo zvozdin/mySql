@@ -28,8 +28,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public List getTablesNames() {
-        List result = new LinkedList();
+    public List<String> getTablesNames() {
+        List<String> result = new LinkedList();
         try {
             DatabaseMetaData data = connection.getMetaData();
             ResultSet tables = data.getTables(null, null, "%", null);
@@ -37,6 +37,29 @@ public class JDBCDatabaseManager implements DatabaseManager {
                 result.add(tables.getString("TABLE_NAME"));
             }
             tables.close();
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return result;
+        }
+    }
+
+    @Override
+    public List<String> getTableColumns(String tableName) {
+        List<String> result = new LinkedList<>();
+        DatabaseMetaData data = null;
+        try {
+            data = connection.getMetaData();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try (ResultSet columnsNames = data.getColumns(
+                null, null, /*"%"*/tableName, null))
+        {
+            while (columnsNames.next()) {
+                result.add(columnsNames.getString(4));
+            }
             return result;
         } catch (SQLException e) {
             e.printStackTrace();

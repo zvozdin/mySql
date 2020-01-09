@@ -6,7 +6,9 @@ public interface DatabaseManager {
 
     void connect(String database, String user, String password);
 
-    List getTablesNames();
+    List<String> getTablesNames();
+
+    List<String> getTableColumns(String tableName);
 
     List<DataSet> getTableData(String tableName);
 
