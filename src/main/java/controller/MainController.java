@@ -17,24 +17,22 @@ public class MainController {
                 new Exit(view),
                 new Help(view),
                 new Tables(manager, view),
-                new Find(manager, view)};
+                new Find(manager, view),
+                new Unsupported(view)};
     }
 
     public void run() {
         connectToDB();
+
         while (true) {
             view.write("Enter a command or help");
-            String command = view.read();
-            if (commands[2].canProcess(command)) {
-                commands[2].process(command);
-            } else if (commands[1].canProcess(command)) {
-                commands[1].process(command);
-            } else if (commands[0].canProcess(command)) {
-                commands[0].process(command);
-            } else if (commands[3].canProcess(command)) {
-                commands[3].process(command);
-            } else {
-                view.write("Non Existent command ==> " + command);
+            String input = view.read();
+
+            for (Command command : commands) {
+                if (command.canProcess(input)) {
+                    command.process(input);
+                    break;
+                }
             }
         }
     }

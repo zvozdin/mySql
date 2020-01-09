@@ -7,8 +7,8 @@ import view.View;
 
 public class Main {
     public static void main(String[] args) {
-        DatabaseManager manager = new JDBCDatabaseManager();
         View view = new Console();
+        DatabaseManager manager = new JDBCDatabaseManager();
         MainController controller = new MainController(view, manager);
 
         controller.run();
