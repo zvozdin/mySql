@@ -1,7 +1,10 @@
 package controller;
 
+import model.DataSet;
 import model.DatabaseManager;
 import view.View;
+
+import java.util.List;
 
 public class MainController {
 
@@ -15,9 +18,73 @@ public class MainController {
 
     public void run() {
         connectToDB();
-        //
-        //
-        //
+        while (true) {
+            view.write("Enter a command or help");
+            String command = view.read();
+            if (command.equals("list")) {
+                doList();
+            } else if (command.equals("help")) {
+                doHelp();
+            } else if (command.equals("exit")) {
+                view.write("See you soon!");
+                System.exit(0);
+            } else if (command.startsWith("find|")) {
+                doFind(command);
+            } else {
+                view.write("Non Existent command ==> " + command);
+            }
+        }
+    }
+
+    private void doFind(String command) {
+        String[] data = command.split("\\|");
+        String tableName = data[1];
+
+        printTableHeader(tableName);
+        printValues(tableName);
+    }
+
+    private void printTableHeader(String tableName) {
+        List<String> columns = manager.getTableColumns(tableName);
+        String result = "|";
+        for (String name : columns) {
+            result += name + "|";
+        }
+        view.write("========================");
+        view.write(result);
+        view.write("========================");
+    }
+
+    private void printValues(String tableName) {
+        List<DataSet> users = manager.getTableData(tableName);
+        for (DataSet row : users) {
+            List<Object> values = row.getValues();
+            String result = "|";
+            for (Object element : values) {
+                result += element + "|";
+            }
+            view.write(result);
+        }
+    }
+
+    private void doList() {
+        List tablesNames = manager.getTablesNames();
+        view.write(tablesNames.toString());
+    }
+
+    private void doHelp() {
+        view.write("Existing commands:");
+        view.write("\tlist");
+        view.write("\t\tdisplay a list of tables");
+
+        view.write("\thelp");
+        view.write("\t\tdisplay a list of commands");
+
+        view.write("\tfind|tableName");
+        view.write("\t\tto obtain content from the 'tableName'");
+
+        view.write("\texit");
+        view.write("\t\texit from the programm");
     }
 
     private void connectToDB() {
