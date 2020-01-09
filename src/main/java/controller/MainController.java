@@ -1,5 +1,7 @@
 package controller;
 
+import controller.command.Command;
+import controller.command.Exit;
 import model.DataSet;
 import model.DatabaseManager;
 import view.View;
@@ -10,10 +12,12 @@ public class MainController {
 
     private View view;
     private DatabaseManager manager;
+    private Command[] commands;
 
     public MainController(View view, DatabaseManager manager) {
         this.view = view;
         this.manager = manager;
+        this.commands = new Command[]{new Exit(view)};
     }
 
     public void run() {
@@ -25,9 +29,8 @@ public class MainController {
                 doList();
             } else if (command.equals("help")) {
                 doHelp();
-            } else if (command.equals("exit")) {
-                view.write("See you soon!");
-                System.exit(0);
+            } else if (commands[0].canProcess(command)) {
+                commands[0].process(command);
             } else if (command.startsWith("find|")) {
                 doFind(command);
             } else {
@@ -75,16 +78,16 @@ public class MainController {
     private void doHelp() {
         view.write("Existing commands:");
         view.write("\tlist");
-        view.write("\t\tdisplay a list of tables");
+        view.write("\t\tto display a list of tables");
 
         view.write("\thelp");
-        view.write("\t\tdisplay a list of commands");
+        view.write("\t\tto display a list of commands");
 
         view.write("\tfind|tableName");
-        view.write("\t\tto obtain content from the 'tableName'");
+        view.write("\t\tto retrieve content from the 'tableName'");
 
         view.write("\texit");
-        view.write("\t\texit from the programm");
+        view.write("\t\tto exit from the programm");
     }
 
     private void connectToDB() {
