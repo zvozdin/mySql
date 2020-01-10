@@ -20,17 +20,25 @@ public class MainController {
                 new IsConnected(manager, view),
                 new Tables(manager, view),
                 new Find(manager, view),
-                new Unsupported(view)};
+                new Unsupported(view)
+        };
     }
 
     public void run() {
         view.write("Hello, User!");
         view.write("Enter the Database name, Username and Password in the format: 'connect|database|user|password' " +
                 "or help");
+        try {
+            doWork();
+        } catch (ExitException e) {
+            //
+        }
+    }
 
+    private void doWork() {
         while (true) {
             String input = view.read();
-            if (input==null) { // null when interrupt application Ctrl F2
+            if (input == null) { // null when interrupt application Ctrl F2
                 new Exit(view).process(input);
             }
             for (Command command : commands) {
