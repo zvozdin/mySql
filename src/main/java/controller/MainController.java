@@ -20,6 +20,7 @@ public class MainController {
                 new IsConnected(manager, view),
                 new Tables(manager, view),
                 new Find(manager, view),
+                new Clear(manager, view),
                 new Unsupported(view)
         };
     }

@@ -31,6 +31,9 @@ public class Help implements Command {
         view.write("\tfind|tableName");
         view.write("\t\tto retrieve content from the 'tableName'");
 
+        view.write("\tclear|tableName");
+        view.write("\t\tto delete content from the 'tableName'");
+
         view.write("\texit");
         view.write("\t\tto exit from the programm");
     }
