@@ -65,6 +65,8 @@ public class IntegrationTest {
                 "\t\tto display a list of tables\r\n" +
                 "\tfind|tableName\r\n" +
                 "\t\tto retrieve content from the 'tableName'\r\n" +
+                "\tclear|tableName\r\n" +
+                "\t\tto delete content from the 'tableName'\r\n" +
                 "\texit\r\n" +
                 "\t\tto exit from the programm\r\n" +
                 "Enter a command or help\r\n" +
@@ -167,9 +169,57 @@ public class IntegrationTest {
     }
 
     @Test
+    public void testClearWithoutConnect() {
+        // given
+        in.addCommand("clear|users");
+        in.addCommand("exit");
+
+        // when
+        Main.main(new String[0]);
+
+        // then
+        assertEquals("" +
+                "Hello, User!\r\n" +
+                "Enter the Database name, Username and Password in the format: " +
+                "'connect|database|user|password' or help\r\n" +
+                // clear
+                "You cannot use command 'clear|users' until you connect to database. " +
+                "Use connect|database|user|password\r\n" +
+                "Enter a command or help\r\n" +
+                // exit
+                "See you soon!\r\n", getOutput());
+    }
+
+    @Test
+    public void testClearAfterConnect() {
+        // given
+        in.addCommand("connect|business|root|root");
+        in.addCommand("clear|users");
+        in.addCommand("exit");
+
+        // when
+        Main.main(new String[0]);
+
+        // then
+        assertEquals("" +
+                "Hello, User!\r\n" +
+                "Enter the Database name, Username and Password in the format: " +
+                "'connect|database|user|password' or help\r\n" +
+                // connect
+                "Success!\r\n" +
+                "Enter a command or help\r\n" +
+                // clear
+                "Table 'users' is cleared!\r\n" +
+                "Enter a command or help\r\n" +
+                // exit
+                "See you soon!\r\n", getOutput());
+    }
+
+    @Test
     public void testFindAfterConnect() {
         // given
         in.addCommand("connect|business|root|root");
+        in.addCommand("clear|users");
         in.addCommand("find|users");
         in.addCommand("exit");
 
@@ -183,6 +233,9 @@ public class IntegrationTest {
                 "'connect|database|user|password' or help\r\n" +
                 // connect
                 "Success!\r\n" +
+                "Enter a command or help\r\n" +
+                // clear
+                "Table 'users' is cleared!\r\n" +
                 "Enter a command or help\r\n" +
                 // find|users
                 "========================\r\n" +
