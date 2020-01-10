@@ -5,6 +5,8 @@ import view.View;
 
 public class Connect implements Command {
 
+    private static final String COMMAND_SAMPLE = "connect|business|root|root";
+
     private DatabaseManager manager;
     private View view;
 
@@ -22,18 +24,20 @@ public class Connect implements Command {
     public void process(String command) {
         try {
             String[] data = command.split("\\|");
-            if (data.length != 4) {
-                throw new IllegalArgumentException("Invalid number of parameters. " +
-                        "Expected 4. You enter ==> " + data.length);
+            String[] commandToConnect = COMMAND_SAMPLE.split("\\|");
+            if (data.length != commandToConnect.length) {
+                throw new IllegalArgumentException(String.format(
+                        "Invalid number of parameters separated by '|'. Expected %s. You enter ==> %s",
+                        commandToConnect.length, data.length));
             }
             String database = data[1];
             String user = data[2];
             String password = data[3];
             manager.connect(database, user, password);
+            view.write("Success!");
         } catch (Exception e) {
             printError(e);
         }
-        view.write("Success!");
     }
 
     private void printError(Exception e) {
