@@ -43,9 +43,7 @@ public abstract class DatabaseManagerTest {
         manager.create("users", input);
 
         List<DataSet> tableData = manager.getTableData("users");
-        assertEquals("[" +
-                "[id, name, password]\n" +
-                "[1, Alex, 1111]]", tableData.toString());
+        assertEquals("[columns:[id, name, password], values:[1, Alex, 1111]]", tableData.toString());
     }
 
     @Test
@@ -64,9 +62,7 @@ public abstract class DatabaseManagerTest {
         manager.update("users", newValue, 1);
 
         List<DataSet> tableData = manager.getTableData("users");
-        assertEquals("[" +
-                "[id, name, password]\n" +
-                "[1, Sasha, 0000]]", tableData.toString());
+        assertEquals("[columns:[id, name, password], values:[1, Sasha, 0000]]", tableData.toString());
     }
 
     @Test

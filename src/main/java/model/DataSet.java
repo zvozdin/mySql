@@ -71,7 +71,7 @@ public class DataSet {
 
     @Override
     public String toString() {
-        return "" + getNames() + "\n" +
-                "" + getValues();
+        return "columns:" + getNames() + ", " +
+                "values:" + getValues();
     }
 }
