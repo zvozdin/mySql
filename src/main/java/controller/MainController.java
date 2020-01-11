@@ -40,16 +40,31 @@ public class MainController {
     private void doWork() {
         while (true) {
             String input = view.read();
-            if (input == null) { // null when interrupt application Ctrl F2
-                new Exit(view).process(input);
-            }
-            for (Command command : commands) {
-                if (command.canProcess(input)) {
-                    command.process(input);
-                    break;
+            try {
+                if (input == null) { // null when interrupt application Ctrl F2
+                    new Exit(view).process(input);
                 }
+                for (Command command : commands) {
+                    if (command.canProcess(input)) {
+                        command.process(input);
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                if (e instanceof ExitException) {
+                    return;
+                }
+                printError(e);
             }
             view.write("Enter a command or help");
         }
+    }
+
+    private void printError(Exception e) {
+        String message = "" + e.getMessage();
+        if (e.getCause() != null) {
+            message += "\n" + e.getCause().getMessage();
+        }
+        view.write("Failed by a reason ==> " + message);
     }
 }
