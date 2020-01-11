@@ -26,8 +26,16 @@ public class Find implements Command {
         String[] data = command.split("\\|");
         String tableName = data[1];
 
-        printTableHeader(tableName);
-        printValues(tableName);
+        List<String> tables = manager.getTablesNames();
+        for (String table : tables) {
+            if (tableName.equals(table)) {
+                printTableHeader(tableName);
+                printValues(tableName);
+                return;
+            }
+        }
+        throw new IllegalArgumentException(String.format(
+                "Table '%s' doesn't exist.", tableName));
     }
 
     private void printTableHeader(String tableName) {
