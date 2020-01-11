@@ -22,29 +22,17 @@ public class Connect implements Command {
 
     @Override
     public void process(String command) {
-        try {
-            String[] data = command.split("\\|");
-            String[] commandToConnect = COMMAND_SAMPLE.split("\\|");
-            if (data.length != commandToConnect.length) {
-                throw new IllegalArgumentException(String.format(
-                        "Invalid number of parameters separated by '|'. Expected %s. You enter ==> %s",
-                        commandToConnect.length, data.length));
-            }
-            String database = data[1];
-            String user = data[2];
-            String password = data[3];
-            manager.connect(database, user, password);
-            view.write("Success!");
-        } catch (Exception e) {
-            printError(e);
+        String[] data = command.split("\\|");
+        String[] commandToConnect = COMMAND_SAMPLE.split("\\|");
+        if (data.length != commandToConnect.length) {
+            throw new IllegalArgumentException(String.format(
+                    "Invalid number of parameters separated by '|'. Expected %s. You enter ==> %s",
+                    commandToConnect.length, data.length));
         }
-    }
-
-    private void printError(Exception e) {
-        String message = "" + e.getMessage();
-        if (e.getCause() != null) {
-            message += "\n" + e.getCause().getMessage();
-        }
-        view.write("Fail for a reason ==> " + message);
+        String database = data[1];
+        String user = data[2];
+        String password = data[3];
+        manager.connect(database, user, password);
+        view.write("Success!");
     }
 }

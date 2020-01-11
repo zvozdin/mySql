@@ -23,36 +23,23 @@ public class Clear implements Command {
 
     @Override
     public void process(String command) {
-        try {
-            String[] data = command.split("\\|");
-            String[] commandToClear = COMMAND_SAMPLE.split("\\|");
-            if (data.length != commandToClear.length) {
-                throw new IllegalArgumentException(String.format(
-                        "Invalid number of parameters separated by '|'. Expected %s. You enter ==> %s",
-                        commandToClear.length, data.length));
-            }
-            String tableName = data[1];
-            List<String> tables = manager.getTablesNames();
-            for (String table : tables) {
-                if (tableName.equals(table)) {
-                    manager.clear(tableName);
-                    view.write(String.format("Table '%s' is cleared!", tableName));
-                    return;
-                }
-            }
+        String[] data = command.split("\\|");
+        String[] commandToClear = COMMAND_SAMPLE.split("\\|");
+        if (data.length != commandToClear.length) {
             throw new IllegalArgumentException(String.format(
-                    "Table '%s' doesn't exist.", tableName));
-        } catch (Exception e) {
-            printError(e);
+                    "Invalid number of parameters separated by '|'. Expected %s. You enter ==> %s",
+                    commandToClear.length, data.length));
         }
-    }
-
-    private void printError(Exception e) {
-        String message = "" + e.getMessage();
-        if (e.getCause() != null) {
-            message += "\n" + e.getCause().getMessage();
+        String tableName = data[1];
+        List<String> tables = manager.getTablesNames();
+        for (String table : tables) {
+            if (tableName.equals(table)) {
+                manager.clear(tableName);
+                view.write(String.format("Table '%s' is cleared!", tableName));
+                return;
+            }
         }
-        view.write("Fail for a reason ==> " + message);
-        view.write("Use command 'list' to look existing tables...");
+        throw new IllegalArgumentException(String.format(
+                "Table '%s' doesn't exist.", tableName));
     }
 }
