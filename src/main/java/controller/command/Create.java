@@ -4,6 +4,8 @@ import model.DataSet;
 import model.DatabaseManager;
 import view.View;
 
+import java.util.List;
+
 public class Create implements Command {
 
     private DatabaseManager manager;
@@ -36,7 +38,15 @@ public class Create implements Command {
             input.put(columnName, value);
         }
         String tableName = data[1];
-        manager.create(tableName, input);
-        view.write(String.format("Record '%s' added.", input));
+        List<String> tables = manager.getTablesNames();
+        for (String table : tables) {
+            if (tableName.equals(table)) {
+                manager.create(tableName, input);
+                view.write(String.format("Record '%s' added.", input));
+                return;
+            }
+        }
+        throw new IllegalArgumentException(String.format(
+                "Table '%s' doesn't exist.", tableName));
     }
 }
