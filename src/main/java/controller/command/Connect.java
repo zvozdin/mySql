@@ -46,6 +46,5 @@ public class Connect implements Command {
             message += "\n" + e.getCause().getMessage();
         }
         view.write("Fail for a reason ==> " + message);
-        view.write("Try again...");
     }
 }

@@ -216,6 +216,32 @@ public class IntegrationTest {
     }
 
     @Test
+    public void testClearNonExistingTable() {
+        // given
+        in.addCommand("connect|business|root|root");
+        in.addCommand("clear|nonExistingTable");
+        in.addCommand("exit");
+
+        // when
+        Main.main(new String[0]);
+
+        // then
+        assertEquals("" +
+                "Hello, User!\r\n" +
+                "Enter the Database name, Username and Password in the format: " +
+                "'connect|database|user|password' or help\r\n" +
+                // connect
+                "Success!\r\n" +
+                "Enter a command or help\r\n" +
+                // clear|nonExistingTable
+                "Fail for a reason ==> Table 'nonExistingTable' doesn't exist.\r\n" +
+                "Use command 'list' to look existing tables...\r\n" +
+                "Enter a command or help\r\n" +
+                // exit
+                "See you soon!\r\n", getOutput());
+    }
+
+    @Test
     public void testFindAfterConnect() {
         // given
         in.addCommand("connect|business|root|root");
@@ -274,6 +300,49 @@ public class IntegrationTest {
                 "Enter a command or help\r\n" +
                 // list
                 "[test_table]\r\n" +
+                "Enter a command or help\r\n" +
+                // exit
+                "See you soon!\r\n", getOutput());
+    }
+
+    @Test
+    public void testConnect() {
+        // given
+        in.addCommand("connect|business|root|root");
+        in.addCommand("exit");
+
+        // when
+        Main.main(new String[0]);
+
+        // then
+        assertEquals("" +
+                "Hello, User!\r\n" +
+                "Enter the Database name, Username and Password in the format: " +
+                "'connect|database|user|password' or help\r\n" +
+                // connect
+                "Success!\r\n" +
+                "Enter a command or help\r\n" +
+                // exit
+                "See you soon!\r\n", getOutput());
+    }
+
+    @Test
+    public void testConnectWithError() {
+        // given
+        in.addCommand("connect|business");
+        in.addCommand("exit");
+
+        // when
+        Main.main(new String[0]);
+
+        // then
+        assertEquals("" +
+                "Hello, User!\r\n" +
+                "Enter the Database name, Username and Password in the format: " +
+                "'connect|database|user|password' or help\r\n" +
+                // connect with wrong parameters
+                "Fail for a reason ==> Invalid number of parameters separated by '|'. " +
+                "Expected 4. You enter ==> 2\r\n" +
                 "Enter a command or help\r\n" +
                 // exit
                 "See you soon!\r\n", getOutput());
