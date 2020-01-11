@@ -1,0 +1,42 @@
+package controller.command;
+
+import model.DataSet;
+import model.DatabaseManager;
+import view.View;
+
+public class Create implements Command {
+
+    private DatabaseManager manager;
+    private View view;
+
+    public Create(DatabaseManager manager, View view) {
+        this.manager = manager;
+        this.view = view;
+    }
+
+    @Override
+    public boolean canProcess(String command) {
+        return command.startsWith("create|");
+    }
+
+    @Override
+    public void process(String command) {
+        String[] data = command.split("\\|");
+        if (data.length % 2 != 0) {
+            throw new IllegalArgumentException(String.format(
+                    "Invalid number of parameters separated by '|'. Expected even count. You enter ==> %s. " +
+                            "Use command 'create|tableName|column1|value1|column2|value2|...|columnN|valueN'",
+                    data.length));
+        }
+
+        DataSet input = new DataSet();
+        for (int index = 1; index < data.length / 2; index++) {
+            String columnName = data[index * 2];
+            String value = data[index * 2 + 1];
+            input.put(columnName, value);
+        }
+        String tableName = data[1];
+        manager.create(tableName, input);
+        view.write(String.format("Record '%s' added.", input));
+    }
+}
