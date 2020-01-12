@@ -11,7 +11,7 @@ public class ExitTestWithMockito {
     private View view = Mockito.mock(View.class);
 
     @Test
-    public void testExitCanProcess_ExitCommand() {
+    public void testCanProcess_ExitCommand() {
         // given
         Command exit = new Exit(view);
 
@@ -23,7 +23,7 @@ public class ExitTestWithMockito {
     }
 
     @Test
-    public void testExitCanProcess_NotExitCommand() {
+    public void testCanProcess_NotExitCommand() {
         // given
         Command exit = new Exit(view);
 

@@ -9,7 +9,7 @@ public class ExitTest {
     private ViewFake view = new ViewFake();
 
     @Test
-    public void testExitCanProcess_ExitCommand() {
+    public void testCanProcess_ExitCommand() {
         // given
         Command exit = new Exit(view);
 
@@ -21,7 +21,7 @@ public class ExitTest {
     }
 
     @Test
-    public void testExitCanProcess_NotExitCommand() {
+    public void testCanProcess_NotExitCommand() {
         // given
         Command exit = new Exit(view);
 
@@ -33,7 +33,7 @@ public class ExitTest {
     }
 
     @Test
-    public void testExitProcess() {
+    public void testProcess() {
         // given
         Command exit = new Exit(view);
 
