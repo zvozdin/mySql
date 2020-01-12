@@ -77,6 +77,31 @@ public class FindTest {
     }
 
     @Test
+    public void testProcess_FindEmptyTable() {
+        // given
+        when(manager.getTablesNames()).thenReturn(
+                Arrays.asList(new String[]{"products", "shops", "users"}));
+
+        when(manager.getTableColumns("users")).thenReturn(
+                Arrays.asList(new String[]{"id", "name", "password"}));
+
+        List<DataSet> users = new LinkedList<>();
+        when(manager.getTableData("users")).thenReturn(users);
+
+        // when
+        command.process("find|users");
+
+        // then
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        verify(view, atLeastOnce()).write(captor.capture());
+
+        assertEquals("[" +
+                "========================, " +
+                "|id|name|password|, " +
+                "========================]", captor.getAllValues().toString());
+    }
+
+    @Test
     public void testProcess_FindNonExistingTable() {
         // given
         when(manager.getTablesNames()).thenReturn(
