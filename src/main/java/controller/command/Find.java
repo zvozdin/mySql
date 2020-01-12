@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Find implements Command {
 
+    private static final String COMMAND_SAMPLE = "find|tableName";
     private DatabaseManager manager;
     private View view;
 
@@ -24,8 +25,14 @@ public class Find implements Command {
     @Override
     public void process(String command) {
         String[] data = command.split("\\|");
-        String tableName = data[1];
+        String[] commandToConnect = COMMAND_SAMPLE.split("\\|");
+        if (data.length != commandToConnect.length) {
+            throw new IllegalArgumentException(String.format(
+                    "Invalid number of parameters separated by '|'. Expected %s. You enter ==> %s",
+                    commandToConnect.length, data.length));
+        }
 
+        String tableName = data[1];
         List<String> tables = manager.getTablesNames();
         for (String table : tables) {
             if (tableName.equals(table)) {
