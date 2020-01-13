@@ -40,7 +40,7 @@ public abstract class DatabaseManagerTest {
         input.put("id", "1");
         input.put("name", "Alex");
         input.put("password", "1111");
-        manager.create("users", input);
+        manager.insert("users", input);
 
         List<DataSet> tableData = manager.getTableData("users");
         assertEquals("[columns:[id, name, password], values:[1, Alex, 1111]]", tableData.toString());
@@ -54,7 +54,7 @@ public abstract class DatabaseManagerTest {
         input.put("id", "1");
         input.put("name", "Alex");
         input.put("password", "1111");
-        manager.create("users", input);
+        manager.insert("users", input);
 
         DataSet newValue = new DataSet();
         newValue.put("name", "Sasha");

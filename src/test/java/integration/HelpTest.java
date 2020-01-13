@@ -33,7 +33,7 @@ public class HelpTest extends IntegrationTest {
                 "\t\tto retrieve content from the 'tableName'\r\n" +
                 "\tclear|tableName\r\n" +
                 "\t\tto delete content from the 'tableName'\r\n" +
-                "\tcreate|tableName|column1|value1|column2|value2|...|columnN|valueN\r\n" +
+                "\tinsert|tableName|column1|value1|column2|value2|...|columnN|valueN\r\n" +
                 "\t\tto record content to the 'tableName'\r\n" +
                 "\texit\r\n" +
                 "\t\tto exit from the programm\r\n" +

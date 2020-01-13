@@ -6,19 +6,19 @@ import view.View;
 
 import java.util.List;
 
-public class Create implements Command {
+public class Insert implements Command {
 
     private DatabaseManager manager;
     private View view;
 
-    public Create(DatabaseManager manager, View view) {
+    public Insert(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
     }
 
     @Override
     public boolean canProcess(String command) {
-        return command.startsWith("create|");
+        return command.startsWith("insert|");
     }
 
     @Override
@@ -27,7 +27,7 @@ public class Create implements Command {
         if (data.length % 2 != 0) {
             throw new IllegalArgumentException(String.format(
                     "Invalid number of parameters separated by '|'. Expected even count. You enter ==> %s. " +
-                            "Use command 'create|tableName|column1|value1|column2|value2|...|columnN|valueN'",
+                            "Use command 'insert|tableName|column1|value1|column2|value2|...|columnN|valueN'",
                     data.length));
         }
 
@@ -41,7 +41,7 @@ public class Create implements Command {
         List<String> tables = manager.getTablesNames();
         for (String table : tables) {
             if (tableName.equals(table)) {
-                manager.create(tableName, input);
+                manager.insert(tableName, input);
                 view.write(String.format("Record '%s' added.", input));
                 return;
             }

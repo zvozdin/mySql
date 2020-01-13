@@ -37,7 +37,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void create(String tableName, DataSet input) {
+    public void insert(String tableName, DataSet input) {
         data.add(input);
     }
 

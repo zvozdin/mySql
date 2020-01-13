@@ -65,8 +65,8 @@ public class FindTest extends IntegrationTest {
         // given
         in.addCommand("connect|business|root|root");
         in.addCommand("clear|users");
-        in.addCommand("create|users|id|3|name|alex|password|0000");
-        in.addCommand("create|users|id|5|name|sasha|password|1111");
+        in.addCommand("insert|users|id|3|name|alex|password|0000");
+        in.addCommand("insert|users|id|5|name|sasha|password|1111");
         in.addCommand("find|users");
         in.addCommand("exit");
 
@@ -84,10 +84,10 @@ public class FindTest extends IntegrationTest {
                 // clear
                 "Table 'users' is cleared!\r\n" +
                 "Enter a command or help\r\n" +
-                // create|users|id|3|name|alex|password|0000
+                // insert|users|id|3|name|alex|password|0000
                 "Record 'columns:[id, name, password], values:[3, alex, 0000]' added.\r\n" +
                 "Enter a command or help\r\n" +
-                // create|users|id|5|name|sasha|password|1111
+                // insert|users|id|5|name|sasha|password|1111
                 "Record 'columns:[id, name, password], values:[5, sasha, 1111]' added.\r\n" +
                 "Enter a command or help\r\n" +
                 "========================\r\n" +
