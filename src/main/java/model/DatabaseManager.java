@@ -6,7 +6,11 @@ public interface DatabaseManager {
 
     void connect(String database, String user, String password);
 
-    List<String> getTablesNames();
+    void createTable(String tableName, DataSet input);
+
+    void dropTable(String tableName);
+
+    List<String> getTablesNames(); // TODO make return  sorted table list
 
     List<String> getTableColumns(String tableName);
 

@@ -28,8 +28,33 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
+    public void createTable(String tableName, DataSet input) {
+        String sql = "create table " + tableName + " (";
+
+        List<String> columns = input.getNames();
+        for (String name : columns) {
+            sql += name + " VARCHAR(45) NOT NULL,";
+        }
+        sql += " PRIMARY KEY (`" + columns.get(0) + "`))";
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void dropTable(String tableName) {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("drop table " + tableName);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public List<String> getTablesNames() {
-        List<String> result = new LinkedList();
+        List<String> result = new LinkedList<>();
         try {
             DatabaseMetaData data = connection.getMetaData();
             ResultSet tables = data.getTables(null, null, "%", null);

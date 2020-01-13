@@ -1,24 +1,43 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryDatabaseManager implements DatabaseManager {
 
-    List<DataSet> data = new ArrayList<>();
     private String table1 = "products";
     private String table2 = "shops";
     private String table3 = "users";
 
+    List<DataSet> data = new LinkedList<>();
+    private List<String> tables = new LinkedList<>(); // TODO create Set not same TablesNames
+    private List<String> columns; // TODO make by Map columnsNames appropriated tableName
+
+
     @Override
     public void connect(String database, String user, String password) {
-        //do nothing
+        tables.add(table1);
+        tables.add(table2);
+        tables.add(table3);
     }
 
     @Override
-    public List getTablesNames() {
-        return Arrays.asList(new String[]{table1, table2, table3});
+    public void createTable(String tableName, DataSet input) {
+        tables.add(0, tableName); // TODO make check on CreateTable Command for same TableName
+        columns = input.getNames();
+    }
+
+    @Override
+    public void dropTable(String tableName) {
+        for (String table : tables) {
+            if (tableName.equals(table)) {
+                tables.remove(tableName);
+            }
+        }
+    }
+
+    @Override
+    public List<String> getTablesNames() {
+        return tables;
     }
 
     @Override
