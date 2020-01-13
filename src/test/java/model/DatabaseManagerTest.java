@@ -17,13 +17,41 @@ public abstract class DatabaseManagerTest {
     @Before
     public void setup() {
         manager = getDatabaseManager();
+        //TODO create Database, create Table, then work with this DB and Table for testing
         manager.connect("business", "root", "root");
     }
 
     @Test
     public void testGetTablesNames() {
+        // when
         List tables = manager.getTablesNames();
-        assertEquals("[products, shops, users]", tables.toString());
+
+        // then
+        assertEquals("[created_table, products, shops, users]", tables.toString());
+    }
+
+    @Test
+    public void testCreateTable() {
+        // given
+        DataSet input = new DataSet();
+        input.put("id","1");
+        input.put("name","alex");
+        input.put("password","1111");
+
+        // when
+        manager.createTable("created_table", input);
+
+        // then
+        assertEquals("[created_table, products, shops, users]", manager.getTablesNames().toString());
+    }
+
+    @Test
+    public void testDropTable() {
+        // when
+        manager.dropTable("created_table");
+
+        // then
+        assertEquals("[products, shops, users]", manager.getTablesNames().toString());
     }
 
     @Test
