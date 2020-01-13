@@ -65,6 +65,10 @@ public class FindTest {
         command.process("find|users");
 
         // then
+        verify(manager).getTablesNames();
+        verify(manager).getTableColumns("users");
+        verify(manager).getTableData("users");
+
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(view, atLeastOnce()).write(captor.capture());
 
