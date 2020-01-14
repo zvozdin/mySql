@@ -77,7 +77,7 @@ public class ConnectTest extends IntegrationTest {
                 "Success!\r\n" +
                 "Enter a command or help\r\n" +
                 // list
-                "[test_table]\r\n" +
+                "[]\r\n" +
                 "Enter a command or help\r\n" +
                 // exit
                 "See you soon!\r\n", getOutput());

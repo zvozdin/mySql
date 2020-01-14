@@ -55,6 +55,7 @@ public class FindTest extends IntegrationTest {
                 "========================\r\n" +
                 "|id|name|password|\r\n" +
                 "========================\r\n" +
+                "||||\r\n" +
                 "Enter a command or help\r\n" +
                 // exit
                 "See you soon!\r\n", getOutput());
