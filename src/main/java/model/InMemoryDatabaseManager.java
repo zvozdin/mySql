@@ -12,7 +12,6 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     private List<String> tables = new LinkedList<>(); // TODO create Set not same TablesNames
     private List<String> columns; // TODO make by Map columnsNames appropriated tableName
 
-
     @Override
     public void connect(String database, String user, String password) {
         tables.add(table1);
@@ -22,7 +21,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public void createTable(String tableName, DataSet input) {
-        tables.add(0, tableName); // TODO make check on CreateTable Command for same TableName
+        tables.add(2, tableName); // TODO make check on CreateTable Command for same TableName
         columns = input.getNames();
     }
 
