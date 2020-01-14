@@ -73,15 +73,22 @@ public abstract class DatabaseManagerTest {
     }
 
     @Test
-    public void testGetTableData() {
+    public void testGetTableDataAndClearTable() {
         // given
         manager.createTable("test", getDataSetForTable());
 
         // when
         manager.insert("test", getDataSetForTable());
 
-        // then
+        // then table data
         assertEquals("[columns:[id, name, password], values:[1, Alex, 1111]]",
+                manager.getTableData("test").toString());
+
+        // when
+        manager.clear("test");
+
+        // then clear table
+        assertEquals("[columns:[id, name, password], values:[, , ]]",
                 manager.getTableData("test").toString());
     }
 
