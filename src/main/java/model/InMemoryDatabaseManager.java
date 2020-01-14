@@ -4,34 +4,35 @@ import java.util.*;
 
 public class InMemoryDatabaseManager implements DatabaseManager {
 
-    private String table1 = "products";
-    private String table2 = "shops";
-    private String table3 = "users";
-
-    List<DataSet> data = new LinkedList<>();
-    private List<String> tables = new LinkedList<>(); // TODO create Set not same TablesNames
-    private List<String> columns; // TODO make by Map columnsNames appropriated tableName
+    private List<DataSet> data = new LinkedList<>();
+    private List<String> tables = new LinkedList<>();
+    private List<String> columns = new LinkedList<>();
+    private boolean isDatabaseExist = false;
 
     @Override
     public void connect(String database, String user, String password) {
-        tables.add(table1);
-        tables.add(table2);
-        tables.add(table3);
+        // do nothing
+    }
+
+    @Override
+    public void createDatabase(String databaseName) {
+        isDatabaseExist = true;
+    }
+
+    @Override
+    public void dropDatabase(String databaseName) {
+        isDatabaseExist = false;
     }
 
     @Override
     public void createTable(String tableName, DataSet input) {
-        tables.add(2, tableName); // TODO make check on CreateTable Command for same TableName
+        tables.add(tableName);
         columns = input.getNames();
     }
 
     @Override
     public void dropTable(String tableName) {
-        for (String table : tables) {
-            if (tableName.equals(table)) {
-                tables.remove(tableName);
-            }
-        }
+        tables.remove(tableName);
     }
 
     @Override
@@ -41,7 +42,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public List<String> getTableColumns(String tableName) {
-        return Arrays.asList(new String[]{"id", "name", "password"});
+        return columns;
     }
 
     @Override
@@ -51,7 +52,12 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public void clear(String tableName) {
-        data = new ArrayList<>();
+        data.clear();
+        DataSet dataSet = new DataSet();
+        for (String name : columns) {
+            dataSet.put(name, "");
+        }
+        data.add(dataSet);
     }
 
     @Override
@@ -71,5 +77,10 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     @Override
     public boolean isConnected() {
         return true;
+    }
+
+    @Override
+    public boolean isDatabaseExist(String databaseName) {
+        return isDatabaseExist;
     }
 }
