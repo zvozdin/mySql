@@ -28,6 +28,24 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
+    public void createDatabase(String databaseName) {
+        try (Statement statement = connection.createStatement()){
+            statement.executeUpdate("create database " + databaseName);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void dropDatabase(String databaseName) {
+        try (Statement statement = connection.createStatement()){
+            statement.executeUpdate("drop database " + databaseName);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void createTable(String tableName, DataSet input) {
         String sql = "create table " + tableName + " (";
 
@@ -153,6 +171,24 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public boolean isConnected() {
         return connection != null;
+    }
+
+    @Override
+    public boolean isDatabaseExist(String databaseName) {
+        try {
+            DatabaseMetaData metaData = connection.getMetaData();
+            ResultSet resultSet = metaData.getCatalogs();
+            while (resultSet.next()) {
+                String data = resultSet.getString(1);
+                if (databaseName.equals(data)) {
+                    return true;
+                }
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private String getColumnNamesFormated(DataSet input, String format) {

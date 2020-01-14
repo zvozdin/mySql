@@ -6,6 +6,10 @@ public interface DatabaseManager {
 
     void connect(String database, String user, String password);
 
+    void createDatabase(String databaseName);
+
+    void dropDatabase(String databaseName);
+
     void createTable(String tableName, DataSet input);
 
     void dropTable(String tableName);
@@ -23,4 +27,6 @@ public interface DatabaseManager {
     void update(String tableName, DataSet newValue, int id);
 
     boolean isConnected();
+
+    boolean isDatabaseExist(String databaseName);
 }
