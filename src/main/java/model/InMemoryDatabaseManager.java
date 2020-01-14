@@ -47,6 +47,10 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public List<DataSet> getTableData(String tableName) {
+        if (data.isEmpty()){
+            // if tableName is empty then return only columnNames without data
+            clear(tableName);
+        }
         return data;
     }
 
@@ -70,6 +74,22 @@ public class InMemoryDatabaseManager implements DatabaseManager {
         for (DataSet element : data) {
             if (element.get("id").toString().equals(String.valueOf(id))) {
                 element.update(newValue);
+            }
+        }
+    }
+
+    @Override
+    public void deleteRow(String tableName, DataSet deleteValue) {
+        // todo impl
+        List<Object> values = deleteValue.getValues();
+        for (DataSet element : data) {
+            List<Object> elementValues = element.getValues();
+            for (Object val : values) {
+                for (Object elementVal : elementValues) {
+                    if (val.toString().equals(elementVal.toString())) {
+                        data.remove(element);
+                    }
+                }
             }
         }
     }

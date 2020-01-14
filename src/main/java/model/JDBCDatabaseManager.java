@@ -49,7 +49,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void createTable(String tableName, DataSet input) {
         String sql = "create table " + tableName + " (";
 
-        List<String> columns = input.getNames();
+        List<String> columns = input.getNames(); // TODO extract to separate method
         for (String name : columns) {
             sql += name + " VARCHAR(45) NOT NULL,";
         }
@@ -129,7 +129,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
                 List<String> columns = getTableColumns(tableName);
                 DataSet dataSet = new DataSet();
                 for (String name : columns) {
-                        dataSet.put(name, "");
+                    dataSet.put(name, "");
                 }
                 result.add(dataSet);
                 return result;
@@ -176,6 +176,22 @@ public class JDBCDatabaseManager implements DatabaseManager {
             }
             statement.setInt(index, id);
             statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteRow(String tableName, DataSet deleteValue) {
+        String columnNames = getColumnNamesFormated(deleteValue, "%s = ?, ");
+        String sql = "delete from " + tableName + " where " + columnNames;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            List<Object> values = deleteValue.getValues();
+            int index = 1;
+            for (Object elementData : values) {
+                preparedStatement.setObject(index++, elementData);
+            }
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -14,7 +14,7 @@ public interface DatabaseManager {
 
     void dropTable(String tableName);
 
-    List<String> getTablesNames(); // TODO make return  sorted table list
+    List<String> getTablesNames();
 
     List<String> getTableColumns(String tableName);
 
@@ -25,6 +25,8 @@ public interface DatabaseManager {
     void insert(String tableName, DataSet input);
 
     void update(String tableName, DataSet newValue, int id);
+
+    void deleteRow(String string, DataSet deleteValue);
 
     boolean isConnected();
 

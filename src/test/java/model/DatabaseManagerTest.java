@@ -36,7 +36,7 @@ public abstract class DatabaseManagerTest {
     }
 
     @Test
-    public void testCreateAndDropDatabase() {
+    public void test_CreateDatabase_DropDatabase() {
         // create DB
         manager.createDatabase("createdDB");
         assertTrue(manager.isDatabaseExist("createdDB".toLowerCase()));
@@ -47,12 +47,12 @@ public abstract class DatabaseManagerTest {
     }
 
     @Test
-    public void testGetTablesNames_EmptyDatabase() {
+    public void test_GetTablesNames_EmptyDatabase() {
         assertEquals("[]", manager.getTablesNames().toString());
     }
 
     @Test
-    public void testCreateAndDropTable() {
+    public void test_CreateTable_DropTable() {
         // create
         manager.createTable("test", getDataSetForTable());
         assertEquals("[test]", manager.getTablesNames().toString());
@@ -63,7 +63,7 @@ public abstract class DatabaseManagerTest {
     }
 
     @Test
-    public void testGetTableColumns() {
+    public void test_CreateTable_GetTableColumns() {
         // when
         manager.createTable("test", getDataSetForTable());
 
@@ -73,7 +73,7 @@ public abstract class DatabaseManagerTest {
     }
 
     @Test
-    public void testGetTableDataAndClearTable() {
+    public void test_Insert_GetTableData_ClearTable() {
         // given
         manager.createTable("test", getDataSetForTable());
 
@@ -82,6 +82,19 @@ public abstract class DatabaseManagerTest {
 
         // then table data
         assertEquals("[columns:[id, name, password], values:[1, Alex, 1111]]",
+                manager.getTableData("test").toString());
+
+        // when insert additional
+        DataSet addValue = new DataSet();
+        addValue.put("id", "5");
+        addValue.put("name", "Olena");
+        addValue.put("password", "7777");
+        manager.insert("test", addValue);
+
+        // then 2 rows
+        assertEquals("[" +
+                        "columns:[id, name, password], values:[1, Alex, 1111], " +
+                        "columns:[id, name, password], values:[5, Olena, 7777]]",
                 manager.getTableData("test").toString());
 
         // when
@@ -93,19 +106,28 @@ public abstract class DatabaseManagerTest {
     }
 
     @Test
-    public void testUpdateTableData() {
+    public void test_UpdateTableData_DeleteRow() {
         // given
         manager.createTable("test", getDataSetForTable());
         manager.insert("test", getDataSetForTable());
 
-        // when
+        // when update
         DataSet newValue = new DataSet();
         newValue.put("name", "SashaChanged");
         newValue.put("password", "0000Changed");
         manager.update("test", newValue, 1);
 
-        //then
+        //then update
         assertEquals("[columns:[id, name, password], values:[1, SashaChanged, 0000Changed]]",
+                manager.getTableData("test").toString());
+
+        // when delete
+        DataSet deleteValue = new DataSet();
+        deleteValue.put("name", "SashaChanged");
+        manager.deleteRow("test", deleteValue);
+
+        // then delete row
+        assertEquals("[columns:[id, name, password], values:[, , ]]",
                 manager.getTableData("test").toString());
     }
 
