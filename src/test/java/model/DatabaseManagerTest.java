@@ -1,14 +1,17 @@
 package model;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public abstract class DatabaseManagerTest {
 
     private DatabaseManager manager;
+    private String testedDatabaseName;
 
     public abstract DatabaseManager getDatabaseManager();
 
@@ -21,94 +24,94 @@ public abstract class DatabaseManagerTest {
         String user = "root";
         String password = "root";
         manager.connect(database, user, password);
-        // todo try to create database for each method and drop at the end method or @after
+
+        testedDatabaseName = "testedDatabase";
+        manager.createDatabase(testedDatabaseName);
+        manager.connect(testedDatabaseName, user, password);
+    }
+
+    @After
+    public void tearDown() {
+        manager.dropDatabase(testedDatabaseName);
     }
 
     @Test
-    public void testGetTablesNames() {
-        assertEquals("[products, shops, users]", manager.getTablesNames().toString());
+    public void testCreateAndDropDatabase() {
+        // create DB
+        manager.createDatabase("createdDB");
+        assertTrue(manager.isDatabaseExist("createdDB".toLowerCase()));
+
+        // drop DB
+        manager.dropDatabase("createdDB");
+        assertFalse(manager.isDatabaseExist("createdDB".toLowerCase()));
     }
 
     @Test
-    public void testCreateTable() {
-        // given
-        DataSet input = new DataSet();
-        input.put("id", "1");
-        input.put("name", "alex");
-        input.put("password", "1111");
+    public void testGetTablesNames_EmptyDatabase() {
+        assertEquals("[]", manager.getTablesNames().toString());
+    }
 
-        // when
-        manager.createTable("test", input);
+    @Test
+    public void testCreateAndDropTable() {
+        // create
+        manager.createTable("test", getDataSetForTable());
+        assertEquals("[test]", manager.getTablesNames().toString());
 
-        // then
-        assertEquals("[products, shops, test, users]", manager.getTablesNames().toString());
-
+        // drop
         manager.dropTable("test");
-    }
-
-    @Test
-    public void testDropTable() {
-        // given
-        DataSet input = new DataSet();
-        input.put("id", "");
-        manager.createTable("created_table", input);
-
-        // when
-        manager.dropTable("created_table");
-
-        // then
-        assertEquals("[products, shops, users]", manager.getTablesNames().toString());
+        assertEquals("[]", manager.getTablesNames().toString());
     }
 
     @Test
     public void testGetTableColumns() {
-        assertEquals("[id, name, password]", manager.getTableColumns("users").toString());
+        // when
+        manager.createTable("test", getDataSetForTable());
+
+        // then
+        assertEquals("[id, name, password]",
+                manager.getTableColumns("test").toString());
     }
 
     @Test
     public void testGetTableData() {
         // given
-        manager.clear("users");
-
-        DataSet input = new DataSet();
-        input.put("id", "1");
-        input.put("name", "Alex");
-        input.put("password", "1111");
+        manager.createTable("test", getDataSetForTable());
 
         // when
-        manager.insert("users", input);
+        manager.insert("test", getDataSetForTable());
 
         // then
-        assertEquals("" +
-                "[columns:[id, name, password], values:[1, Alex, 1111]]",
-                manager.getTableData("users").toString());
+        assertEquals("[columns:[id, name, password], values:[1, Alex, 1111]]",
+                manager.getTableData("test").toString());
     }
 
     @Test
     public void testUpdateTableData() {
         // given
-        manager.clear("users");
-
-        DataSet input = new DataSet();
-        input.put("id", "1");
-        input.put("name", "Alex");
-        input.put("password", "1111");
-        manager.insert("users", input);
+        manager.createTable("test", getDataSetForTable());
+        manager.insert("test", getDataSetForTable());
 
         // when
         DataSet newValue = new DataSet();
-        newValue.put("name", "Sasha");
-        newValue.put("password", "0000");
-        manager.update("users", newValue, 1);
+        newValue.put("name", "SashaChanged");
+        newValue.put("password", "0000Changed");
+        manager.update("test", newValue, 1);
 
         //then
-        assertEquals("" +
-                "[columns:[id, name, password], values:[1, Sasha, 0000]]",
-                manager.getTableData("users").toString());
+        assertEquals("[columns:[id, name, password], values:[1, SashaChanged, 0000Changed]]",
+                manager.getTableData("test").toString());
     }
 
     @Test
     public void testIsConnected() {
         assertTrue(manager.isConnected());
+    }
+
+    private DataSet getDataSetForTable() {
+        DataSet input = new DataSet();
+        input.put("id", "1");
+        input.put("name", "Alex");
+        input.put("password", "1111");
+        return input;
     }
 }
