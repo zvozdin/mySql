@@ -29,7 +29,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void createDatabase(String databaseName) {
-        try (Statement statement = connection.createStatement()){
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("create database " + databaseName);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -38,7 +38,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void dropDatabase(String databaseName) {
-        try (Statement statement = connection.createStatement()){
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("drop database " + databaseName);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -54,6 +54,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             sql += name + " VARCHAR(45) NOT NULL,";
         }
         sql += " PRIMARY KEY (`" + columns.get(0) + "`))";
+
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql);
         } catch (SQLException e) {
@@ -122,6 +123,18 @@ public class JDBCDatabaseManager implements DatabaseManager {
                     dataSet.put(metaData.getColumnName(i + 1), resultSet.getObject(i + 1));
                 }
             }
+
+            // return empty table with only columnNames and without values
+            if (result.size() == 0) {
+                List<String> columns = getTableColumns(tableName);
+                DataSet dataSet = new DataSet();
+                for (String name : columns) {
+                        dataSet.put(name, "");
+                }
+                result.add(dataSet);
+                return result;
+            }
+
             return result;
         } catch (SQLException e) {
             e.printStackTrace();
