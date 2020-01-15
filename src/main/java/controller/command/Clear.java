@@ -39,6 +39,8 @@ public class Clear implements Command {
                 return;
             }
         }
+        // TODO create Exception class to throw the same message for all Commands when user enters non existed table
+        // TODO or remain here throwing and catch in MainController bi printError() method
         throw new IllegalArgumentException(String.format(
                 "Table '%s' doesn't exist.", tableName));
     }

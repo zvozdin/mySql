@@ -80,7 +80,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public void deleteRow(String tableName, DataSet deleteValue) {
-        // todo impl
+        // todo refactor this
         List<Object> values = deleteValue.getValues();
         for (DataSet element : data) {
             List<Object> elementValues = element.getValues();
