@@ -22,7 +22,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
                     "jdbc:mysql://localhost:3306/" + database + "?autoReconnect=true&useSSL=false", user, password);
         } catch (SQLException e) {
             connection = null;
-            throw new RuntimeException(String.format("Can't get connection for database: %s, user: %s ",
+            throw new RuntimeException(String.format(
+                    "Can't get connection for database: %s, user: %s ",
                     database, user), e);
         }
     }
@@ -32,7 +33,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("create database " + databaseName);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(String.format(
+                    "%s", e.getMessage()));
         }
     }
 
@@ -41,7 +43,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("drop database " + databaseName);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(String.format(
+                    "%s", e.getMessage()));
         }
     }
 
