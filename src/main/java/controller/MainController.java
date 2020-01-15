@@ -18,6 +18,8 @@ public class MainController {
                 new Help(view),
                 new Exit(view),
                 new IsConnected(manager, view),
+                new CreateDatabase(manager, view),
+                new DropDatabase(manager, view),
                 new Tables(manager, view),
                 new Find(manager, view),
                 new Insert(manager, view),
@@ -60,7 +62,7 @@ public class MainController {
         }
     }
 
-    private void printError(Exception e) {
+    private void printError(Exception e) { // TODO wrap SQLException by RuntimeEx(String.format("%s", e)) in JDBC_DBMan
         String message = "" + e.getMessage();
         if (e.getCause() != null) {
             message += "\n" + e.getCause().getMessage();

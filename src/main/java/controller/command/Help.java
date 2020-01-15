@@ -22,8 +22,14 @@ public class Help implements Command {
         view.write("\thelp");
         view.write("\t\tto display a list of commands");
 
-        view.write("\tconnect|database|user|password");
+        view.write("\tconnect|databaseName|user|password");
         view.write("\t\tto connect to database");
+
+        view.write("\tnewDatabase|databaseName");
+        view.write("\t\tto create new database");
+
+        view.write("\tdropDatabase|databaseName");
+        view.write("\t\tto delete database");
 
         view.write("\tlist");
         view.write("\t\tto display a list of tables");
@@ -38,6 +44,6 @@ public class Help implements Command {
         view.write("\t\tto record content to the 'tableName'");
 
         view.write("\texit");
-        view.write("\t\tto exit from the programm");
+        view.write("\t\tto exit from the program");
     }
 }
