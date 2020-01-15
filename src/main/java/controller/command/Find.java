@@ -33,6 +33,7 @@ public class Find implements Command {
         }
 
         String tableName = data[1];
+        // TODO try to check table existing by wrap SQLException into RuntimeException
         List<String> tables = manager.getTablesNames();
         for (String table : tables) {
             if (tableName.equals(table)) {

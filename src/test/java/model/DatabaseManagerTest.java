@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 public abstract class DatabaseManagerTest {
 
     private DatabaseManager manager;
-    private String testedDatabaseName;
+    private String testedDatabaseName = "testedDatabase";
 
     public abstract DatabaseManager getDatabaseManager();
 

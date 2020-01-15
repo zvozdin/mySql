@@ -11,6 +11,7 @@ public class HelpTest extends IntegrationTest {
     public void testHelp() {
         // given
         in.addCommand("help");
+        in.addCommand("dropDatabase|" + testedDatabaseName);
         in.addCommand("exit");
 
         // when
@@ -21,12 +22,25 @@ public class HelpTest extends IntegrationTest {
                 "Hello, User!\r\n" +
                 "Enter the Database name, Username and Password in the format: " +
                 "'connect|database|user|password' or help\r\n" +
+                // connect|yourDatabase|user|password
+                "Success!\r\n" +
+                "Enter a command or help\r\n" +
+                // newDatabase|testedDatabase
+                "Database 'testedDatabase' created.\r\n" +
+                "Enter a command or help\r\n" +
+                // connect|testedDatabase|user|password
+                "Success!\r\n"  +
+                "Enter a command or help\r\n" +
                 // help
                 "Existing commands:\r\n" +
                 "\thelp\r\n" +
                 "\t\tto display a list of commands\r\n" +
-                "\tconnect|database|user|password\r\n" +
+                "\tconnect|databaseName|user|password\r\n" +
                 "\t\tto connect to database\r\n" +
+                "\tnewDatabase|databaseName\r\n" +
+                "\t\tto create new database\r\n" +
+                "\tdropDatabase|databaseName\r\n" +
+                "\t\tto delete database\r\n" +
                 "\tlist\r\n" +
                 "\t\tto display a list of tables\r\n" +
                 "\tfind|tableName\r\n" +
@@ -36,7 +50,10 @@ public class HelpTest extends IntegrationTest {
                 "\tinsert|tableName|column1|value1|column2|value2|...|columnN|valueN\r\n" +
                 "\t\tto record content to the 'tableName'\r\n" +
                 "\texit\r\n" +
-                "\t\tto exit from the programm\r\n" +
+                "\t\tto exit from the program\r\n" +
+                "Enter a command or help\r\n" +
+                // dropDatabase|testedDatabase
+                "Database 'testedDatabase' deleted.\r\n" +
                 "Enter a command or help\r\n" +
                 // exit
                 "See you soon!\r\n", getOutput());

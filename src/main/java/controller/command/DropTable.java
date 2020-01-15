@@ -3,20 +3,20 @@ package controller.command;
 import model.DatabaseManager;
 import view.View;
 
-public class DropDatabase implements Command {
+public class DropTable implements Command {
 
-    private static final String COMMAND_SAMPLE = "dropDatabase|databaseName";
+    private static final String COMMAND_SAMPLE = "drop|tableName";
     private DatabaseManager manager;
     private View view;
 
-    public DropDatabase(DatabaseManager manager, View view) {
+    public DropTable(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
     }
 
     @Override
     public boolean canProcess(String command) {
-        return command.startsWith("dropDatabase|");
+        return command.startsWith("drop|");
     }
 
     @Override
@@ -30,9 +30,9 @@ public class DropDatabase implements Command {
         }
 
         String databaseName = data[1];
-        // TODO check db already exists or catch exception in JDBC and wrap into RuntimeException
+        // TODO check table already exists or catch exception in JDBC and wrap into RuntimeException
 
-        manager.dropDatabase(databaseName);
-        view.write(String.format("Database '%s' deleted.", databaseName));
+        manager.dropTable(databaseName);
+        view.write(String.format("Table '%s' deleted.", databaseName));
     }
 }

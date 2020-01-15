@@ -108,4 +108,9 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     public boolean isDatabaseExist(String databaseName) {
         return isDatabaseExist;
     }
+
+    @Override
+    public void closeConnectionWithMySQSL() {
+        // do nothing
+    }
 }

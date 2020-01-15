@@ -38,11 +38,13 @@ public class Insert implements Command {
             input.put(columnName, value);
         }
         String tableName = data[1];
+        // TODO check table already exists or catch exception in JDBC and wrap into RuntimeException
         List<String> tables = manager.getTablesNames();
         for (String table : tables) {
             if (tableName.equals(table)) {
                 manager.insert(tableName, input);
                 view.write(String.format("Record '%s' added.", input));
+                new Find(manager, view).process("find|" + tableName);
                 return;
             }
         }

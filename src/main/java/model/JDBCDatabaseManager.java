@@ -1,7 +1,9 @@
 package model;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class JDBCDatabaseManager implements DatabaseManager {
 
@@ -30,11 +32,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void disconnect() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(String.format("%s", e.getMessage()));
-        }
+        connection = null;
     }
 
     @Override
@@ -70,7 +68,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(String.format(
+                    "%s", e.getMessage()));
         }
     }
 
@@ -79,7 +78,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
         try (Statement statement = connection.createStatement()) {
             statement.execute("drop table " + tableName);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(String.format(
+                    "%s", e.getMessage()));
         }
     }
 
@@ -230,6 +230,15 @@ public class JDBCDatabaseManager implements DatabaseManager {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public void closeConnectionWithMySQSL() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private String getColumnNamesFormated(DataSet input, String format) {
