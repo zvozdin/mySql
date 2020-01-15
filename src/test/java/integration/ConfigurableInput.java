@@ -30,7 +30,7 @@ public class ConfigurableInput extends InputStream {
     }
 
     public void addCommand(String command) {
-        if (line == "") {
+        if (line.length() == 0) {
             line = command;
         } else {
             line += "\n" + command;
