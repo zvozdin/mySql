@@ -15,6 +15,11 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     }
 
     @Override
+    public void disconnect() {
+        // do nothing
+    }
+
+    @Override
     public void createDatabase(String databaseName) {
         isDatabaseExist = true;
     }

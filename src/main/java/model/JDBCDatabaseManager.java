@@ -29,6 +29,15 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
+    public void disconnect() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(String.format("%s", e.getMessage()));
+        }
+    }
+
+    @Override
     public void createDatabase(String databaseName) {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("create database " + databaseName);
@@ -127,7 +136,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
                 }
             }
 
-            // return empty table with only columnNames and without values
+            // return empty table (for example after clear table) with only columnNames and without values
             if (result.size() == 0) {
                 List<String> columns = getTableColumns(tableName);
                 DataSet dataSet = new DataSet();
