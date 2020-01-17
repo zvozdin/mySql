@@ -6,7 +6,7 @@ public interface DatabaseManager {
 
     void connect(String database, String user, String password);
 
-    void disconnect();
+//    void disconnect();
 
     void createDatabase(String databaseName);
 

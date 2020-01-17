@@ -29,11 +29,11 @@ public class JDBCDatabaseManager implements DatabaseManager {
                     database, user), e);
         }
     }
-
-    @Override
-    public void disconnect() {
-        connection = null;
-    }
+//
+//    @Override
+//    public void disconnect() {
+//        connection = null;
+//    }
 
     @Override
     public void createDatabase(String databaseName) {

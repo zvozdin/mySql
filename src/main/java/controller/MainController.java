@@ -18,7 +18,6 @@ public class MainController {
                 new Help(view),
                 new Exit(manager, view),
                 new IsConnected(manager, view),
-                new Disconnect(manager, view),
                 new CreateDatabase(manager, view),
                 new DropDatabase(manager, view),
                 new Tables(manager, view),
