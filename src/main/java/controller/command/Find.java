@@ -33,7 +33,7 @@ public class Find implements Command {
         }
 
         String tableName = data[1];
-        // TODO try to check table existing by wrap SQLException into RuntimeException
+        // TODO try to check table existing by wrap SQLException in getTablesNames() method into RuntimeException
         List<String> tables = manager.getTablesNames();
         for (String table : tables) {
             if (tableName.equals(table)) {
@@ -46,7 +46,7 @@ public class Find implements Command {
                 "Table '%s' doesn't exist.", tableName));
     }
 
-    private void printTableHeader(String tableName) {
+    void printTableHeader(String tableName) {
         List<String> columns = manager.getTableColumns(tableName);
         String result = "|";
         for (String name : columns) {
@@ -57,7 +57,7 @@ public class Find implements Command {
         view.write("========================");
     }
 
-    private void printValues(String tableName) {
+    void printValues(String tableName) {
         List<DataSet> users = manager.getTableData(tableName);
         for (DataSet row : users) {
             List<Object> values = row.getValues();

@@ -27,11 +27,9 @@ public class CreateTable implements Command {
         if (data.length < commandToCreate.length) {
             throw new IllegalArgumentException(String.format(
                     "Invalid number of parameters separated by '|'. Expected no less than %s. You enter ==> %s. " +
-                            "Use command 'create|tableName|column1|column2|...|columnN'",
+                            "Use command '1'",
                     commandToCreate, data.length));
         }
-
-        String tableName = data[1];
 
         DataSet input = new DataSet();
         for (int index = 2; index < data.length; index++) {
@@ -39,7 +37,7 @@ public class CreateTable implements Command {
             String value = "";
             input.put(columnName, value);
         }
-        // TODO check db already exists or catch exception in JDBC and wrap into RuntimeException
+        // TODO check db already exists or catch exception in JDBC createTable() method and wrap into RuntimeException
 //        List<String> tables = manager.getTablesNames();
 //        for (String table : tables) {
 //            if (tableName.equals(table)) {
@@ -48,9 +46,11 @@ public class CreateTable implements Command {
 //            }
 //        }
 
+        String tableName = data[1];
         manager.createTable(tableName, input);
         view.write(String.format("Table '%s' created.", tableName));
+
         // print table
-        new Find(manager, view).process("find|" + tableName);
+        new Find(manager, view).printTableHeader(tableName);
     }
 }

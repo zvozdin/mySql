@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Insert implements Command {
 
+    private static final String COMMAND_SAMPLE = "insert|tableName|column|value";
     private DatabaseManager manager;
     private View view;
 
@@ -31,6 +32,14 @@ public class Insert implements Command {
                     data.length));
         }
 
+        String[] commandToInsert = COMMAND_SAMPLE.split("\\|");
+        if (data.length < commandToInsert.length) {
+            throw new IllegalArgumentException(String.format(
+                    "Invalid number of parameters separated by '|'. Expected min %s. You enter ==> %s. " +
+                            "Use command 'insert|tableName|column1|value1|column2|value2|...|columnN|valueN'",
+                    commandToInsert.length, data.length));
+        }
+
         DataSet input = new DataSet();
         for (int index = 1; index < data.length / 2; index++) {
             String columnName = data[index * 2];
@@ -38,13 +47,15 @@ public class Insert implements Command {
             input.put(columnName, value);
         }
         String tableName = data[1];
-        // TODO check table already exists or catch exception in JDBC and wrap into RuntimeException
+        // TODO check table already exists or catch exception in JDBC in insert() method and wrap into RuntimeException
         List<String> tables = manager.getTablesNames();
         for (String table : tables) {
             if (tableName.equals(table)) {
                 manager.insert(tableName, input);
                 view.write(String.format("Record '%s' added.", input));
-                new Find(manager, view).process("find|" + tableName);
+                // print table with values
+                new Find(manager, view).printTableHeader(tableName);
+                new Find(manager, view).printValues(tableName);
                 return;
             }
         }
