@@ -6,7 +6,6 @@ import view.View;
 public class Connect implements Command {
 
     private static final String COMMAND_SAMPLE = "connect|business|root|root";
-
     private DatabaseManager manager;
     private View view;
 

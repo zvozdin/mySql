@@ -110,7 +110,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void closeConnectionWithMySQSL() {
+    public void closeConnection() {
         // do nothing
     }
 }

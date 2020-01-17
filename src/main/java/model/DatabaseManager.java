@@ -34,5 +34,5 @@ public interface DatabaseManager {
 
     boolean isDatabaseExist(String databaseName);
 
-    void closeConnectionWithMySQSL();
+    void closeConnection();
 }

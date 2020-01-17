@@ -233,7 +233,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void closeConnectionWithMySQSL() {
+    public void closeConnection() {
         try {
             connection.close();
         } catch (SQLException e) {
