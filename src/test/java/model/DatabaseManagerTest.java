@@ -112,19 +112,22 @@ public abstract class DatabaseManagerTest {
         manager.insert("test", getDataSetForTable());
 
         // when update
-        DataSet newValue = new DataSet();
-        newValue.put("name", "SashaChanged");
-        newValue.put("password", "0000Changed");
-        manager.update("test", newValue, 1);
+        DataSet set = new DataSet();
+        set.put("name", "SashaChanged");
+        set.put("password", "0000Changed");
+
+        DataSet where = new DataSet();
+        where.put("id", "1");
+        manager.update("test", set, where);
 
         //then update
         assertEquals("[columns:[id, name, password], values:[1, SashaChanged, 0000Changed]]",
                 manager.getTableData("test").toString());
 
         // when delete
-        DataSet deleteValue = new DataSet();
-        deleteValue.put("name", "SashaChanged");
-        manager.deleteRow("test", deleteValue);
+        DataSet delete = new DataSet();
+        delete.put("name", "SashaChanged");
+        manager.deleteRow("test", delete);
 
         // then delete row
         assertEquals("[columns:[id, name, password], values:[, , ]]",

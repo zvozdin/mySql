@@ -26,7 +26,7 @@ public interface DatabaseManager {
 
     void insert(String tableName, DataSet input);
 
-    void update(String tableName, DataSet newValue, int id);
+    void update(String tableName, DataSet newValue, DataSet whereValue);
 
     void deleteRow(String string, DataSet deleteValue);
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Update implements Command {
 
-    private static final String COMMAND_SAMPLE = "update|tableName|column|value";
+    private static final String COMMAND_SAMPLE = "update|tableName|column1|value1|column2|value2";
     private DatabaseManager manager;
     private View view;
 
@@ -25,35 +25,32 @@ public class Update implements Command {
     @Override
     public void process(String command) {
         String[] data = command.split("\\|");
-        if (data.length % 2 != 0) {
-            throw new IllegalArgumentException(String.format(
-                    "Invalid number of parameters separated by '|'. Expected even count. You enter ==> %s. " +
-                            "Use command 'update|tableName|column1|value1|column2|value2|...|columnN|valueN'",
-                    data.length));
-        }
-
         String[] commandToInsert = COMMAND_SAMPLE.split("\\|");
-        if (data.length < commandToInsert.length) {
+        if (data.length == commandToInsert.length) {
             throw new IllegalArgumentException(String.format(
-                    "Invalid number of parameters separated by '|'. Expected min %s. You enter ==> %s. " +
-                            "Use command 'update|tableName|column1|value1|column2|value2|...|columnN|valueN'",
+                    "Invalid number of parameters separated by '|'. Expected %s. You enter ==> %s. " +
+                            "Use command 'update|tableName|column1|value1|column2|value2'",
                     commandToInsert.length, data.length));
         }
 
-        DataSet input = new DataSet();
-        for (int index = 1; index < data.length / 2; index++) {
-            String columnName = data[index * 2];
-            String value = data[index * 2 + 1];
-            input.put(columnName, value);
-        }
+        DataSet set = new DataSet();
+        set.put(data[2],data[3]);
+//        for (int index = 1; index < data.length / 2; index++) {
+//            String columnName = data[index * 2];
+//            String value = data[index * 2 + 1];
+//            set.put(columnName, value);
+//        }
+
+        DataSet where = new DataSet();
+        where.put(data[4],data[5]);
 
         String tableName = data[1];
-        // TODO check table already exists or catch exception in JDBC in insert() method and wrap into RuntimeException
+        // TODO check table already exists or catch exception in JDBC in update() method and wrap into RuntimeException
         List<String> tables = manager.getTablesNames();
         for (String table : tables) {
             if (tableName.equals(table)) {
-                manager.insert(tableName, input);
-                view.write(String.format("Record '%s' updated.", input));
+                manager.update(tableName, set, where);
+                view.write(String.format("Record '%s' updated.", set));
                 // print table with values
                 new Find(manager, view).printTableHeader(tableName);
                 new Find(manager, view).printValues(tableName);

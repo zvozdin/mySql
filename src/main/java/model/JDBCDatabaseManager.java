@@ -177,16 +177,24 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void update(String tableName, DataSet newValue, int id) {
-        String columnNames = getColumnNamesFormated(newValue, "%s = ?, ");
-        String sql = "update " + tableName + " set " + columnNames + " WHERE id = ?";
+    public void update(String tableName, DataSet set, DataSet where/*, int id*/) {
+        String columnNamesSet = getColumnNamesFormated(set, "%s = ?, ");
+        String columnNamesWhere = getColumnNamesFormated(where, "%s = ?, ");
+
+
+        String sql = "UPDATE " + tableName + " SET " + columnNamesSet + " WHERE " + columnNamesWhere;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int index = 1;
-            List<Object> values = newValue.getValues();
-            for (Object elementData : values) {
+            List<Object> valuesSet = set.getValues();
+            for (Object elementData : valuesSet) {
                 statement.setObject(index++, elementData);
             }
-            statement.setInt(index, id);
+
+            List<Object> valuesWhere = where.getValues();
+            for (Object elementData : valuesWhere) {
+                statement.setObject(index, elementData);
+            }
+//            statement.setInt(index, id);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
