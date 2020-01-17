@@ -44,7 +44,6 @@ public class ExitTestWithMockito {
         // when
         try {
             exit.process("exit");
-            Mockito.verify(manager).disconnect();
             fail("Expected ExitException");
         } catch (ExitException e) {
             // do nothing

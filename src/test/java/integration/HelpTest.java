@@ -36,19 +36,27 @@ public class HelpTest extends IntegrationTest {
                 "\thelp\r\n" +
                 "\t\tto display a list of commands\r\n" +
                 "\tconnect|databaseName|user|password\r\n" +
-                "\t\tto connect to database\r\n" +
+                "\t\tto connect to the database\r\n" +
                 "\tnewDatabase|databaseName\r\n" +
-                "\t\tto create new database\r\n" +
+                "\t\tto create a new database\r\n" +
                 "\tdropDatabase|databaseName\r\n" +
-                "\t\tto delete database\r\n" +
+                "\t\tto delete the database\r\n" +
                 "\tlist\r\n" +
                 "\t\tto display a list of tables\r\n" +
+                "\tcreate|tableName|column1|column2|...|columnN\r\n" +
+                "\t\tto create a new table\r\n" +
+                "\tdrop|tableName\r\n" +
+                "\t\tto delete the table\r\n" +
                 "\tfind|tableName\r\n" +
                 "\t\tto retrieve content from the 'tableName'\r\n" +
-                "\tclear|tableName\r\n" +
-                "\t\tto delete content from the 'tableName'\r\n" +
                 "\tinsert|tableName|column1|value1|column2|value2|...|columnN|valueN\r\n" +
                 "\t\tto record content to the 'tableName'\r\n" +
+                "\tupdate|tableName|column1|value1|column2|value2|...|columnN|valueN\r\n" +
+                "\t\tto record to update the content in the 'tableName'\r\n" +
+                "\tdelete|tableName|column|value\r\n" +
+                "\t\tto delete content where column = value\r\n" +
+                "\tclear|tableName\r\n" +
+                "\t\tto delete content from the 'tableName'\r\n" +
                 "\texit\r\n" +
                 "\t\tto exit from the program\r\n" +
                 "Enter a command or help\r\n" +
