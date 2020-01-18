@@ -64,7 +64,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             statement.executeUpdate(sql);
         } catch (SQLException e) {
             throw new RuntimeException(String.format(
-                    "%s", e.getMessage()));
+                    "Table '%s' already exists", tableName), e);
         }
     }
 
@@ -74,7 +74,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             statement.execute("drop table " + tableName);
         } catch (SQLException e) {
             throw new RuntimeException(String.format(
-                    "%s", e.getMessage()));
+                    "Table '%s' doesn't exist", tableName), e);
         }
     }
 

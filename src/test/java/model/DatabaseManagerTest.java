@@ -7,6 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public abstract class DatabaseManagerTest {
 
@@ -57,9 +58,25 @@ public abstract class DatabaseManagerTest {
         manager.createTable("test", getDataSetForTable());
         assertEquals("[test]", manager.getTablesNames().toString());
 
+        // create already existing table
+        try {
+            manager.createTable("test", getDataSetForTable());
+            fail("Expected Exception");
+        } catch (Exception e) {
+            assertEquals("Table 'test' already exists", e.getMessage());
+        }
+
         // drop
         manager.dropTable("test");
         assertEquals("[]", manager.getTablesNames().toString());
+
+        // drop non existing table
+        try {
+            manager.dropTable("test");
+            fail("Expected Exception");
+        } catch (Exception e) {
+            assertEquals("Table 'test' doesn't exist", e.getMessage());
+        }
     }
 
     @Test

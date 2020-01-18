@@ -26,12 +26,18 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public void createTable(String tableName, DataSet input) {
+        if (tables.contains(tableName)) {
+            throw new RuntimeException(String.format("Table '%s' already exists", tableName), new RuntimeException());
+        }
         tables.add(tableName);
         columns = input.getNames();
     }
 
     @Override
     public void dropTable(String tableName) {
+        if (!tables.contains(tableName)){
+            throw new RuntimeException(String.format("Table '%s' doesn't exist", tableName), new RuntimeException());
+        }
         tables.remove(tableName);
     }
 
