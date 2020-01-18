@@ -39,21 +39,21 @@ public class ClearTest {
     public void testProcess_ClearTable() {
         // given
         when(manager.getTablesNames())
-                .thenReturn(Arrays.asList(new String[]{"products", "shops", "users"}));
+                .thenReturn(Arrays.asList(new String[]{"test"}));
 
         // when
-        command.process("clear|users");
+        command.process("clear|test");
 
         // then
-        verify(manager).clear("users");
-        verify(view).write("Table 'users' is cleared!");
+        verify(manager).clear("test");
+        verify(view).write("Table 'test' is cleared!");
     }
 
     @Test
     public void testProcess_ClearNonExistingTable() {
         // given
         when(manager.getTablesNames())
-                .thenReturn(Arrays.asList(new String[]{"products", "shops", "users"}));
+                .thenReturn(Arrays.asList(new String[]{"test"}));
 
         // when
         try {
@@ -69,7 +69,7 @@ public class ClearTest {
     public void testProcess_ClearCommandWithWrongParameters() {
         // when
         try {
-            command.process("clear|users|wrongParameter");
+            command.process("clear|test|wrongParameter");
             fail("Expected IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             // then
