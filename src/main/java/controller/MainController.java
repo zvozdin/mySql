@@ -69,7 +69,7 @@ public class MainController {
     private void printError(Exception e) { // TODO wrap SQLException by RuntimeEx(String.format("%s", e)) in JDBC_DBMan
         String message = "" + e.getMessage();
         if (e.getCause() != null) {
-            message += "\n" + e.getCause().getMessage();
+//            message += "\n" + e.getCause().getMessage();
         }
         view.write("Failed by a reason ==> " + message);
     }
