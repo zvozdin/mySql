@@ -46,8 +46,9 @@ public class Help implements Command {
         view.write("\tinsert|tableName|column1|value1|column2|value2|...|columnN|valueN");
         view.write("\t\tto record content to the 'tableName'");
 
-        view.write("\tupdate|tableName|column1|value1|column2|value2|...|columnN|valueN");
-        view.write("\t\tto record to update the content in the 'tableName'");
+        view.write("\tupdate|tableName|column1|value1|column2|value2");
+        view.write("\t\tto update the content in the 'tableName'");
+        view.write("\t\t\tset column1 = value1 where column2 = value2");
 
         view.write("\tdelete|tableName|column|value");
         view.write("\t\tto delete content where column = value");

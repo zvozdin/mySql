@@ -51,8 +51,9 @@ public class HelpTest extends IntegrationTest {
                 "\t\tto retrieve content from the 'tableName'\r\n" +
                 "\tinsert|tableName|column1|value1|column2|value2|...|columnN|valueN\r\n" +
                 "\t\tto record content to the 'tableName'\r\n" +
-                "\tupdate|tableName|column1|value1|column2|value2|...|columnN|valueN\r\n" +
-                "\t\tto record to update the content in the 'tableName'\r\n" +
+                "\tupdate|tableName|column1|value1|column2|value2\r\n" +
+                "\t\tto update the content in the 'tableName'\r\n" +
+                "\t\t\tset column1 = value1 where column2 = value2\r\n" +
                 "\tdelete|tableName|column|value\r\n" +
                 "\t\tto delete content where column = value\r\n" +
                 "\tclear|tableName\r\n" +

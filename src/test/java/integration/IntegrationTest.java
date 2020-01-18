@@ -33,12 +33,6 @@ public class IntegrationTest {
         in.addCommand("connect|" + testedDatabaseName + "|" + user + "|" + password);
     }
 
-//    @After
-//    public void tearDown() {
-//        in.addCommand("dropDatabase|" + testedDatabaseName);
-//        in.addCommand("exit");
-//    }
-
     public String getOutput() {
         try {
             return new String(out.toByteArray(), "utf-8");
