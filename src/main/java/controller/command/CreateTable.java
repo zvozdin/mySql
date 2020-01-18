@@ -49,8 +49,5 @@ public class CreateTable implements Command {
         String tableName = data[1];
         manager.createTable(tableName, input);
         view.write(String.format("Table '%s' created.", tableName));
-
-        // print table
-        new Find(manager, view).printTableHeader(tableName);
     }
 }
