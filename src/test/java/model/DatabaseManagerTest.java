@@ -38,13 +38,29 @@ public abstract class DatabaseManagerTest {
 
     @Test
     public void test_CreateDatabase_DropDatabase() {
-        // create DB
-        manager.createDatabase("createdDB");
-        assertTrue(manager.isDatabaseExist("createdDB".toLowerCase()));
+        // create database
+        manager.createDatabase("_test");
+        assertTrue(manager.isDatabaseExist("_test"));
 
-        // drop DB
-        manager.dropDatabase("createdDB");
-        assertFalse(manager.isDatabaseExist("createdDB".toLowerCase()));
+        // create already existing database
+        try {
+            manager.createDatabase("_test");
+            fail("Expected Exception");
+        } catch (Exception e) {
+            assertEquals("Database '_test' already exists", e.getMessage());
+        }
+
+        // drop database
+        manager.dropDatabase("_test");
+        assertFalse(manager.isDatabaseExist("_test"));
+
+        // drop non existing database
+        try {
+            manager.dropDatabase("_test");
+            fail("Expected Exception");
+        } catch (Exception e) {
+            assertEquals("Database '_test' doesn't exist", e.getMessage());
+        }
     }
 
     @Test

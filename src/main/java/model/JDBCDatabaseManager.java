@@ -36,7 +36,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             statement.executeUpdate("create database " + databaseName);
         } catch (SQLException e) {
             throw new RuntimeException(String.format(
-                    "%s", e.getMessage()));
+                    "Database '%s' already exists", databaseName), e);
         }
     }
 
@@ -46,7 +46,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             statement.executeUpdate("drop database " + databaseName);
         } catch (SQLException e) {
             throw new RuntimeException(String.format(
-                    "%s", e.getMessage()));
+                    "Database '%s' doesn't exist", databaseName), e);
         }
     }
 

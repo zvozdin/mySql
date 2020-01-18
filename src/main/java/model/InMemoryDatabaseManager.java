@@ -6,8 +6,8 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     private List<DataSet> data = new LinkedList<>();
     private List<String> tables = new LinkedList<>();
+    private List<String> databases = new LinkedList<>();
     private List<String> columns = new LinkedList<>();
-    private boolean isDatabaseExists = false;
 
     @Override
     public void connect(String database, String user, String password) {
@@ -16,12 +16,20 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public void createDatabase(String databaseName) {
-        isDatabaseExists = true;
+        if (isDatabaseExist(databaseName)){
+            throw new RuntimeException(String.format(
+                    "Database '%s' already exists", databaseName), new RuntimeException());
+        }
+        databases.add(databaseName);
     }
 
     @Override
     public void dropDatabase(String databaseName) {
-        isDatabaseExists = false;
+        if (!isDatabaseExist(databaseName)){
+            throw new RuntimeException(String.format(
+                    "Database '%s' doesn't exist", databaseName), new RuntimeException());
+        }
+        databases.remove(databaseName);
     }
 
     @Override
@@ -104,7 +112,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public boolean isDatabaseExist(String databaseName) {
-        return isDatabaseExists;
+        return databases.contains(databaseName);
     }
 
     @Override
