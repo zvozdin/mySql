@@ -26,14 +26,14 @@ public class DataSet {
         }
     }
 
-    public void put(String columnName, Object object) {
+    public void put(String column, Object value) {
         for (Data elementDataSet : data) {
-            if (elementDataSet.getName().equals(columnName)) {
-                elementDataSet.value = object;
+            if (elementDataSet.getName().equals(column)) {
+                elementDataSet.value = value;
                 return;
             }
         }
-        data.add(new Data(columnName, object));
+        data.add(new Data(column, value));
     }
 
     public List<String> getNames() {
@@ -52,9 +52,9 @@ public class DataSet {
         return result;
     }
 
-    public Object get(String columnName) {
+    public Object get(String column) {
         for (Data elementDataSet : data) {
-            if (elementDataSet.getName().equals(columnName)) {
+            if (elementDataSet.getName().equals(column)) {
                 return elementDataSet.getValue();
             }
         }
@@ -62,10 +62,10 @@ public class DataSet {
     }
 
     public void update(DataSet newValue) {
-        List<String> columnNames = newValue.getNames();
-        for (String name : columnNames) {
-            Object data = newValue.get(name);
-            put(name, data);
+        List<String> columns = newValue.getNames();
+        for (String column : columns) {
+            Object data = newValue.get(column);
+            put(column, data);
         }
     }
 

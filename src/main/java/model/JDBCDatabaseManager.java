@@ -1,7 +1,9 @@
 package model;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class JDBCDatabaseManager implements DatabaseManager {
 
@@ -25,15 +27,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
             throw new RuntimeException(String.format(
                     "Can't get connection for database: %s, user: %s ",
                     database, user), e);
-        }
-    }
-
-    @Override
-    public void disconnect() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(String.format("%s", e.getMessage()));
         }
     }
 
@@ -70,7 +63,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(String.format(
+                    "%s", e.getMessage()));
         }
     }
 
@@ -79,7 +73,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
         try (Statement statement = connection.createStatement()) {
             statement.execute("drop table " + tableName);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(String.format(
+                    "%s", e.getMessage()));
         }
     }
 
@@ -166,27 +161,32 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public void insert(String tableName, DataSet input) {
         try (Statement statement = connection.createStatement()) {
-            String columnNames = getColumnNamesFormated(input, "%s, ");
-            String valuesFormated = getValuesFormated(input);
-            statement.executeUpdate("insert into " + tableName + " (" + columnNames + ") values (" +
-                    valuesFormated +
-                    ")");
+            String columns = getColumnNamesFormated(input, "%s, ");
+            String values = getValuesFormated(input, "'%s', ");
+            statement.executeUpdate(
+                    "insert into " + tableName + " (" + columns + ") values (" + values + ")");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void update(String tableName, DataSet newValue, int id) {
-        String columnNames = getColumnNamesFormated(newValue, "%s = ?, ");
-        String sql = "update " + tableName + " set " + columnNames + " WHERE id = ?";
+    public void update(String tableName, DataSet set, DataSet where) {
+        String columnsSet = getColumnNamesFormated(set, "%s = ?, ");
+        String columnsWhere = getColumnNamesFormated(where, "%s = ?, ");
+
+        String sql = "UPDATE " + tableName + " SET " + columnsSet + " WHERE " + columnsWhere;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int index = 1;
-            List<Object> values = newValue.getValues();
-            for (Object elementData : values) {
+            List<Object> valuesSet = set.getValues();
+            for (Object elementData : valuesSet) {
                 statement.setObject(index++, elementData);
             }
-            statement.setInt(index, id);
+
+            List<Object> valuesWhere = where.getValues();
+            for (Object elementData : valuesWhere) {
+                statement.setObject(index, elementData);
+            }
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -232,6 +232,15 @@ public class JDBCDatabaseManager implements DatabaseManager {
         return false;
     }
 
+    @Override
+    public void closeConnection() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private String getColumnNamesFormated(DataSet input, String format) {
         String result = "";
         List<String> columnNames = input.getNames();
@@ -241,12 +250,12 @@ public class JDBCDatabaseManager implements DatabaseManager {
         return result.substring(0, result.length() - 2);
     }
 
-    private String getValuesFormated(DataSet input) {
-        String result = "'";
+    private String getValuesFormated(DataSet input, String format) {
+        String result = "";
         List<Object> values = input.getValues();
-        for (Object elementData : values) {
-            result += elementData + "', '";
+        for (Object value : values) {
+            result += String.format(format, value);
         }
-        return result.substring(0, result.length() - 3);
+        return result.substring(0, result.length() - 2);
     }
 }

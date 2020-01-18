@@ -16,13 +16,17 @@ public class MainController {
         this.commands = new Command[]{
                 new Connect(manager, view),
                 new Help(view),
-                new Exit(view),
+                new Exit(manager, view),
                 new IsConnected(manager, view),
                 new CreateDatabase(manager, view),
                 new DropDatabase(manager, view),
                 new Tables(manager, view),
+                new CreateTable(manager, view),
+                new DropTable(manager, view),
                 new Find(manager, view),
                 new Insert(manager, view),
+                new Update(manager, view),
+                new DeleteRow(manager, view),
                 new Clear(manager, view),
                 new Unsupported(view)
         };
@@ -44,7 +48,7 @@ public class MainController {
             String input = view.read();
             try {
                 if (input == null) { // null when interrupt application Ctrl F2
-                    new Exit(view).process(input);
+                    new Exit(manager, view).process(input);
                 }
                 for (Command command : commands) {
                     if (command.canProcess(input)) {

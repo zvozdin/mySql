@@ -7,7 +7,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     private List<DataSet> data = new LinkedList<>();
     private List<String> tables = new LinkedList<>();
     private List<String> columns = new LinkedList<>();
-    private boolean isDatabaseExist = false;
+    private boolean isDatabaseExists = false;
 
     @Override
     public void connect(String database, String user, String password) {
@@ -15,18 +15,13 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void disconnect() {
-        // do nothing
-    }
-
-    @Override
     public void createDatabase(String databaseName) {
-        isDatabaseExist = true;
+        isDatabaseExists = true;
     }
 
     @Override
     public void dropDatabase(String databaseName) {
-        isDatabaseExist = false;
+        isDatabaseExists = false;
     }
 
     @Override
@@ -52,7 +47,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public List<DataSet> getTableData(String tableName) {
-        if (data.isEmpty()){
+        if (data.isEmpty()) {
             // if tableName is empty then return only columnNames without data
             clear(tableName);
         }
@@ -63,8 +58,8 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     public void clear(String tableName) {
         data.clear();
         DataSet dataSet = new DataSet();
-        for (String name : columns) {
-            dataSet.put(name, "");
+        for (String column : columns) {
+            dataSet.put(column, "");
         }
         data.add(dataSet);
     }
@@ -75,26 +70,23 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void update(String tableName, DataSet newValue, int id) {
+    public void update(String tableName, DataSet set, DataSet where) {
+        String column = where.getNames().get(0);
+        Object value = where.getValues().get(0);
         for (DataSet element : data) {
-            if (element.get("id").toString().equals(String.valueOf(id))) {
-                element.update(newValue);
+            if (element.get(column).equals(value)) {
+                element.update(set);
             }
         }
     }
 
     @Override
-    public void deleteRow(String tableName, DataSet deleteValue) {
-        // todo refactor this
-        List<Object> values = deleteValue.getValues();
+    public void deleteRow(String tableName, DataSet delete) {
+        String column = delete.getNames().get(0);
+        Object value = delete.getValues().get(0);
         for (DataSet element : data) {
-            List<Object> elementValues = element.getValues();
-            for (Object val : values) {
-                for (Object elementVal : elementValues) {
-                    if (val.toString().equals(elementVal.toString())) {
-                        data.remove(element);
-                    }
-                }
+            if (element.get(column).equals(value)) {
+                data.remove(element);
             }
         }
     }
@@ -106,6 +98,11 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public boolean isDatabaseExist(String databaseName) {
-        return isDatabaseExist;
+        return isDatabaseExists;
+    }
+
+    @Override
+    public void closeConnection() {
+        // do nothing
     }
 }
