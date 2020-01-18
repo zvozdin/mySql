@@ -46,7 +46,7 @@ public class DeleteRow implements Command {
         for (String table : tables) {
             if (tableName.equals(table)) {
                 manager.deleteRow(tableName, input);
-                view.write(String.format("Record '%s' deleted.", input));
+                view.write(String.format("Record '%s' deleted.", input.getValues().get(0)));
                 // print table with values
                 new Find(manager, view).printTableHeader(tableName);
                 new Find(manager, view).printValues(tableName);

@@ -52,7 +52,7 @@ public class Insert implements Command {
         for (String table : tables) {
             if (tableName.equals(table)) {
                 manager.insert(tableName, input);
-                view.write(String.format("Record '%s' added.", input));
+                view.write(String.format("Record '%s' added.", input.getValues()));
                 // print table with values
                 new Find(manager, view).printTableHeader(tableName);
                 new Find(manager, view).printValues(tableName);

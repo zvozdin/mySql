@@ -26,9 +26,9 @@ public class Update implements Command {
     public void process(String command) {
         String[] data = command.split("\\|");
         String[] commandToInsert = COMMAND_SAMPLE.split("\\|");
-        if (data.length == commandToInsert.length) {
+        if (data.length != commandToInsert.length) {
             throw new IllegalArgumentException(String.format(
-                    "Invalid number of parameters separated by '|'. Expected %s. You enter ==> %s. " +
+                    "Invalid number of parameters separated by '|'. Expected %s. You enter ==> %s.\n" +
                             "Use command 'update|tableName|column1|value1|column2|value2'",
                     commandToInsert.length, data.length));
         }
@@ -50,7 +50,7 @@ public class Update implements Command {
         for (String table : tables) {
             if (tableName.equals(table)) {
                 manager.update(tableName, set, where);
-                view.write(String.format("Record '%s' updated.", set));
+                view.write(String.format("Record '%s' updated.", where.getValues().get(0)));
                 // print table with values
                 new Find(manager, view).printTableHeader(tableName);
                 new Find(manager, view).printValues(tableName);
