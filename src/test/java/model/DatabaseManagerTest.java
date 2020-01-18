@@ -81,20 +81,20 @@ public abstract class DatabaseManagerTest {
         manager.insert("test", getDataSetForTable());
 
         // then table data
-        assertEquals("[columns:[id, name, password], values:[1, Alex, 1111]]",
+        assertEquals("[columns:[id, name, password], values:[1, user1, 1111]]",
                 manager.getTableData("test").toString());
 
         // when insert additional
         DataSet addValue = new DataSet();
         addValue.put("id", "5");
-        addValue.put("name", "Olena");
+        addValue.put("name", "user2");
         addValue.put("password", "7777");
         manager.insert("test", addValue);
 
         // then 2 rows
         assertEquals("[" +
-                        "columns:[id, name, password], values:[1, Alex, 1111], " +
-                        "columns:[id, name, password], values:[5, Olena, 7777]]",
+                        "columns:[id, name, password], values:[1, user1, 1111], " +
+                        "columns:[id, name, password], values:[5, user2, 7777]]",
                 manager.getTableData("test").toString());
 
         // when
@@ -113,7 +113,7 @@ public abstract class DatabaseManagerTest {
 
         // when update
         DataSet set = new DataSet();
-        set.put("name", "SashaChanged");
+        set.put("name", "user1Changed");
         set.put("password", "0000Changed");
 
         DataSet where = new DataSet();
@@ -121,12 +121,12 @@ public abstract class DatabaseManagerTest {
         manager.update("test", set, where);
 
         //then update
-        assertEquals("[columns:[id, name, password], values:[1, SashaChanged, 0000Changed]]",
+        assertEquals("[columns:[id, name, password], values:[1, user1Changed, 0000Changed]]",
                 manager.getTableData("test").toString());
 
         // when delete
         DataSet delete = new DataSet();
-        delete.put("name", "SashaChanged");
+        delete.put("name", "user1Changed");
         manager.deleteRow("test", delete);
 
         // then delete row
@@ -142,7 +142,7 @@ public abstract class DatabaseManagerTest {
     private DataSet getDataSetForTable() {
         DataSet input = new DataSet();
         input.put("id", "1");
-        input.put("name", "Alex");
+        input.put("name", "user1");
         input.put("password", "1111");
         return input;
     }
