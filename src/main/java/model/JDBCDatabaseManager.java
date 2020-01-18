@@ -29,11 +29,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
                     database, user), e);
         }
     }
-//
-//    @Override
-//    public void disconnect() {
-//        connection = null;
-//    }
 
     @Override
     public void createDatabase(String databaseName) {
@@ -166,23 +161,21 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public void insert(String tableName, DataSet input) {
         try (Statement statement = connection.createStatement()) {
-            String columnNames = getColumnNamesFormated(input, "%s, ");
-            String valuesFormated = getValuesFormated(input);
-            statement.executeUpdate("insert into " + tableName + " (" + columnNames + ") values (" +
-                    valuesFormated +
-                    ")");
+            String columns = getColumnNamesFormated(input, "%s, ");
+            String values = getValuesFormated(input, "'%s', ");
+            statement.executeUpdate(
+                    "insert into " + tableName + " (" + columns + ") values (" + values + ")");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void update(String tableName, DataSet set, DataSet where/*, int id*/) {
-        String columnNamesSet = getColumnNamesFormated(set, "%s = ?, ");
-        String columnNamesWhere = getColumnNamesFormated(where, "%s = ?, ");
+    public void update(String tableName, DataSet set, DataSet where) {
+        String columnsSet = getColumnNamesFormated(set, "%s = ?, ");
+        String columnsWhere = getColumnNamesFormated(where, "%s = ?, ");
 
-
-        String sql = "UPDATE " + tableName + " SET " + columnNamesSet + " WHERE " + columnNamesWhere;
+        String sql = "UPDATE " + tableName + " SET " + columnsSet + " WHERE " + columnsWhere;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int index = 1;
             List<Object> valuesSet = set.getValues();
@@ -194,7 +187,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
             for (Object elementData : valuesWhere) {
                 statement.setObject(index, elementData);
             }
-//            statement.setInt(index, id);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -258,12 +250,12 @@ public class JDBCDatabaseManager implements DatabaseManager {
         return result.substring(0, result.length() - 2);
     }
 
-    private String getValuesFormated(DataSet input) {
-        String result = "'";
+    private String getValuesFormated(DataSet input, String format) {
+        String result = "";
         List<Object> values = input.getValues();
-        for (Object elementData : values) {
-            result += elementData + "', '";
+        for (Object value : values) {
+            result += String.format(format, value);
         }
-        return result.substring(0, result.length() - 3);
+        return result.substring(0, result.length() - 2);
     }
 }
