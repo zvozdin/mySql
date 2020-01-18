@@ -8,11 +8,12 @@ import static junit.framework.TestCase.assertEquals;
 public class TableOperationsTest extends IntegrationTest {
 
     @Test
-    public void test_CreateTable_List_DropTable() {
+    public void test_CreateTable_List_Find_DropTable() {
         // given
         in.addCommand("list");
         in.addCommand("create|test|id|name|password");
         in.addCommand("list");
+        in.addCommand("find|test");
         in.addCommand("drop|test");
         in.addCommand("list");
         in.addCommand("dropDatabase|" + testedDatabaseName);
@@ -39,12 +40,15 @@ public class TableOperationsTest extends IntegrationTest {
                 "Enter a command or help\r\n" +
                 // create|test|id|name|password
                 "Table 'test' created.\r\n" +
-                "========================\r\n" +
-                "|id|name|password|\r\n" +
-                "========================\r\n" +
                 "Enter a command or help\r\n" +
                 // list
                 "[test]\r\n" +
+                "Enter a command or help\r\n" +
+                // find|test
+                "========================\r\n" +
+                "|id|name|password|\r\n" +
+                "========================\r\n" +
+                "||||\r\n" +
                 "Enter a command or help\r\n" +
                 // drop|test
                 "Table 'test' deleted.\r\n" +
@@ -62,11 +66,11 @@ public class TableOperationsTest extends IntegrationTest {
     public void test_Insert_Insert_Update_Delete_ClearTable() {
         // given
         in.addCommand("create|test|id|name|password");
-        in.addCommand("insert|tableName|id|1|name|user1|password|1111");
-        in.addCommand("insert|tableName|id|2|name|user2|password|0000");
-        in.addCommand("update|tableName|column1|value1|column2|value2");
-        in.addCommand("drop|test");
-        in.addCommand("list");
+        in.addCommand("insert|test|id|1|name|user1|password|1111");
+        in.addCommand("insert|test|id|2|name|user2|password|0000");
+        in.addCommand("update|test|password|7777|name|user1");
+        in.addCommand("delete|test|name|user2");
+        in.addCommand("clear|test");
         in.addCommand("dropDatabase|" + testedDatabaseName);
         in.addCommand("exit");
         // when
@@ -86,22 +90,41 @@ public class TableOperationsTest extends IntegrationTest {
                 // connect|testedDatabase|user|password
                 "Success!\r\n" +
                 "Enter a command or help\r\n" +
-                // list
-                "[]\r\n" +
-                "Enter a command or help\r\n" +
                 // create|test|id|name|password
                 "Table 'test' created.\r\n" +
+                "Enter a command or help\r\n" +
+                // insert|test|id|1|name|user1|password|1111
+                "Record '[1, user1, 1111]' added.\r\n" +
                 "========================\r\n" +
                 "|id|name|password|\r\n" +
                 "========================\r\n" +
+                "|1|user1|1111|\r\n" +
                 "Enter a command or help\r\n" +
-                // list
-                "[test]\r\n" +
+                // insert|test|id|2|name|user2|password|0000
+                "Record '[2, user2, 0000]' added.\r\n" +
+                "========================\r\n" +
+                "|id|name|password|\r\n" +
+                "========================\r\n" +
+                "|1|user1|1111|\r\n" +
+                "|2|user2|0000|\r\n" +
                 "Enter a command or help\r\n" +
-                // drop|test
-                "Table 'test' deleted.\r\n" +
+                // update|test|password|7777|name|user1
+                "Record 'user1' updated.\r\n" +
+                "========================\r\n" +
+                "|id|name|password|\r\n" +
+                "========================\r\n" +
+                "|1|user1|7777|\r\n" +
+                "|2|user2|0000|\r\n" +
                 "Enter a command or help\r\n" +
-                "[]\r\n" +
+                // delete|test|name|user2
+                "Record 'user2' deleted.\r\n" +
+                "========================\r\n" +
+                "|id|name|password|\r\n" +
+                "========================\r\n" +
+                "|1|user1|7777|\r\n" +
+                "Enter a command or help\r\n" +
+                // clear|test
+                "Table 'test' is cleared!\r\n" +
                 "Enter a command or help\r\n" +
                 // dropDatabase|testedDatabase
                 "Database 'testedDatabase' deleted.\r\n" +
