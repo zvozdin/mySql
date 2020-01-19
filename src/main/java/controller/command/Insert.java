@@ -25,7 +25,7 @@ public class Insert implements Command {
         String[] data = command.split("\\|");
         if (data.length % 2 != 0) {
             throw new IllegalArgumentException(String.format("" +
-                    "Invalid number of parameters separated by '|'.\n" +
+                    "Invalid parameters number separated by '|'.\n" +
                     "Expected even count. You enter ==> %s.\n" +
                     "Use command 'insert|tableName|column1|value1|column2|value2|...|columnN|valueN'", data.length));
         }
@@ -33,9 +33,10 @@ public class Insert implements Command {
         String[] commandToInsert = COMMAND_SAMPLE.split("\\|");
         if (data.length < commandToInsert.length) {
             throw new IllegalArgumentException(String.format("" +
-                    "Invalid number of parameters separated by '|'.\n" +
+                    "Invalid parameters number separated by '|'.\n" +
                     "Expected min %s. You enter ==> %s.\n" +
-                    "Use command 'insert|tableName|column1|value1|column2|value2|...|columnN|valueN'", commandToInsert.length, data.length));
+                    "Use command 'insert|tableName|column1|value1|column2|value2|...|columnN|valueN'",
+                    commandToInsert.length, data.length));
         }
 
         DataSet insert = new DataSet();
