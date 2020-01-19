@@ -65,7 +65,6 @@ public class FindTest {
         command.process("find|users");
 
         // then
-        verify(manager).getTablesNames();
         verify(manager).getTableColumns("users");
         verify(manager).getTableData("users");
 
@@ -106,22 +105,6 @@ public class FindTest {
     }
 
     @Test
-    public void testProcess_FindNonExistingTable() {
-        // given
-        when(manager.getTablesNames()).thenReturn(
-                Arrays.asList(new String[]{"products", "shops", "users"}));
-
-        // when
-        try {
-            command.process("find|nonExisting");
-            fail("Expected IllegalArgumentException");
-        } catch (IllegalArgumentException e) {
-            // then
-            assertEquals("Table 'nonExisting' doesn't exist.", e.getMessage());
-        }
-    }
-
-    @Test
     public void testProcess_FindCommandWithWrongParameters() {
         // when
         try {
@@ -130,7 +113,9 @@ public class FindTest {
         } catch (IllegalArgumentException e) {
             // then
             assertEquals("" +
-                    "Invalid number of parameters separated by '|'. Expected 2. You enter ==> 3", e.getMessage());
+                    "Invalid number of parameters separated by '|'.\n" +
+                    "Expected 2. You enter ==> 3.\n" +
+                    "Use command 'find|tableName'", e.getMessage());
         }
     }
 }

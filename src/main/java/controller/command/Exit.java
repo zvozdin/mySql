@@ -20,7 +20,7 @@ public class Exit implements Command {
 
     @Override
     public void process(String command) {
-        // TODO manager.closeConnectionWithMySQSL(); after disconnect command need connection to exit from app
+        manager.closeConnection();
         view.write("See you soon!");
         throw new ExitException();
     }

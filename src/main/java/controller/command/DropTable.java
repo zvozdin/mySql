@@ -21,18 +21,16 @@ public class DropTable implements Command {
 
     @Override
     public void process(String command) {
+        commandValidation(COMMAND_SAMPLE, command);
         String[] data = command.split("\\|");
-        String[] commandToDrop = COMMAND_SAMPLE.split("\\|");
-        if (data.length != commandToDrop.length) {
-            throw new IllegalArgumentException(String.format(
-                    "Invalid number of parameters separated by '|'. Expected %s. You enter ==> %s",
-                    commandToDrop.length, data.length));
-        }
 
-        String databaseName = data[1];
-        // TODO check table already exists or catch exception in JDBC and wrap into RuntimeException
+//        String[] commandToDrop = COMMAND_SAMPLE.split("\\|");
+//        if (data.length != commandToDrop.length) {
+//            throw new InvalidNumberParametersException(commandToDrop.length, data.length, COMMAND_SAMPLE);
+//        }
 
-        manager.dropTable(databaseName);
-        view.write(String.format("Table '%s' deleted.", databaseName));
+        String tableName = data[1];
+        manager.dropTable(tableName);
+        view.write(String.format("Table '%s' deleted.", tableName));
     }
 }

@@ -25,10 +25,10 @@ public class CreateTable implements Command {
         String[] data = command.split("\\|");
         String[] commandToCreate = COMMAND_SAMPLE.split("\\|");
         if (data.length < commandToCreate.length) {
-            throw new IllegalArgumentException(String.format(
-                    "Invalid number of parameters separated by '|'. Expected no less than %s. You enter ==> %s. " +
-                            "Use command '1'",
-                    commandToCreate, data.length));
+            throw new IllegalArgumentException(String.format("" +
+                            "Invalid number of parameters separated by '|'.\n" +
+                            "Expected no less than %s. You enter ==> %s.\n" +
+                            "Use command '%s'", commandToCreate.length, data.length, COMMAND_SAMPLE));
         }
 
         DataSet input = new DataSet();
@@ -37,14 +37,6 @@ public class CreateTable implements Command {
             String value = "";
             input.put(columnName, value);
         }
-        // TODO check db already exists or catch exception in JDBC createTable() method and wrap into RuntimeException
-//        List<String> tables = manager.getTablesNames();
-//        for (String table : tables) {
-//            if (tableName.equals(table)) {
-//                throw new IllegalArgumentException(String.format(
-//                        "Table '%s' already exists.", tableName));
-//            }
-//        }
 
         String tableName = data[1];
         manager.createTable(tableName, input);

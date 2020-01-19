@@ -52,7 +52,9 @@ public class ConnectTest {
         } catch (IllegalArgumentException e) {
             //then
             assertEquals("" +
-                    "Invalid number of parameters separated by '|'. Expected 4. You enter ==> 2", e.getMessage());
+                    "Invalid number of parameters separated by '|'.\n" +
+                    "Expected 4. You enter ==> 2.\n" +
+                    "Use command 'connect|business|root|root'", e.getMessage());
         }
     }
 }

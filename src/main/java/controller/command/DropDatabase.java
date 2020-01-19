@@ -21,17 +21,15 @@ public class DropDatabase implements Command {
 
     @Override
     public void process(String command) {
+        commandValidation(COMMAND_SAMPLE, command);
         String[] data = command.split("\\|");
-        String[] commandToDrop = COMMAND_SAMPLE.split("\\|");
-        if (data.length != commandToDrop.length) {
-            throw new IllegalArgumentException(String.format(
-                    "Invalid number of parameters separated by '|'. Expected %s. You enter ==> %s",
-                    commandToDrop.length, data.length));
-        }
+
+//        String[] commandToDrop = COMMAND_SAMPLE.split("\\|");
+//        if (data.length != commandToDrop.length) {
+//            throw new InvalidNumberParametersException(commandToDrop.length, data.length, COMMAND_SAMPLE);
+//        }
 
         String databaseName = data[1];
-        // TODO check db already exists or catch exception in JDBC and wrap into RuntimeException
-
         manager.dropDatabase(databaseName);
         view.write(String.format("Database '%s' deleted.", databaseName));
     }

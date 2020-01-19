@@ -21,20 +21,14 @@ public class CreateDatabase implements Command {
 
     @Override
     public void process(String command) {
-        // TODO extract into separated method validation parameters in command String in all Command classes where it runs
-        // TODO enter parameters data and commandToCreate into validated method
-
+        commandValidation(COMMAND_SAMPLE, command);
         String[] data = command.split("\\|");
-        String[] commandToCreate = COMMAND_SAMPLE.split("\\|");
-        if (data.length != commandToCreate.length) {
-            // TODO create Exception class to throw the same message for all Commands when user enters Invalid number of parameters separated by '|'
-            throw new IllegalArgumentException(String.format(
-                    "Invalid number of parameters separated by '|'. Expected %s. You enter ==> %s",
-                    commandToCreate.length, data.length));
-        }
+//        String[] commandToCreate = COMMAND_SAMPLE.split("\\|");
+//        if (data.length != commandToCreate.length) {
+//            throw new InvalidNumberParametersException(commandToCreate.length, data.length, COMMAND_SAMPLE);
+//        }
 
         String databaseName = data[1];
-        // TODO check table already exists or catch exception in JDBC and wrap into RuntimeException
         manager.createDatabase(databaseName);
         view.write(String.format("Database '%s' created.", databaseName));
     }

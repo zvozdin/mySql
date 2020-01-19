@@ -24,26 +24,17 @@ public class Find implements Command {
 
     @Override
     public void process(String command) {
-        String[] data = command.split("\\|");
-        String[] commandToConnect = COMMAND_SAMPLE.split("\\|");
-        if (data.length != commandToConnect.length) {
-            throw new IllegalArgumentException(String.format(
-                    "Invalid number of parameters separated by '|'. Expected %s. You enter ==> %s",
-                    commandToConnect.length, data.length));
-        }
+        commandValidation(COMMAND_SAMPLE, command);
 
+//        String[] commandToConnect = COMMAND_SAMPLE.split("\\|");
+//        if (data.length != commandToConnect.length) {
+//            throw new InvalidNumberParametersException(commandToConnect.length, data.length, COMMAND_SAMPLE);
+//        }
+
+        String[] data = command.split("\\|");
         String tableName = data[1];
-        // TODO try to check table existing by wrap SQLException in getTablesNames() method into RuntimeException
-        List<String> tables = manager.getTablesNames();
-        for (String table : tables) {
-            if (tableName.equals(table)) {
-                printTableHeader(tableName);
-                printValues(tableName);
-                return;
-            }
-        }
-        throw new IllegalArgumentException(String.format(
-                "Table '%s' doesn't exist.", tableName));
+        printTableHeader(tableName);  // TODO print nice table
+        printValues(tableName);
     }
 
     void printTableHeader(String tableName) {

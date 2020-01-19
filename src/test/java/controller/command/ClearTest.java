@@ -8,9 +8,7 @@ import view.View;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ClearTest {
 
@@ -50,22 +48,6 @@ public class ClearTest {
     }
 
     @Test
-    public void testProcess_ClearNonExistingTable() {
-        // given
-        when(manager.getTablesNames())
-                .thenReturn(Arrays.asList(new String[]{"test"}));
-
-        // when
-        try {
-            command.process("clear|nonExistingTable");
-            fail("Expected IllegalArgumentException");
-        } catch (IllegalArgumentException e) {
-            // then
-            assertEquals("Table 'nonExistingTable' doesn't exist.", e.getMessage());
-        }
-    }
-
-    @Test
     public void testProcess_ClearCommandWithWrongParameters() {
         // when
         try {
@@ -74,7 +56,9 @@ public class ClearTest {
         } catch (IllegalArgumentException e) {
             // then
             assertEquals("" +
-                    "Invalid number of parameters separated by '|'. Expected 2. You enter ==> 3", e.getMessage());
+                    "Invalid number of parameters separated by '|'.\n" +
+                    "Expected 2. You enter ==> 3.\n" +
+                    "Use command 'clear|tableName'", e.getMessage());
         }
     }
 }
