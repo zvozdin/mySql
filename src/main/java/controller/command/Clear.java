@@ -22,12 +22,8 @@ public class Clear implements Command {
     @Override
     public void process(String command) {
         parametersNumberValidation(COMMAND_SAMPLE, command);
-        String[] data = command.split("\\|");
-//        String[] commandToClear = COMMAND_SAMPLE.split("\\|");
-//        if (data.length != commandToClear.length) {
-//            throw new InvalidParametersNumberException(commandToClear.length, data.length, COMMAND_SAMPLE);
-//        }
 
+        String[] data = command.split("\\|");
         String tableName = data[1];
         manager.clear(tableName);
         view.write(String.format("Table '%s' is cleared!", tableName));

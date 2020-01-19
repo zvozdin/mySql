@@ -40,26 +40,22 @@ public class FindTest {
     @Test
     public void testProcess_FindData() {
         // given
-        when(manager.getTablesNames()).thenReturn(
-                Arrays.asList(new String[]{"users"}));
-
-        when(manager.getTableColumns("users")).thenReturn(
-                Arrays.asList(new String[]{"id", "name", "password"}));
-
         List<DataSet> users = new LinkedList<>();
         DataSet user1 = new DataSet();
         user1.put("id", "11");
         user1.put("name", "user1");
         user1.put("password", "****");
+        users.add(user1);
 
         DataSet user2 = new DataSet();
         user2.put("id", "12");
         user2.put("name", "user2");
         user2.put("password", "++++");
-
-        users.add(user1);
         users.add(user2);
+
         when(manager.getTableData("users")).thenReturn(users);
+        when(manager.getTableColumns("users")).thenReturn(
+                Arrays.asList(new String[]{"id", "name", "password"}));
 
         // when
         command.process("find|users");
@@ -82,13 +78,10 @@ public class FindTest {
     @Test
     public void testProcess_FindEmptyTable() {
         // given
-        when(manager.getTablesNames()).thenReturn(
-                Arrays.asList(new String[]{"users"}));
+        List<DataSet> users = new LinkedList<>();
 
         when(manager.getTableColumns("users")).thenReturn(
                 Arrays.asList(new String[]{"id", "name", "password"}));
-
-        List<DataSet> users = new LinkedList<>();
         when(manager.getTableData("users")).thenReturn(users);
 
         // when

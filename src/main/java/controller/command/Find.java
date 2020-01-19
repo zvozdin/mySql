@@ -26,12 +26,8 @@ public class Find implements Command {
     public void process(String command) {
         parametersNumberValidation(COMMAND_SAMPLE, command);
 
-//        String[] commandToConnect = COMMAND_SAMPLE.split("\\|");
-//        if (data.length != commandToConnect.length) {
-//            throw new InvalidParametersNumberException(commandToConnect.length, data.length, COMMAND_SAMPLE);
-//        }
-
         String[] data = command.split("\\|");
+
         String tableName = data[1];
         printTableHeader(tableName);  // TODO print nice table
         printValues(tableName);

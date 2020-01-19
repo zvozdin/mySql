@@ -5,10 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 import view.View;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class ClearTest {
 
@@ -35,10 +34,6 @@ public class ClearTest {
 
     @Test
     public void testProcess_ClearTable() {
-        // given
-        when(manager.getTablesNames())
-                .thenReturn(Arrays.asList(new String[]{"test"}));
-
         // when
         command.process("clear|test");
 

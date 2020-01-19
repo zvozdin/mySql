@@ -23,12 +23,12 @@ public class CreateDatabaseTest {
     }
 
     @Test
-    public void testCanProcess_CorrectFindCommand() {
+    public void testCanProcess_CorrectCreateDatabaseCommand() {
         assertTrue(command.canProcess("newDatabase|databaseName"));
     }
 
     @Test
-    public void testCanProcess_WrongFindCommand() {
+    public void testCanProcess_WrongCreateDatabaseCommand() {
         assertFalse(command.canProcess("newDatabase"));
     }
 
