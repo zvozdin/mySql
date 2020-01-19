@@ -22,14 +22,10 @@ public class DropTable implements Command {
     @Override
     public void process(String command) {
         parametersNumberValidation(COMMAND_SAMPLE, command);
+
         String[] data = command.split("\\|");
-
-//        String[] commandToDrop = COMMAND_SAMPLE.split("\\|");
-//        if (data.length != commandToDrop.length) {
-//            throw new InvalidParametersNumberException(commandToDrop.length, data.length, COMMAND_SAMPLE);
-//        }
-
         String tableName = data[1];
+
         manager.dropTable(tableName);
         view.write(String.format("Table '%s' deleted.", tableName));
     }
