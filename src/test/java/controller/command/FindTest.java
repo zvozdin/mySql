@@ -98,7 +98,7 @@ public class FindTest {
     }
 
     @Test
-    public void testProcess_FindCommandWithWrongParameters() {
+    public void testProcess_FindCommandWithWithInvalidParametersNumber() {
         // when
         try {
             command.process("find|users|wrongParameter");

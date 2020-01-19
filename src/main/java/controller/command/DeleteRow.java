@@ -23,12 +23,9 @@ public class DeleteRow implements Command {
     @Override
     public void process(String command) {
         parametersNumberValidation(COMMAND_SAMPLE, command);
-        String[] data = command.split("\\|");
 
-//        String[] commandToDelete = COMMAND_SAMPLE.split("\\|");
-//        if (data.length != commandToDelete.length) {
-//            throw new InvalidParametersNumberException(commandToDelete.length, data.length, COMMAND_SAMPLE);
-//        }
+        String[] data = command.split("\\|");
+        String tableName = data[1];
 
         DataSet delete = new DataSet();
         for (int index = 1; index < data.length / 2; index++) {
@@ -37,7 +34,6 @@ public class DeleteRow implements Command {
             delete.put(columnName, value);
         }
 
-        String tableName = data[1];
         manager.deleteRow(tableName, delete);
         view.write(String.format("Record '%s' deleted.", delete.getValues().get(0)));
         // print table with values

@@ -43,7 +43,7 @@ public class CreateDatabaseTest {
     }
 
     @Test
-    public void testProcess_CreateDatabaseCommandWithWrongParameters() {
+    public void testProcess_CreateDatabaseCommandWithWithInvalidParametersNumber() {
         // when
         try {
             command.process("newDatabase|");

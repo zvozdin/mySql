@@ -26,7 +26,7 @@ public class CreateTable implements Command {
         String[] commandToCreate = COMMAND_SAMPLE.split("\\|");
         if (data.length < commandToCreate.length) {
             throw new IllegalArgumentException(String.format("" +
-                            "Invalid number of parameters separated by '|'.\n" +
+                            "Invalid parameters number separated by '|'.\n" +
                             "Expected no less than %s. You enter ==> %s.\n" +
                             "Use command '%s'", commandToCreate.length, data.length, COMMAND_SAMPLE));
         }

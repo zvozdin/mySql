@@ -45,7 +45,7 @@ public class ConnectTest {
     }
 
     @Test
-    public void testProcess_ConnectCommandWithWrongParameters() {
+    public void testProcess_ConnectCommandWithWithInvalidParametersNumber() {
         //when
         try {
             command.process("connect|business");

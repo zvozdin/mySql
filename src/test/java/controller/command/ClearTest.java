@@ -43,7 +43,7 @@ public class ClearTest {
     }
 
     @Test
-    public void testProcess_ClearCommandWithWrongParameters_1() {
+    public void testProcess_ClearCommandWithWithInvalidParametersNumber_1() {
         // when
         try {
             command.process("clear|");
@@ -58,7 +58,7 @@ public class ClearTest {
     }
 
     @Test
-    public void testProcess_ClearCommandWithWrongParameters_3() {
+    public void testProcess_ClearCommandWithWithInvalidParametersNumber_3() {
         // when
         try {
             command.process("clear|test|wrongParameter");

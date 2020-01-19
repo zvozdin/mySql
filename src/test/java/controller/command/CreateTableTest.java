@@ -47,15 +47,15 @@ public class CreateTableTest {
     }
 
     @Test
-    public void testProcess_CreateDatabaseCommandWithWrongParameters() {
+    public void testProcess_CreateTableCommandWithInvalidParametersNumber() {
         // when
         try {
             command.process("create|test|");
             fail("Expected IllegalArgumentException");
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             // then
             assertEquals("" +
-                    "Invalid number of parameters separated by '|'.\n" +
+                    "Invalid parameters number separated by '|'.\n" +
                     "Expected no less than 3. You enter ==> 2.\n" +
                     "Use command 'create|tableName|columnName'", e.getMessage());
         }
