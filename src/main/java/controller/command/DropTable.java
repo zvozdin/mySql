@@ -26,7 +26,7 @@ public class DropTable implements Command {
 
 //        String[] commandToDrop = COMMAND_SAMPLE.split("\\|");
 //        if (data.length != commandToDrop.length) {
-//            throw new InvalidNumberParametersException(commandToDrop.length, data.length, COMMAND_SAMPLE);
+//            throw new InvalidParametersNumberException(commandToDrop.length, data.length, COMMAND_SAMPLE);
 //        }
 
         String tableName = data[1];

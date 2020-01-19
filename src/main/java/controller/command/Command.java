@@ -10,7 +10,7 @@ public interface Command {
         String[] correctCommand = sampleCommand.split("\\|");
         String[] data = inputCommand.split("\\|");
         if (correctCommand.length != data.length) {
-            throw new InvalidNumberParametersException(correctCommand.length, data.length, sampleCommand);
+            throw new InvalidParametersNumberException(correctCommand.length, data.length, sampleCommand);
         }
     }
 }

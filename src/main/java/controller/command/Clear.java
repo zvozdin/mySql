@@ -25,7 +25,7 @@ public class Clear implements Command {
         String[] data = command.split("\\|");
 //        String[] commandToClear = COMMAND_SAMPLE.split("\\|");
 //        if (data.length != commandToClear.length) {
-//            throw new InvalidNumberParametersException(commandToClear.length, data.length, COMMAND_SAMPLE);
+//            throw new InvalidParametersNumberException(commandToClear.length, data.length, COMMAND_SAMPLE);
 //        }
 
         String tableName = data[1];

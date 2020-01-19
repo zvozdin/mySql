@@ -27,7 +27,7 @@ public class DeleteRow implements Command {
 
 //        String[] commandToDelete = COMMAND_SAMPLE.split("\\|");
 //        if (data.length != commandToDelete.length) {
-//            throw new InvalidNumberParametersException(commandToDelete.length, data.length, COMMAND_SAMPLE);
+//            throw new InvalidParametersNumberException(commandToDelete.length, data.length, COMMAND_SAMPLE);
 //        }
 
         DataSet delete = new DataSet();

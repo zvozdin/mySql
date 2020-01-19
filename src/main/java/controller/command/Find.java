@@ -28,7 +28,7 @@ public class Find implements Command {
 
 //        String[] commandToConnect = COMMAND_SAMPLE.split("\\|");
 //        if (data.length != commandToConnect.length) {
-//            throw new InvalidNumberParametersException(commandToConnect.length, data.length, COMMAND_SAMPLE);
+//            throw new InvalidParametersNumberException(commandToConnect.length, data.length, COMMAND_SAMPLE);
 //        }
 
         String[] data = command.split("\\|");

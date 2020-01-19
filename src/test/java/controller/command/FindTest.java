@@ -18,7 +18,7 @@ public class FindTest {
 
     private DatabaseManager manager;
     private View view;
-    private Find command;
+    private Command command;
 
     @Before
     public void setup() {
@@ -113,7 +113,7 @@ public class FindTest {
         } catch (IllegalArgumentException e) {
             // then
             assertEquals("" +
-                    "Invalid number of parameters separated by '|'.\n" +
+                    "Invalid parameters number separated by '|'.\n" +
                     "Expected 2. You enter ==> 3.\n" +
                     "Use command 'find|tableName'", e.getMessage());
         }

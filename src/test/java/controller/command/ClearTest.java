@@ -48,7 +48,22 @@ public class ClearTest {
     }
 
     @Test
-    public void testProcess_ClearCommandWithWrongParameters() {
+    public void testProcess_ClearCommandWithWrongParameters_1() {
+        // when
+        try {
+            command.process("clear|");
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // then
+            assertEquals("" +
+                    "Invalid parameters number separated by '|'.\n" +
+                    "Expected 2. You enter ==> 1.\n" +
+                    "Use command 'clear|tableName'", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testProcess_ClearCommandWithWrongParameters_3() {
         // when
         try {
             command.process("clear|test|wrongParameter");
@@ -56,7 +71,7 @@ public class ClearTest {
         } catch (IllegalArgumentException e) {
             // then
             assertEquals("" +
-                    "Invalid number of parameters separated by '|'.\n" +
+                    "Invalid parameters number separated by '|'.\n" +
                     "Expected 2. You enter ==> 3.\n" +
                     "Use command 'clear|tableName'", e.getMessage());
         }

@@ -25,7 +25,7 @@ public class CreateDatabase implements Command {
         String[] data = command.split("\\|");
 //        String[] commandToCreate = COMMAND_SAMPLE.split("\\|");
 //        if (data.length != commandToCreate.length) {
-//            throw new InvalidNumberParametersException(commandToCreate.length, data.length, COMMAND_SAMPLE);
+//            throw new InvalidParametersNumberException(commandToCreate.length, data.length, COMMAND_SAMPLE);
 //        }
 
         String databaseName = data[1];
