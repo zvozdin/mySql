@@ -16,7 +16,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public void createDatabase(String databaseName) {
-        if (isDatabaseExist(databaseName)){
+        if (isDatabaseExist(databaseName)) {
             throw new RuntimeException(String.format(
                     "Database '%s' already exists", databaseName), new RuntimeException());
         }
@@ -25,7 +25,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public void dropDatabase(String databaseName) {
-        if (!isDatabaseExist(databaseName)){
+        if (!isDatabaseExist(databaseName)) {
             throw new RuntimeException(String.format(
                     "Database '%s' doesn't exist", databaseName), new RuntimeException());
         }
@@ -35,7 +35,8 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     @Override
     public void createTable(String tableName, DataSet input) {
         if (tables.contains(tableName)) {
-            throw new RuntimeException(String.format("Table '%s' already exists", tableName), new RuntimeException());
+            throw new IllegalArgumentException(String.format("" +
+                    "Table '%s' already exists", tableName), new IllegalArgumentException());
         }
         tables.add(tableName);
         columns = input.getNames();
@@ -43,9 +44,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public void dropTable(String tableName) {
-        if (!tables.contains(tableName)){
-            throw new RuntimeException(String.format("Table '%s' doesn't exist", tableName), new RuntimeException());
-        }
+        notExistingTableValidation(tableName);
         tables.remove(tableName);
     }
 
@@ -56,11 +55,13 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public List<String> getTableColumns(String tableName) {
+        notExistingTableValidation(tableName);
         return columns;
     }
 
     @Override
     public List<DataSet> getTableData(String tableName) {
+        notExistingTableValidation(tableName);
         if (data.isEmpty()) {
             // if tableName is empty then return only columnNames without data
             clear(tableName);
@@ -70,6 +71,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public void clear(String tableName) {
+        notExistingTableValidation(tableName);
         data.clear();
         DataSet dataSet = new DataSet();
         for (String column : columns) {
@@ -80,11 +82,13 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public void insert(String tableName, DataSet input) {
+        notExistingTableValidation(tableName);
         data.add(input);
     }
 
     @Override
     public void update(String tableName, DataSet set, DataSet where) {
+        notExistingTableValidation(tableName);
         String column = where.getNames().get(0);
         Object value = where.getValues().get(0);
         for (DataSet element : data) {
@@ -96,6 +100,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
 
     @Override
     public void deleteRow(String tableName, DataSet delete) {
+        notExistingTableValidation(tableName);
         String column = delete.getNames().get(0);
         Object value = delete.getValues().get(0);
         for (DataSet element : data) {
@@ -118,5 +123,12 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     @Override
     public void closeConnection() {
         // do nothing
+    }
+
+    private void notExistingTableValidation(String tableName) {
+        if (!tables.contains(tableName)) {
+            throw new IllegalArgumentException(String.format("" +
+                    "Table '%s' doesn't exist", tableName), new IllegalArgumentException());
+        }
     }
 }

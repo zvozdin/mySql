@@ -35,7 +35,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("create database " + databaseName);
         } catch (SQLException e) {
-            throw new RuntimeException(String.format(
+            throw new IllegalArgumentException(String.format(
                     "Database '%s' already exists", databaseName), e);
         }
     }
@@ -45,13 +45,17 @@ public class JDBCDatabaseManager implements DatabaseManager {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("drop database " + databaseName);
         } catch (SQLException e) {
-            throw new RuntimeException(String.format(
+            throw new IllegalArgumentException(String.format(
                     "Database '%s' doesn't exist", databaseName), e);
         }
     }
 
     @Override
     public void createTable(String tableName, DataSet input) {
+        if (getTablesNames().contains(tableName)){
+            throw new IllegalArgumentException(String.format(
+                    "Table '%s' already exists", tableName));
+        }
         String sql = "create table " + tableName + " (";
 
         List<String> columns = input.getNames(); // TODO extract to separate method
@@ -63,18 +67,17 @@ public class JDBCDatabaseManager implements DatabaseManager {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql);
         } catch (SQLException e) {
-            throw new RuntimeException(String.format(
-                    "Table '%s' already exists", tableName), e);
+            e.printStackTrace();
         }
     }
 
     @Override
     public void dropTable(String tableName) {
+        notExistingTableValidation(tableName);
         try (Statement statement = connection.createStatement()) {
             statement.execute("drop table " + tableName);
         } catch (SQLException e) {
-            throw new RuntimeException(String.format(
-                    "Table '%s' doesn't exist", tableName), e);
+            e.printStackTrace();
         }
     }
 
@@ -97,6 +100,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public List<String> getTableColumns(String tableName) {
+        notExistingTableValidation(tableName);
         List<String> result = new LinkedList<>();
         DatabaseMetaData data = null;
         try {
@@ -119,6 +123,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public List<DataSet> getTableData(String tableName) {
+        notExistingTableValidation(tableName);
         List<DataSet> result = new ArrayList<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("select * from " + tableName)) {
@@ -145,12 +150,13 @@ public class JDBCDatabaseManager implements DatabaseManager {
             return result;
         } catch (SQLException e) {
             e.printStackTrace();
-            return new ArrayList<>();
+            return result;
         }
     }
 
     @Override
     public void clear(String tableName) {
+        notExistingTableValidation(tableName);
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("delete from " + tableName);
         } catch (SQLException e) {
@@ -160,6 +166,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void insert(String tableName, DataSet input) {
+        notExistingTableValidation(tableName);
         try (Statement statement = connection.createStatement()) {
             String columns = getColumnNamesFormated(input, "%s, ");
             String values = getValuesFormated(input, "'%s', ");
@@ -172,6 +179,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void update(String tableName, DataSet set, DataSet where) {
+        notExistingTableValidation(tableName);
         String columnsSet = getColumnNamesFormated(set, "%s = ?, ");
         String columnsWhere = getColumnNamesFormated(where, "%s = ?, ");
 
@@ -195,6 +203,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void deleteRow(String tableName, DataSet deleteValue) {
+        notExistingTableValidation(tableName);
         String columnNames = getColumnNamesFormated(deleteValue, "%s = ?, ");
         String sql = "delete from " + tableName + " where " + columnNames;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -238,6 +247,12 @@ public class JDBCDatabaseManager implements DatabaseManager {
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void notExistingTableValidation(String tableName) {
+        if (!getTablesNames().contains(tableName)) {
+            throw new IllegalArgumentException(String.format("Table '%s' doesn't exist", tableName));
         }
     }
 

@@ -4,10 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public abstract class DatabaseManagerTest {
 
@@ -103,6 +100,14 @@ public abstract class DatabaseManagerTest {
         // then
         assertEquals("[id, name, password]",
                 manager.getTableColumns("test").toString());
+
+        // getTableColumns from non existing table
+        try {
+            manager.getTableColumns("nonExistingTable");
+            fail("Expected Exception");
+        } catch (Exception e) {
+            assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
+        }
     }
 
     @Test
@@ -136,6 +141,22 @@ public abstract class DatabaseManagerTest {
         // then clear table
         assertEquals("[columns:[id, name, password], values:[, , ]]",
                 manager.getTableData("test").toString());
+
+        // getTableData from non existing table
+        try {
+            manager.getTableData("nonExistingTable");
+            fail("Expected Exception");
+        } catch (Exception e) {
+            assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
+        }
+
+        // clear non existing table
+        try {
+            manager.clear("nonExistingTable");
+            fail("Expected Exception");
+        } catch (Exception e) {
+            assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
+        }
     }
 
     @Test
@@ -143,6 +164,14 @@ public abstract class DatabaseManagerTest {
         // given
         manager.createTable("test", getDataSetForTable());
         manager.insert("test", getDataSetForTable());
+
+        // insert into non existing table
+        try {
+            manager.insert("nonExistingTable", getDataSetForTable());
+            fail("Expected Exception");
+        } catch (Exception e) {
+            assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
+        }
 
         // when update
         DataSet set = new DataSet();
@@ -157,6 +186,14 @@ public abstract class DatabaseManagerTest {
         assertEquals("[columns:[id, name, password], values:[1, user1Changed, 0000Changed]]",
                 manager.getTableData("test").toString());
 
+        // update into non existing table
+        try {
+            manager.update("nonExistingTable", set, where);
+            fail("Expected Exception");
+        } catch (Exception e) {
+            assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
+        }
+
         // when delete
         DataSet delete = new DataSet();
         delete.put("name", "user1Changed");
@@ -165,6 +202,14 @@ public abstract class DatabaseManagerTest {
         // then delete row
         assertEquals("[columns:[id, name, password], values:[, , ]]",
                 manager.getTableData("test").toString());
+
+        // delete into non existing table
+        try {
+            manager.deleteRow("nonExistingTable", delete);
+            fail("Expected Exception");
+        } catch (Exception e) {
+            assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
+        }
     }
 
     @Test
