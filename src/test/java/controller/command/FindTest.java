@@ -41,7 +41,7 @@ public class FindTest {
     public void testProcess_FindData() {
         // given
         when(manager.getTablesNames()).thenReturn(
-                Arrays.asList(new String[]{"products", "shops", "users"}));
+                Arrays.asList(new String[]{"users"}));
 
         when(manager.getTableColumns("users")).thenReturn(
                 Arrays.asList(new String[]{"id", "name", "password"}));
@@ -49,12 +49,12 @@ public class FindTest {
         List<DataSet> users = new LinkedList<>();
         DataSet user1 = new DataSet();
         user1.put("id", "11");
-        user1.put("name", "Alex");
+        user1.put("name", "user1");
         user1.put("password", "****");
 
         DataSet user2 = new DataSet();
         user2.put("id", "12");
-        user2.put("name", "Sasha");
+        user2.put("name", "user2");
         user2.put("password", "++++");
 
         users.add(user1);
@@ -75,15 +75,15 @@ public class FindTest {
                 "========================, " +
                 "|id|name|password|, " +
                 "========================, " +
-                "|11|Alex|****|, " +
-                "|12|Sasha|++++|]", captor.getAllValues().toString());
+                "|11|user1|****|, " +
+                "|12|user2|++++|]", captor.getAllValues().toString());
     }
 
     @Test
     public void testProcess_FindEmptyTable() {
         // given
         when(manager.getTablesNames()).thenReturn(
-                Arrays.asList(new String[]{"products", "shops", "users"}));
+                Arrays.asList(new String[]{"users"}));
 
         when(manager.getTableColumns("users")).thenReturn(
                 Arrays.asList(new String[]{"id", "name", "password"}));

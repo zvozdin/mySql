@@ -1,6 +1,7 @@
 package controller.command;
 
 import model.DatabaseManager;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import view.View;
@@ -11,36 +12,25 @@ public class ExitTestWithMockito {
 
     private View view = Mockito.mock(View.class);
     private DatabaseManager manager = Mockito.mock(DatabaseManager.class);
+    private Command exit;
+
+    @Before
+    public void setup() {
+        exit = new Exit(manager, view);
+    }
 
     @Test
     public void testCanProcess_ExitCommand() {
-        // given
-        Command exit = new Exit(manager, view);
-
-        // when
-        boolean canProcess = exit.canProcess("exit");
-
-        // then
-        assertTrue(canProcess);
+        assertTrue(exit.canProcess("exit"));
     }
 
     @Test
     public void testCanProcess_NotExitCommand() {
-        // given
-        Command exit = new Exit(manager, view);
-
-        // when
-        boolean canProcess = exit.canProcess("notExit");
-
-        // then
-        assertFalse(canProcess);
+        assertFalse(exit.canProcess("notExit"));
     }
 
     @Test
     public void testExitProcess() {
-        // given
-        Command exit = new Exit(manager, view);
-
         // when
         try {
             exit.process("exit");
