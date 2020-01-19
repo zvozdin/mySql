@@ -21,7 +21,7 @@ public class DropDatabase implements Command {
 
     @Override
     public void process(String command) {
-        commandValidation(COMMAND_SAMPLE, command);
+        parametersNumberValidation(COMMAND_SAMPLE, command);
         String[] data = command.split("\\|");
 
 //        String[] commandToDrop = COMMAND_SAMPLE.split("\\|");

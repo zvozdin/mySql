@@ -24,7 +24,7 @@ public class Find implements Command {
 
     @Override
     public void process(String command) {
-        commandValidation(COMMAND_SAMPLE, command);
+        parametersNumberValidation(COMMAND_SAMPLE, command);
 
 //        String[] commandToConnect = COMMAND_SAMPLE.split("\\|");
 //        if (data.length != commandToConnect.length) {

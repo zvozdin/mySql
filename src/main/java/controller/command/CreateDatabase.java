@@ -21,14 +21,11 @@ public class CreateDatabase implements Command {
 
     @Override
     public void process(String command) {
-        commandValidation(COMMAND_SAMPLE, command);
-        String[] data = command.split("\\|");
-//        String[] commandToCreate = COMMAND_SAMPLE.split("\\|");
-//        if (data.length != commandToCreate.length) {
-//            throw new InvalidParametersNumberException(commandToCreate.length, data.length, COMMAND_SAMPLE);
-//        }
+        parametersNumberValidation(COMMAND_SAMPLE, command);
 
+        String[] data = command.split("\\|");
         String databaseName = data[1];
+
         manager.createDatabase(databaseName);
         view.write(String.format("Database '%s' created.", databaseName));
     }

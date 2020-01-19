@@ -25,13 +25,6 @@ public class Update implements Command {
         parametersNumberValidation(COMMAND_SAMPLE, command);
 
         String[] data = command.split("\\|");
-//        String[] commandToInsert = COMMAND_SAMPLE.split("\\|");
-//        if (data.length != commandToInsert.length) {
-//            throw new IllegalArgumentException(String.format(
-//                    "Invalid number of parameters separated by '|'. Expected %s. You enter ==> %s.\n" +
-//                            "Use command 'update|tableName|column1|value1|column2|value2'",
-//                    commandToInsert.length, data.length));
-//        }
 
         DataSet set = new DataSet();
         set.put(data[2], data[3]);

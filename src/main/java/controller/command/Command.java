@@ -6,7 +6,7 @@ public interface Command {
 
     void process(String command);
 
-    default void commandValidation(String sampleCommand, String inputCommand) {
+    default void parametersNumberValidation(String sampleCommand, String inputCommand) {
         String[] correctCommand = sampleCommand.split("\\|");
         String[] data = inputCommand.split("\\|");
         if (correctCommand.length != data.length) {

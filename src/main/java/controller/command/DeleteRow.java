@@ -22,7 +22,7 @@ public class DeleteRow implements Command {
 
     @Override
     public void process(String command) {
-        commandValidation(COMMAND_SAMPLE, command);
+        parametersNumberValidation(COMMAND_SAMPLE, command);
         String[] data = command.split("\\|");
 
 //        String[] commandToDelete = COMMAND_SAMPLE.split("\\|");

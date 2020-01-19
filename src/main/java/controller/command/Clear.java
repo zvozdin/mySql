@@ -21,7 +21,7 @@ public class Clear implements Command {
 
     @Override
     public void process(String command) {
-        commandValidation(COMMAND_SAMPLE, command);
+        parametersNumberValidation(COMMAND_SAMPLE, command);
         String[] data = command.split("\\|");
 //        String[] commandToClear = COMMAND_SAMPLE.split("\\|");
 //        if (data.length != commandToClear.length) {
