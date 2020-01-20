@@ -3,8 +3,6 @@ package controller.command;
 import model.DatabaseManager;
 import view.View;
 
-import java.util.List;
-
 public class Tables implements Command {
 
     private DatabaseManager manager;
@@ -22,7 +20,6 @@ public class Tables implements Command {
 
     @Override
     public void process(String command) {
-        List tablesNames = manager.getTablesNames();
-        view.write(tablesNames.toString());
+        view.write(manager.getTablesNames().toString());
     }
 }
