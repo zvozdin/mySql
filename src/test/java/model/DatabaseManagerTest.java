@@ -3,6 +3,7 @@ package model;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import testSettingsToConnectDB.ParametersToConnect;
 
 import static org.junit.Assert.*;
 
@@ -17,10 +18,9 @@ public abstract class DatabaseManagerTest {
     public void setUp() {
         manager = getDatabaseManager();
 
-        // to test on your computer enter your MySql databaseName, user, password below
-        String database = "business";
-        String user = "root";
-        String password = "root";
+        String database = ParametersToConnect.DATABASE;
+        String user = ParametersToConnect.USER;
+        String password = ParametersToConnect.PASSWORD;
         manager.connect(database, user, password);
 
         testedDatabaseName = "testedDatabase";

@@ -1,6 +1,7 @@
 package integration;
 
 import org.junit.Before;
+import testSettingsToConnectDB.ParametersToConnect;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -11,11 +12,9 @@ public class IntegrationTest {
     protected static ConfigurableInput in;
     private static ByteArrayOutputStream out;
 
-    // to test on your computer enter your MySql databaseName, user, password below
-    // todo create enum class for parameters to connect to db
-    public String databaseName = "business";
-    private String user = "root";
-    private String password = "root";
+    public String databaseName = ParametersToConnect.DATABASE;
+    private String user = ParametersToConnect.USER;
+    private String password = ParametersToConnect.PASSWORD;
 
     public String testedDatabaseName = "testedDatabase";
 
