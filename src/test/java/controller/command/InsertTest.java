@@ -64,10 +64,11 @@ public class InsertTest {
 
         assertEquals("[" +
                 "Record '[1, user1, 1111]' added., " +
-                "========================, " +
-                "|id|name|password|, " +
-                "========================, " +
-                "|1|user1|1111|]", captor.getAllValues().toString());
+                "+------+----------+------------+\n" +
+                "|  id  |   name   |  password  |\n" +
+                "+------+----------+------------+\n" +
+                "|  1   |  user1   |    1111    |\n" +
+                "+------+----------+------------+]", captor.getAllValues().toString());
     }
 
     @Test

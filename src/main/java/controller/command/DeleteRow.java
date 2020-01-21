@@ -36,8 +36,7 @@ public class DeleteRow implements Command {
 
         manager.deleteRow(tableName, delete);
         view.write(String.format("Record '%s' deleted.", delete.getValues().get(0)));
-        // print table with values
-        new Find(manager, view).printTableHeader(tableName);
-        new Find(manager, view).printValues(tableName);
+
+        new Find(manager, view).printTable(tableName);
     }
 }

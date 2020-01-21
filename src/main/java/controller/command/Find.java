@@ -2,8 +2,10 @@ package controller.command;
 
 import model.DataSet;
 import model.DatabaseManager;
+import view.TableGenerator;
 import view.View;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Find implements Command {
@@ -29,30 +31,25 @@ public class Find implements Command {
         String[] data = command.split("\\|");
 
         String tableName = data[1];
-        printTableHeader(tableName);  // TODO print nice table
-        printValues(tableName);
+
+        printTable(tableName);
     }
 
-    void printTableHeader(String tableName) {
+    void printTable(String tableName) {
+        TableGenerator tableGenerator = new TableGenerator();
+
         List<String> columns = manager.getTableColumns(tableName);
-        String result = "|";
-        for (String name : columns) {
-            result += name + "|";
-        }
-        view.write("========================");
-        view.write(result);
-        view.write("========================");
-    }
+        List<DataSet> objectRows = manager.getTableData(tableName);
 
-    void printValues(String tableName) {
-        List<DataSet> users = manager.getTableData(tableName);
-        for (DataSet row : users) {
-            List<Object> values = row.getValues();
-            String result = "|";
-            for (Object element : values) {
-                result += element + "|";
+        List<List<String>> stringRows = new ArrayList<>();
+        for (DataSet row : objectRows) {
+            List<String> stringRow = new ArrayList<>();
+            for (Object value : row.getValues()) {
+                stringRow.add(value.toString());
             }
-            view.write(result);
+            stringRows.add(stringRow);
         }
+
+        view.write(tableGenerator.generateTable(columns, stringRows));
     }
 }

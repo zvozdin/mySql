@@ -45,10 +45,11 @@ public class TableOperationsTest extends IntegrationTest {
                 "[test]\r\n" +
                 "Enter a command or help\r\n" +
                 // find|test
-                "========================\r\n" +
-                "|id|name|password|\r\n" +
-                "========================\r\n" +
-                "||||\r\n" +
+                "+------+--------+------------+\n" +
+                "|  id  |  name  |  password  |\n" +
+                "+------+--------+------------+\n" +
+                "|      |        |            |\n" +
+                "+------+--------+------------+\r\n" +
                 "Enter a command or help\r\n" +
                 // drop|test
                 "Table 'test' deleted.\r\n" +
@@ -95,33 +96,37 @@ public class TableOperationsTest extends IntegrationTest {
                 "Enter a command or help\r\n" +
                 // insert|test|id|1|name|user1|password|1111
                 "Record '[1, user1, 1111]' added.\r\n" +
-                "========================\r\n" +
-                "|id|name|password|\r\n" +
-                "========================\r\n" +
-                "|1|user1|1111|\r\n" +
+                "+------+----------+------------+\n" +
+                "|  id  |   name   |  password  |\n" +
+                "+------+----------+------------+\n" +
+                "|  1   |  user1   |    1111    |\n" +
+                "+------+----------+------------+\r\n" +
                 "Enter a command or help\r\n" +
                 // insert|test|id|2|name|user2|password|0000
                 "Record '[2, user2, 0000]' added.\r\n" +
-                "========================\r\n" +
-                "|id|name|password|\r\n" +
-                "========================\r\n" +
-                "|1|user1|1111|\r\n" +
-                "|2|user2|0000|\r\n" +
+                "+------+----------+------------+\n" +
+                "|  id  |   name   |  password  |\n" +
+                "+------+----------+------------+\n" +
+                "|  1   |  user1   |    1111    |\n" +
+                "|  2   |  user2   |    0000    |\n" +
+                "+------+----------+------------+\r\n" +
                 "Enter a command or help\r\n" +
                 // update|test|password|7777|name|user1
                 "Record 'user1' updated.\r\n" +
-                "========================\r\n" +
-                "|id|name|password|\r\n" +
-                "========================\r\n" +
-                "|1|user1|7777|\r\n" +
-                "|2|user2|0000|\r\n" +
+                "+------+----------+------------+\n" +
+                "|  id  |   name   |  password  |\n" +
+                "+------+----------+------------+\n" +
+                "|  1   |  user1   |    7777    |\n" +
+                "|  2   |  user2   |    0000    |\n" +
+                "+------+----------+------------+\r\n" +
                 "Enter a command or help\r\n" +
                 // delete|test|name|user2
                 "Record 'user2' deleted.\r\n" +
-                "========================\r\n" +
-                "|id|name|password|\r\n" +
-                "========================\r\n" +
-                "|1|user1|7777|\r\n" +
+                "+------+----------+------------+\n" +
+                "|  id  |   name   |  password  |\n" +
+                "+------+----------+------------+\n" +
+                "|  1   |  user1   |    7777    |\n" +
+                "+------+----------+------------+\r\n" +
                 "Enter a command or help\r\n" +
                 // clear|test
                 "Table 'test' is cleared!\r\n" +

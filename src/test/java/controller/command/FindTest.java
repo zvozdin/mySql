@@ -68,11 +68,12 @@ public class FindTest {
         verify(view, atLeastOnce()).write(captor.capture());
 
         assertEquals("[" +
-                "========================, " +
-                "|id|name|password|, " +
-                "========================, " +
-                "|11|user1|****|, " +
-                "|12|user2|++++|]", captor.getAllValues().toString());
+                "+------+----------+------------+\n" +
+                "|  id  |   name   |  password  |\n" +
+                "+------+----------+------------+\n" +
+                "|  11  |  user1   |    ****    |\n" +
+                "|  12  |  user2   |    ++++    |\n" +
+                "+------+----------+------------+]", captor.getAllValues().toString());
     }
 
     @Test
@@ -92,9 +93,10 @@ public class FindTest {
         verify(view, atLeastOnce()).write(captor.capture());
 
         assertEquals("[" +
-                "========================, " +
-                "|id|name|password|, " +
-                "========================]", captor.getAllValues().toString());
+                "+------+--------+------------+\n" +
+                "|  id  |  name  |  password  |\n" +
+                "+------+--------+------------+\n" +
+                "+------+--------+------------+]", captor.getAllValues().toString());
     }
 
     @Test

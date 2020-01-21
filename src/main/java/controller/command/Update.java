@@ -35,8 +35,7 @@ public class Update implements Command {
         String tableName = data[1];
         manager.update(tableName, set, where);
         view.write(String.format("Record '%s' updated.", where.getValues().get(0)));
-        // print table with values
-        new Find(manager, view).printTableHeader(tableName);
-        new Find(manager, view).printValues(tableName);
+
+        new Find(manager, view).printTable(tableName);
     }
 }

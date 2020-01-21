@@ -71,10 +71,11 @@ public class DeleteRowTest {
 
         assertEquals("[" +
                 "Record 'user2' deleted., " +
-                "========================, " +
-                "|id|name|password|, " +
-                "========================, " +
-                "|1|user1|1111|]", captor.getAllValues().toString());
+                "+------+----------+------------+\n" +
+                "|  id  |   name   |  password  |\n" +
+                "+------+----------+------------+\n" +
+                "|  1   |  user1   |    1111    |\n" +
+                "+------+----------+------------+]", captor.getAllValues().toString());
     }
 
     @Test

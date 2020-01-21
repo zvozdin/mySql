@@ -49,8 +49,7 @@ public class Insert implements Command {
         String tableName = data[1];
         manager.insert(tableName, insert);
         view.write(String.format("Record '%s' added.", insert.getValues()));
-        // print table with values
-        new Find(manager, view).printTableHeader(tableName);
-        new Find(manager, view).printValues(tableName);
+
+        new Find(manager, view).printTable(tableName);
     }
 }

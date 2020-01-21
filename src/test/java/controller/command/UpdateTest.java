@@ -69,10 +69,11 @@ public class UpdateTest {
 
         assertEquals("[" +
                 "Record 'user1' updated., " +
-                "========================, " +
-                "|id|name|password|, " +
-                "========================, " +
-                "|1|user1|0000|]", captor.getAllValues().toString());
+                "+------+----------+------------+\n" +
+                "|  id  |   name   |  password  |\n" +
+                "+------+----------+------------+\n" +
+                "|  1   |  user1   |    0000    |\n" +
+                "+------+----------+------------+]", captor.getAllValues().toString());
     }
 
     @Test
