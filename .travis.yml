@@ -1,2 +1,4 @@
+[//]: # (excluded integration Test from Travis_CI)
+ 
 language: java
-script: "mvn clean -Dtest=src/**/*Test.java"
+script: "mvn clean -Dtest=src/test/java/integration/**/*Test.java"
