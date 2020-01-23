@@ -1,4 +1,2 @@
 language: java
-script:
-- bundle exec rake build
-- bundle exec rake builddoc
+install: "mvn --debug clean compile"
