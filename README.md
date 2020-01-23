@@ -1,4 +1,5 @@
 # mySql
+![](https://travis-ci.com/zvozdin/mySql.svg?branch=master)
 
 !!! Для выполнения всех тестов необходимо ввести имя своей базы данных, имя юзера и пароль в 
 
