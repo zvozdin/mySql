@@ -2,6 +2,10 @@ package ua.com.juja.command;
 
 import ua.com.juja.view.View;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class Help implements Command {
 
     private View view;
@@ -17,46 +21,14 @@ public class Help implements Command {
 
     @Override
     public void process(String command) {
-        view.write("Existing commands:");
-
-        view.write("\thelp");
-        view.write("\t\tto display a list of commands");
-
-        view.write("\tconnect|databaseName|user|password");
-        view.write("\t\tto connect to the database");
-
-        view.write("\tnewDatabase|databaseName");
-        view.write("\t\tto create a new database");
-
-        view.write("\tdropDatabase|databaseName");
-        view.write("\t\tto delete the database");
-
-        view.write("\tlist");
-        view.write("\t\tto display a list of tables");
-
-        view.write("\tcreate|tableName|column1|column2|...|columnN");
-        view.write("\t\tto create a new table");
-
-        view.write("\tdrop|tableName");
-        view.write("\t\tto delete the table");
-
-        view.write("\tfind|tableName");
-        view.write("\t\tto retrieve content from the 'tableName'");
-
-        view.write("\tinsert|tableName|column1|value1|column2|value2|...|columnN|valueN");
-        view.write("\t\tto record content to the 'tableName'");
-
-        view.write("\tupdate|tableName|column1|value1|column2|value2");
-        view.write("\t\tto update the content in the 'tableName'");
-        view.write("\t\t\tset column1 = value1 where column2 = value2");
-
-        view.write("\tdelete|tableName|column|value");
-        view.write("\t\tto delete content where column = value");
-
-        view.write("\tclear|tableName");
-        view.write("\t\tto delete content from the 'tableName'");
-
-        view.write("\texit");
-        view.write("\t\tto exit from the program");
+        try (Scanner scanner = new Scanner(new File("src\\main\\resources\\help.txt"))) {
+            String commands = scanner.nextLine();
+            while (scanner.hasNextLine()) {
+                commands += "\r\n" + scanner.nextLine();
+            }
+            view.write(commands);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

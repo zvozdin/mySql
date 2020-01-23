@@ -1,0 +1,28 @@
+Existing commands:
+	help
+		to display a list of commands
+	connect|databaseName|user|password
+		to connect to the database
+	newDatabase|databaseName
+		to create a new database
+	dropDatabase|databaseName
+		to delete the database
+	list
+		to display a list of tables
+	create|tableName|column1|column2|...|columnN
+		to create a new table
+	drop|tableName
+		to delete the table
+	find|tableName
+		to retrieve content from the 'tableName'
+	insert|tableName|column1|value1|column2|value2|...|columnN|valueN
+		to record content to the 'tableName'
+	update|tableName|column1|value1|column2|value2
+		to update the content in the 'tableName'
+			set column1 = value1 where column2 = value2
+	delete|tableName|column|value
+		to delete content where column = value
+	clear|tableName
+		to delete content from the 'tableName'
+	exit
+		to exit from the program
