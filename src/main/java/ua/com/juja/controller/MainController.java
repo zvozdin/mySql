@@ -1,6 +1,6 @@
 package ua.com.juja.controller;
 
-import ua.com.juja.controller.command.*;
+import ua.com.juja.command.*;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
 

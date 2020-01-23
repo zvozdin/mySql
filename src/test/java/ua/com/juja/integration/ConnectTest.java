@@ -1,6 +1,6 @@
 package ua.com.juja.integration;
 
-import ua.com.juja.controller.Main;
+import ua.com.juja.Main;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
