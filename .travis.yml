@@ -1,5 +1,2 @@
 language: java
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
-script: 
-  - "mvn test"
+script: bundle exec thor build
