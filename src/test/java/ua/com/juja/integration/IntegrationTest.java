@@ -1,7 +1,7 @@
 package ua.com.juja.integration;
 
 import org.junit.Before;
-import ua.com.juja.testSettingsToConnectDB.ParametersToConnect;
+import ua.com.juja.ConnectParameters;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -12,10 +12,6 @@ public class IntegrationTest {
     protected static ConfigurableInput in;
     private static ByteArrayOutputStream out;
 
-    public String databaseName = ParametersToConnect.DATABASE;
-    private String user = ParametersToConnect.USER;
-    private String password = ParametersToConnect.PASSWORD;
-
     public String testedDatabaseName = "testedDatabase";
 
     @Before
@@ -25,6 +21,11 @@ public class IntegrationTest {
 
         System.setIn(in);
         System.setOut(new PrintStream(out));
+
+        ConnectParameters.get();
+        String databaseName = ConnectParameters.database;
+        String user = ConnectParameters.user;
+        String password = ConnectParameters.password;
 
         in.addCommand("connect|" + databaseName + "|" + user + "|" + password);
         // create and connect to newDatabase for testing

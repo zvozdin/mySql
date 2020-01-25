@@ -40,7 +40,7 @@ public class ConnectTest extends IntegrationTest {
     @Test
     public void testConnectWithError() {
         // given
-        in.addCommand("connect|" + databaseName);
+        in.addCommand("connect|databaseName");
         in.addCommand("dropDatabase|" + testedDatabaseName);
         in.addCommand("exit");
 
