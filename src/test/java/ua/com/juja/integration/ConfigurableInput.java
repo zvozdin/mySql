@@ -6,7 +6,7 @@ import java.io.InputStream;
 public class ConfigurableInput extends InputStream {
 
     private String line = "";
-    private boolean endline;
+    private boolean endLine;
 
     @Override
     public int read() throws IOException {
@@ -14,8 +14,8 @@ public class ConfigurableInput extends InputStream {
             return -1;
         }
 
-        if (endline) {
-            endline = false;
+        if (endLine) {
+            endLine = false;
             return -1;
         }
 
@@ -23,7 +23,7 @@ public class ConfigurableInput extends InputStream {
         line = line.substring(1);
 
         if (ch == '\n') {
-            endline = true;
+            endLine = true;
         }
 
         return ch;

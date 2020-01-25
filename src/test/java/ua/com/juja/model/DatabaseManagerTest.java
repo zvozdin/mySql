@@ -3,7 +3,7 @@ package ua.com.juja.model;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import ua.com.juja.testSettingsToConnectDB.ParametersToConnect;
+import ua.com.juja.ConnectParameters;
 
 import static org.junit.Assert.*;
 
@@ -18,9 +18,10 @@ public abstract class DatabaseManagerTest {
     public void setUp() {
         manager = getDatabaseManager();
 
-        String database = ParametersToConnect.DATABASE;
-        String user = ParametersToConnect.USER;
-        String password = ParametersToConnect.PASSWORD;
+        ConnectParameters.get();
+        String database = ConnectParameters.database;
+        String user = ConnectParameters.user;
+        String password = ConnectParameters.password;
         manager.connect(database, user, password);
 
         testedDatabaseName = "testedDatabase";
