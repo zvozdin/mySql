@@ -103,4 +103,4 @@
     * формат вывода: текстовое сообщение с результатом выполнения операции
     
 ***!!! Для выполнения всех тестов необходимо ввести имя своей базы данных, имя юзера и пароль в   
-src/test/java/ua/com/juja/testSettingsToConnectDB/ParametersToConnect.java***
+src/main/resources/db_connect.properties***
