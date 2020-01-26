@@ -11,7 +11,7 @@ public class ConnectParameters {
     public static String password = "";
 
     public static void get() {
-        try (FileReader fileReader = new FileReader("src\\main\\resources\\db_connect.properties")) {
+        try (FileReader fileReader = new FileReader("src\\main\\resources\\db.properties")) {
             Properties properties = new Properties();
             properties.load(fileReader);
             database = properties.getProperty("databaseName");
