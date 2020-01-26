@@ -33,12 +33,6 @@
             <version>3.2.4</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.uniknow.agiledev.support</groupId>
-            <artifactId>maven-embedded-mysql</artifactId>
-            <version>0.1.14</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -51,12 +45,6 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.uniknow.agiledev.support</groupId>
-                <artifactId>maven-embedded-mysql</artifactId>
-                <version>0.1.14</version>
             </plugin>
         </plugins>
     </build>
