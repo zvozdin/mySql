@@ -68,7 +68,6 @@ public class TableGenerator {
         }
     }
 
-
     private Map<Integer, Integer> getMaximumWidthOfTable(List<String> headersList, List<List<String>> rowsList) {
         Map<Integer, Integer> columnMaxWidthMapping = new HashMap<>();
         for (int columnIndex = 0; columnIndex < headersList.size(); columnIndex++) {

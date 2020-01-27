@@ -51,16 +51,15 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void createTable(String tableName, DataSet input) {
+    public void createTable(String tableName, List<String> columns) {
         if (getTablesNames().contains(tableName)){
             throw new IllegalArgumentException(String.format(
-                    "Table '%s' already exists", tableName));
+                    "Table '%s' already exists", tableName)); // TODO extract messages into enum
         }
         String sql = "create table " + tableName + " (";
 
-        List<String> columns = input.getNames(); // TODO extract to separate method
-        for (String name : columns) {
-            sql += name + " VARCHAR(45) NOT NULL,";
+        for (String column : columns) {
+            sql += column + " VARCHAR(45) NOT NULL,";
         }
         sql += " PRIMARY KEY (`" + columns.get(0) + "`))";
 

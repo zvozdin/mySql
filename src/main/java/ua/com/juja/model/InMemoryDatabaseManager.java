@@ -33,13 +33,13 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void createTable(String tableName, DataSet input) {
+    public void createTable(String tableName, List<String> columns) {
         if (tables.contains(tableName)) {
             throw new IllegalArgumentException(String.format("" +
                     "Table '%s' already exists", tableName), new IllegalArgumentException());
         }
         tables.add(tableName);
-        columns = input.getNames();
+        this.columns = columns;
     }
 
     @Override

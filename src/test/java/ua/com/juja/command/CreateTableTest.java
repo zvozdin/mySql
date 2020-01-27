@@ -42,7 +42,7 @@ public class CreateTableTest {
         command.process("create|test|id");
 
         // then
-        verify(manager, atMostOnce()).createTable("test", input);
+        verify(manager, atMostOnce()).createTable("test", input.getNames());
         verify(view).write("Table 'test' created.");
     }
 

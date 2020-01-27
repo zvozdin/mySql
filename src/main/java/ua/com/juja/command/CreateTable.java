@@ -1,8 +1,10 @@
 package ua.com.juja.command;
 
-import ua.com.juja.model.DataSet;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateTable implements Command {
 
@@ -27,14 +29,12 @@ public class CreateTable implements Command {
         String[] data = command.split("\\|");
         String tableName = data[1];
 
-        DataSet input = new DataSet();
+        List<String> columns = new ArrayList<>();
         for (int index = 2; index < data.length; index++) {
-            String columnName = data[index];
-            String value = "";
-            input.put(columnName, value);
+            columns.add(data[index]);
         }
 
-        manager.createTable(tableName, input);
+        manager.createTable(tableName, columns);
         view.write(String.format("Table '%s' created.", tableName));
     }
 }

@@ -69,12 +69,12 @@ public abstract class DatabaseManagerTest {
     @Test
     public void test_CreateTable_DropTable() {
         // create
-        manager.createTable("test", getDataSetForTable());
+        manager.createTable("test", getDataSetForTable().getNames());
         assertEquals("[test]", manager.getTablesNames().toString());
 
         // create already existing table
         try {
-            manager.createTable("test", getDataSetForTable());
+            manager.createTable("test", getDataSetForTable().getNames());
             fail("Expected Exception");
         } catch (Exception e) {
             assertEquals("Table 'test' already exists", e.getMessage());
@@ -96,7 +96,7 @@ public abstract class DatabaseManagerTest {
     @Test
     public void test_CreateTable_GetTableColumns() {
         // when
-        manager.createTable("test", getDataSetForTable());
+        manager.createTable("test", getDataSetForTable().getNames());
 
         // then
         assertEquals("[id, name, password]",
@@ -114,7 +114,7 @@ public abstract class DatabaseManagerTest {
     @Test
     public void test_Insert_GetTableData_ClearTable() {
         // given
-        manager.createTable("test", getDataSetForTable());
+        manager.createTable("test", getDataSetForTable().getNames());
 
         // when
         manager.insert("test", getDataSetForTable());
@@ -163,7 +163,7 @@ public abstract class DatabaseManagerTest {
     @Test
     public void test_UpdateTableData_DeleteRow() {
         // given
-        manager.createTable("test", getDataSetForTable());
+        manager.createTable("test", getDataSetForTable().getNames());
         manager.insert("test", getDataSetForTable());
 
         // insert into non existing table
