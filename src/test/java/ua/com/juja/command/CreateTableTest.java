@@ -56,8 +56,8 @@ public class CreateTableTest {
             // then
             assertEquals("" +
                     "Invalid parameters number separated by '|'.\n" +
-                    "Expected no less than 3. You enter ==> 2.\n" +
-                    "Use command 'create|tableName|columnName'", e.getMessage());
+                    "Expected min 3. You enter ==> 2.\n" +
+                    "Use command 'create|tableName|column1|column2|...|columnN'", e.getMessage());
         }
     }
 }

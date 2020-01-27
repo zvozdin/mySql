@@ -6,14 +6,19 @@ public interface Command {
 
     void process(String command);
 
-    default void parametersNumberValidation(String sampleCommand, String inputCommand) {
-        String[] correctCommand = sampleCommand.split("\\|");
-        String[] data = inputCommand.split("\\|");
-        if (correctCommand.length != data.length) {
-            if (inputCommand.startsWith("create|") & data.length > correctCommand.length) {
+    default void parametersNumberValidation(String sample, String input) {
+        String[] sampleArr = sample.split("\\|");
+        String[] inputArr = input.split("\\|");
+        if (sampleArr.length != inputArr.length) {
+            if (input.startsWith("create|") && inputArr.length > sampleArr.length) {
                 return;
             }
-            throw new InvalidParametersNumberException(correctCommand.length, data.length, sampleCommand);
+
+            if (input.startsWith("insert|") && inputArr.length > sampleArr.length && inputArr.length % 2 == 0) {
+                return;
+            }
+
+            throw new InvalidParametersNumberException(sampleArr.length, inputArr.length, sample);
         }
     }
 }

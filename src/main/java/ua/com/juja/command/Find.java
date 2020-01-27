@@ -29,7 +29,6 @@ public class Find implements Command {
         parametersNumberValidation(COMMAND_SAMPLE, command);
 
         String[] data = command.split("\\|");
-
         String tableName = data[1];
 
         printTable(tableName);
