@@ -5,7 +5,7 @@ import ua.com.juja.view.View;
 
 public class CreateDatabase implements Command {
 
-    private static final String COMMAND_SAMPLE = "newDatabase|databaseName";
+    private static final String COMMAND_SAMPLE = "newDatabase|databaseName"; // TODO enum command sample and there all command samples
     private DatabaseManager manager;
     private View view;
 

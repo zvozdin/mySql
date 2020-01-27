@@ -10,6 +10,9 @@ public interface Command {
         String[] correctCommand = sampleCommand.split("\\|");
         String[] data = inputCommand.split("\\|");
         if (correctCommand.length != data.length) {
+            if (inputCommand.startsWith("create|") & data.length > correctCommand.length) {
+                return;
+            }
             throw new InvalidParametersNumberException(correctCommand.length, data.length, sampleCommand);
         }
     }

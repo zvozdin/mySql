@@ -22,14 +22,10 @@ public class CreateTable implements Command {
 
     @Override
     public void process(String command) {
+        parametersNumberValidation(COMMAND_SAMPLE, command);
+
         String[] data = command.split("\\|");
-        String[] commandToCreate = COMMAND_SAMPLE.split("\\|");
-        if (data.length < commandToCreate.length) {
-            throw new IllegalArgumentException(String.format("" +
-                            "Invalid parameters number separated by '|'.\n" +
-                            "Expected no less than %s. You enter ==> %s.\n" +
-                            "Use command '%s'", commandToCreate.length, data.length, COMMAND_SAMPLE));
-        }
+        String tableName = data[1];
 
         DataSet input = new DataSet();
         for (int index = 2; index < data.length; index++) {
@@ -38,7 +34,6 @@ public class CreateTable implements Command {
             input.put(columnName, value);
         }
 
-        String tableName = data[1];
         manager.createTable(tableName, input);
         view.write(String.format("Table '%s' created.", tableName));
     }
