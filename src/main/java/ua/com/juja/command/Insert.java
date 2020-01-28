@@ -25,6 +25,7 @@ public class Insert implements Command {
         parametersNumberValidation(COMMAND_SAMPLE, command);
 
         String[] data = command.split("\\|");
+        String tableName = data[1];
 
         DataSet insert = new DataSet();
         for (int index = 1; index < data.length / 2; index++) {
@@ -33,10 +34,8 @@ public class Insert implements Command {
             insert.put(columnName, value);
         }
 
-        String tableName = data[1];
         manager.insert(tableName, insert);
-        view.write(String.format("Record '%s' added.", insert.getValues()));
 
-        new Find(manager, view).printTable(tableName);
+        view.write(String.format("Record '%s' added.", insert.getValues()));
     }
 }

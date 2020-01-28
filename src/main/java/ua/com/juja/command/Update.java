@@ -25,6 +25,7 @@ public class Update implements Command {
         parametersNumberValidation(COMMAND_SAMPLE, command);
 
         String[] data = command.split("\\|");
+        String tableName = data[1];
 
         DataSet set = new DataSet();
         set.put(data[2], data[3]);
@@ -32,10 +33,9 @@ public class Update implements Command {
         DataSet where = new DataSet();
         where.put(data[4], data[5]);
 
-        String tableName = data[1];
         manager.update(tableName, set, where);
-        view.write(String.format("Record '%s' updated.", where.getValues().get(0)));
 
-        new Find(manager, view).printTable(tableName);
+        view.write(String.format("Record '%s' updated.", where.getValues().get(0)));
+        view.write(manager.getDataInTableFormat(tableName));
     }
 }

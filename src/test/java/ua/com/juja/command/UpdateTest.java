@@ -1,14 +1,13 @@
 package ua.com.juja.command;
 
-import ua.com.juja.model.DataSet;
-import ua.com.juja.model.DatabaseManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import ua.com.juja.model.DataSet;
+import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -51,9 +50,13 @@ public class UpdateTest {
         DataSet set = new DataSet();
         set.put("password", "0000");
 
-        when(manager.getTableData("users")).thenReturn(users);
-        when(manager.getTableColumns("users")).thenReturn(
-                Arrays.asList(new String[]{"id", "name", "password"}));
+        when(manager.getDataInTableFormat("users"))
+                .thenReturn("" +
+                        "+------+----------+------------+\n" +
+                        "|  id  |   name   |  password  |\n" +
+                        "+------+----------+------------+\n" +
+                        "|  1   |  user1   |    0000    |\n" +
+                        "+------+----------+------------+");
 
         // when
         user1.update(set);
@@ -61,8 +64,7 @@ public class UpdateTest {
 
         // then
         verify(manager, atMostOnce()).update("users", set, user1);
-        verify(manager).getTableColumns("users");
-        verify(manager).getTableData("users");
+        verify(manager).getDataInTableFormat("users");
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(view, atLeastOnce()).write(captor.capture());

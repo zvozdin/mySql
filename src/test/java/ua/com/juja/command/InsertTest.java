@@ -1,14 +1,12 @@
 package ua.com.juja.command;
 
-import ua.com.juja.model.DataSet;
-import ua.com.juja.model.DatabaseManager;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
+import ua.com.juja.model.DataSet;
+import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -46,9 +44,6 @@ public class InsertTest {
         user1.put("password", "1111");
 
         List<DataSet> users = new ArrayList<>();
-        when(manager.getTableData("users")).thenReturn(users);
-        when(manager.getTableColumns("users")).thenReturn(
-                Arrays.asList(new String[]{"id", "name", "password"}));
 
         // when
         users.add(user1);
@@ -56,25 +51,13 @@ public class InsertTest {
 
         // then
         verify(manager, atMostOnce()).insert("users", user1);
-        verify(manager).getTableColumns("users");
-        verify(manager).getTableData("users");
-
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        verify(view, atLeastOnce()).write(captor.capture());
-
-        assertEquals("[" +
-                "Record '[1, user1, 1111]' added., " +
-                "+------+----------+------------+\n" +
-                "|  id  |   name   |  password  |\n" +
-                "+------+----------+------------+\n" +
-                "|  1   |  user1   |    1111    |\n" +
-                "+------+----------+------------+]", captor.getAllValues().toString());
+        verify(view).write("Record '[1, user1, 1111]' added.");
     }
 
     @Test
     public void testProcess_InsertCommandWithInvalidParametersNumber() {
         // not even parameters count
-        try {
+        try { // TODO separate into 2 tests
             command.process("insert|tableName|column|value|invalid");
             fail("Expected IllegalArgumentException");
         } catch (IllegalArgumentException e) {

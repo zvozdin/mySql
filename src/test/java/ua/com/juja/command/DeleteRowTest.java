@@ -1,13 +1,12 @@
 package ua.com.juja.command;
 
-import ua.com.juja.model.DataSet;
-import ua.com.juja.model.DatabaseManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import ua.com.juja.model.DataSet;
+import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,18 +52,21 @@ public class DeleteRowTest {
         user2.put("password", "0000");
         users.add(user2);
 
-        when(manager.getTableColumns("users")).thenReturn(
-                Arrays.asList(new String[]{"id", "name", "password"}));
-        when(manager.getTableData("users")).thenReturn(users);
+        when(manager.getDataInTableFormat("users"))
+                .thenReturn("" +
+                        "+------+----------+------------+\n" +
+                        "|  id  |   name   |  password  |\n" +
+                        "+------+----------+------------+\n" +
+                        "|  1   |  user1   |    1111    |\n" +
+                        "+------+----------+------------+");
 
         // when
         users.remove(user2);
         command.process("delete|users|name|user2");
 
         // then
-        verify(manager).getTableColumns("users");
-        verify(manager).getTableData("users");
         verify(manager, atMostOnce()).deleteRow("delete|users|name|user2", user2);
+        verify(manager).getDataInTableFormat("users");
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(view, atLeastOnce()).write(captor.capture());

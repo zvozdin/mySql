@@ -48,7 +48,6 @@ public class TableOperationsTest extends IntegrationTest {
                 "+------+--------+------------+\n" +
                 "|  id  |  name  |  password  |\n" +
                 "+------+--------+------------+\n" +
-                "|      |        |            |\n" +
                 "+------+--------+------------+\r\n" +
                 "Enter a command or help\r\n" +
                 // drop|test
@@ -96,20 +95,9 @@ public class TableOperationsTest extends IntegrationTest {
                 "Enter a command or help\r\n" +
                 // insert|test|id|1|name|user1|password|1111
                 "Record '[1, user1, 1111]' added.\r\n" +
-                "+------+----------+------------+\n" +
-                "|  id  |   name   |  password  |\n" +
-                "+------+----------+------------+\n" +
-                "|  1   |  user1   |    1111    |\n" +
-                "+------+----------+------------+\r\n" +
                 "Enter a command or help\r\n" +
                 // insert|test|id|2|name|user2|password|0000
                 "Record '[2, user2, 0000]' added.\r\n" +
-                "+------+----------+------------+\n" +
-                "|  id  |   name   |  password  |\n" +
-                "+------+----------+------------+\n" +
-                "|  1   |  user1   |    1111    |\n" +
-                "|  2   |  user2   |    0000    |\n" +
-                "+------+----------+------------+\r\n" +
                 "Enter a command or help\r\n" +
                 // update|test|password|7777|name|user1
                 "Record 'user1' updated.\r\n" +

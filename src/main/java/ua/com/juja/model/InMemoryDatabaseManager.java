@@ -1,5 +1,7 @@
 package ua.com.juja.model;
 
+import ua.com.juja.view.TableGenerator;
+
 import java.util.*;
 
 public class InMemoryDatabaseManager implements DatabaseManager {
@@ -60,24 +62,24 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public List<DataSet> getTableData(String tableName) {
+    public String getDataInTableFormat(String tableName) {
         notExistingTableValidation(tableName);
-        if (data.isEmpty()) {
-            // if tableName is empty then return only columnNames without data
-            clear(tableName);
+
+        List<List<String>> rowsList = new ArrayList<>();
+        for (DataSet row : data) {
+            List<String> stringRow = new ArrayList<>();
+            for (Object value : row.getValues()) {
+                stringRow.add(value.toString());
+            }
+            rowsList.add(stringRow);
         }
-        return data;
+        return new TableGenerator().generateTable(columns, rowsList);
     }
 
     @Override
     public void clear(String tableName) {
         notExistingTableValidation(tableName);
-        data.clear();
-        DataSet dataSet = new DataSet();
-        for (String column : columns) {
-            dataSet.put(column, "");
-        }
-        data.add(dataSet);
+        data = new ArrayList<>();
     }
 
     @Override

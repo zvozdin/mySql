@@ -1,13 +1,11 @@
 package ua.com.juja.command;
 
-import ua.com.juja.model.DataSet;
-import ua.com.juja.model.DatabaseManager;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
+import ua.com.juja.model.DataSet;
+import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,50 +51,51 @@ public class FindTest {
         user2.put("password", "++++");
         users.add(user2);
 
-        when(manager.getTableData("users")).thenReturn(users);
-        when(manager.getTableColumns("users")).thenReturn(
-                Arrays.asList(new String[]{"id", "name", "password"}));
+        when(manager.getDataInTableFormat("users"))
+                .thenReturn("" +
+                        "+------+----------+------------+\n" +
+                        "|  id  |   name   |  password  |\n" +
+                        "+------+----------+------------+\n" +
+                        "|  11  |  user1   |    ****    |\n" +
+                        "|  12  |  user2   |    ++++    |\n" +
+                        "+------+----------+------------+");
 
         // when
         command.process("find|users");
 
         // then
-        verify(manager).getTableColumns("users");
-        verify(manager).getTableData("users");
-
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        verify(view, atLeastOnce()).write(captor.capture());
-
-        assertEquals("[" +
-                "+------+----------+------------+\n" +
-                "|  id  |   name   |  password  |\n" +
-                "+------+----------+------------+\n" +
-                "|  11  |  user1   |    ****    |\n" +
-                "|  12  |  user2   |    ++++    |\n" +
-                "+------+----------+------------+]", captor.getAllValues().toString());
+        verify(manager).getDataInTableFormat("users");
+        verify(view)
+                .write("" +
+                        "+------+----------+------------+\n" +
+                        "|  id  |   name   |  password  |\n" +
+                        "+------+----------+------------+\n" +
+                        "|  11  |  user1   |    ****    |\n" +
+                        "|  12  |  user2   |    ++++    |\n" +
+                        "+------+----------+------------+");
     }
 
     @Test
     public void testProcess_FindEmptyTable() {
         // given
-        List<DataSet> users = new LinkedList<>();
-
-        when(manager.getTableColumns("users")).thenReturn(
-                Arrays.asList(new String[]{"id", "name", "password"}));
-        when(manager.getTableData("users")).thenReturn(users);
+        when(manager.getDataInTableFormat("users"))
+                .thenReturn("" +
+                        "+------+--------+------------+\n" +
+                        "|  id  |  name  |  password  |\n" +
+                        "+------+--------+------------+\n" +
+                        "+------+--------+------------");
 
         // when
         command.process("find|users");
 
         // then
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        verify(view, atLeastOnce()).write(captor.capture());
-
-        assertEquals("[" +
-                "+------+--------+------------+\n" +
-                "|  id  |  name  |  password  |\n" +
-                "+------+--------+------------+\n" +
-                "+------+--------+------------+]", captor.getAllValues().toString());
+        verify(manager).getDataInTableFormat("users");
+        verify(view)
+                .write("" +
+                        "+------+--------+------------+\n" +
+                        "|  id  |  name  |  password  |\n" +
+                        "+------+--------+------------+\n" +
+                        "+------+--------+------------");
     }
 
     @Test

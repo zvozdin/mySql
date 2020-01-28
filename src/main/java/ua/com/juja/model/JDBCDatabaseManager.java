@@ -1,5 +1,7 @@
 package ua.com.juja.model;
 
+import ua.com.juja.view.TableGenerator;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -52,7 +54,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void createTable(String tableName, List<String> columns) {
-        if (getTablesNames().contains(tableName)){
+        if (getTablesNames().contains(tableName)) {
             throw new IllegalArgumentException(String.format(
                     "Table '%s' already exists", tableName)); // TODO extract messages into enum
         }
@@ -121,35 +123,27 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public List<DataSet> getTableData(String tableName) {
+    public String getDataInTableFormat(String tableName) {
         notExistingTableValidation(tableName);
-        List<DataSet> result = new ArrayList<>();
+
+        List<String> columns = getTableColumns(tableName);
+        List<List<String>> rows = new ArrayList<>();
+
         try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("select * from " + tableName)) {
+             ResultSet resultSet = statement.executeQuery("select * from " + tableName))
+        {
             ResultSetMetaData metaData = resultSet.getMetaData();
             while (resultSet.next()) {
-                DataSet dataSet = new DataSet();
-                result.add(dataSet);
+                List<String> row = new ArrayList<>();
                 for (int i = 0; i < metaData.getColumnCount(); i++) {
-                    dataSet.put(metaData.getColumnName(i + 1), resultSet.getObject(i + 1));
+                    row.add(resultSet.getString(i + 1));
                 }
+                rows.add(row);
             }
 
-            // return empty table (for example after clear table) with only columnNames and without values
-            if (result.size() == 0) {
-                List<String> columns = getTableColumns(tableName);
-                DataSet dataSet = new DataSet();
-                for (String name : columns) {
-                    dataSet.put(name, "");
-                }
-                result.add(dataSet);
-                return result;
-            }
-
-            return result;
+            return new TableGenerator().generateTable(columns, rows);
         } catch (SQLException e) {
-            e.printStackTrace();
-            return result;
+            return e.getMessage();
         }
     }
 

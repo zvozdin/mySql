@@ -20,7 +20,7 @@ public interface DatabaseManager {
 
     List<String> getTableColumns(String tableName);
 
-    List<DataSet> getTableData(String tableName);
+    String getDataInTableFormat(String tableName);
 
     void clear(String tableName);
 

@@ -112,7 +112,7 @@ public abstract class DatabaseManagerTest {
     }
 
     @Test
-    public void test_Insert_GetTableData_ClearTable() {
+    public void test_Insert_GetDataInTable_ClearTable() {
         // given
         manager.createTable("test", getDataSetForTable().getNames());
 
@@ -120,8 +120,12 @@ public abstract class DatabaseManagerTest {
         manager.insert("test", getDataSetForTable());
 
         // then table data
-        assertEquals("[columns:[id, name, password], values:[1, user1, 1111]]",
-                manager.getTableData("test").toString());
+        assertEquals("" +
+                "+------+----------+------------+\n" +
+                "|  id  |   name   |  password  |\n" +
+                "+------+----------+------------+\n" +
+                "|  1   |  user1   |    1111    |\n" +
+                "+------+----------+------------+", manager.getDataInTableFormat("test"));
 
         // when insert additional
         DataSet addValue = new DataSet();
@@ -131,21 +135,27 @@ public abstract class DatabaseManagerTest {
         manager.insert("test", addValue);
 
         // then 2 rows
-        assertEquals("[" +
-                        "columns:[id, name, password], values:[1, user1, 1111], " +
-                        "columns:[id, name, password], values:[5, user2, 7777]]",
-                manager.getTableData("test").toString());
+        assertEquals("" +
+                "+------+----------+------------+\n" +
+                "|  id  |   name   |  password  |\n" +
+                "+------+----------+------------+\n" +
+                "|  1   |  user1   |    1111    |\n" +
+                "|  5   |  user2   |    7777    |\n" +
+                "+------+----------+------------+", manager.getDataInTableFormat("test"));
 
         // when
         manager.clear("test");
 
         // then clear table
-        assertEquals("[columns:[id, name, password], values:[, , ]]",
-                manager.getTableData("test").toString());
+        assertEquals("" +
+                "+------+--------+------------+\n" +
+                "|  id  |  name  |  password  |\n" +
+                "+------+--------+------------+\n" +
+                "+------+--------+------------+", manager.getDataInTableFormat("test"));
 
-        // getTableData from non existing table
+        // getDataInTableFormat from non existing table
         try {
-            manager.getTableData("nonExistingTable");
+            manager.getDataInTableFormat("nonExistingTable");
             fail("Expected Exception");
         } catch (Exception e) {
             assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
@@ -161,7 +171,7 @@ public abstract class DatabaseManagerTest {
     }
 
     @Test
-    public void test_UpdateTableData_DeleteRow() {
+    public void test_UpdateTableData_DeleteRow() { // TODO separate all tests into each test
         // given
         manager.createTable("test", getDataSetForTable().getNames());
         manager.insert("test", getDataSetForTable());
@@ -184,8 +194,12 @@ public abstract class DatabaseManagerTest {
         manager.update("test", set, where);
 
         //then update
-        assertEquals("[columns:[id, name, password], values:[1, user1Changed, 0000Changed]]",
-                manager.getTableData("test").toString());
+        assertEquals("" +
+                "+------+----------------+----------------+\n" +
+                "|  id  |      name      |    password    |\n" +
+                "+------+----------------+----------------+\n" +
+                "|  1   |  user1Changed  |  0000Changed   |\n" +
+                "+------+----------------+----------------+", manager.getDataInTableFormat("test"));
 
         // update into non existing table
         try {
@@ -201,8 +215,11 @@ public abstract class DatabaseManagerTest {
         manager.deleteRow("test", delete);
 
         // then delete row
-        assertEquals("[columns:[id, name, password], values:[, , ]]",
-                manager.getTableData("test").toString());
+        assertEquals("" +
+                "+------+--------+------------+\n" +
+                "|  id  |  name  |  password  |\n" +
+                "+------+--------+------------+\n" +
+                "+------+--------+------------+", manager.getDataInTableFormat("test"));
 
         // delete into non existing table
         try {
