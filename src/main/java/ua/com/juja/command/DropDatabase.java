@@ -1,11 +1,12 @@
 package ua.com.juja.command;
 
 import ua.com.juja.model.DatabaseManager;
+import ua.com.juja.view.ActionMessages;
+import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.View;
 
 public class DropDatabase implements Command {
 
-    private static final String COMMAND_SAMPLE = "dropDatabase|databaseName";
     private DatabaseManager manager;
     private View view;
 
@@ -21,12 +22,13 @@ public class DropDatabase implements Command {
 
     @Override
     public void process(String command) {
-        parametersNumberValidation(COMMAND_SAMPLE, command);
+        parametersNumberValidation(CommandSamples.DROP_DB.toString(), command);
 
         String[] data = command.split("\\|");
         String databaseName = data[1];
 
         manager.dropDatabase(databaseName);
-        view.write(String.format("Database '%s' deleted.", databaseName));
+
+        view.write(String.format(ActionMessages.DROP_DB.toString(), databaseName));
     }
 }

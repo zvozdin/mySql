@@ -1,6 +1,7 @@
 package ua.com.juja.model;
 
 import ua.com.juja.ConnectParameters;
+import ua.com.juja.view.ActionMessages;
 import ua.com.juja.view.TableGenerator;
 
 import java.sql.*;
@@ -16,7 +17,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         try {
             Class.forName(ConnectParameters.driver);
         } catch (ClassNotFoundException e) {
-            throw new IllegalStateException("Cannot find the driver in the classpath!", e);
+            throw new IllegalStateException(ActionMessages.NO_DRIVER.toString(), e);
         }
         try {
             if (connection != null) {
@@ -27,7 +28,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         } catch (SQLException e) {
             connection = null;
             throw new RuntimeException(String.format(
-                    "Can't get connection for database: %s, user: %s ",
+                    ActionMessages.NO_CONNECTION.toString(),
                     database, user), e);
         }
     }
@@ -38,7 +39,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             statement.executeUpdate("create database " + databaseName);
         } catch (SQLException e) {
             throw new IllegalArgumentException(String.format(
-                    "Database '%s' already exists", databaseName), e);
+                    ActionMessages.DATABASE_EXISTS.toString(), databaseName), e);
         }
     }
 
@@ -48,7 +49,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             statement.executeUpdate("drop database " + databaseName);
         } catch (SQLException e) {
             throw new IllegalArgumentException(String.format(
-                    "Database '%s' doesn't exist", databaseName), e);
+                    ActionMessages.NOT_EXISTING_DATABASE.toString(), databaseName), e);
         }
     }
 
@@ -56,7 +57,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void createTable(String tableName, Set<String> columns) {
         if (getTablesNames().contains(tableName)) {
             throw new IllegalArgumentException(String.format(
-                    "Table '%s' already exists", tableName)); // TODO extract messages into enum
+                    ActionMessages.CREATE_EXISTING_TABLE.toString(), tableName));
         }
         String sql = "create table " + tableName + " (";
 
@@ -248,7 +249,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     private void notExistingTableValidation(String tableName) {
         if (!getTablesNames().contains(tableName)) {
-            throw new IllegalArgumentException(String.format("Table '%s' doesn't exist", tableName));
+            throw new IllegalArgumentException(String.format(
+                    ActionMessages.NOT_EXISTING_TABLE.toString(), tableName));
         }
     }
 

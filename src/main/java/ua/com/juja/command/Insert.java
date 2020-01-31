@@ -1,6 +1,8 @@
 package ua.com.juja.command;
 
 import ua.com.juja.model.DatabaseManager;
+import ua.com.juja.view.ActionMessages;
+import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.View;
 
 import java.util.LinkedHashMap;
@@ -8,7 +10,6 @@ import java.util.Map;
 
 public class Insert implements Command {
 
-    private static final String COMMAND_SAMPLE = "insert|tableName|column|value";
     private DatabaseManager manager;
     private View view;
 
@@ -24,7 +25,7 @@ public class Insert implements Command {
 
     @Override
     public void process(String command) {
-        parametersNumberValidation(COMMAND_SAMPLE, command);
+        parametersNumberValidation(CommandSamples.INSERT.toString(), command);
 
         String[] data = command.split("\\|");
         String tableName = data[1];
@@ -38,6 +39,6 @@ public class Insert implements Command {
 
         manager.insert(tableName, insert);
 
-        view.write(String.format("Record '%s' added.", insert.values()));
+        view.write(String.format(ActionMessages.INSERT.toString(), insert.values()));
     }
 }

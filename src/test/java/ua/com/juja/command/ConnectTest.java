@@ -54,7 +54,7 @@ public class ConnectTest {
             assertEquals("" +
                     "Invalid parameters number separated by '|'.\n" +
                     "Expected 4. You enter ==> 2.\n" +
-                    "Use command 'connect|business|root|root'", e.getMessage());
+                    "Use command 'connect|database|user|password'", e.getMessage());
         }
     }
 }

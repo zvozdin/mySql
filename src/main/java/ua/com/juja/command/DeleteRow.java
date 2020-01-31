@@ -1,6 +1,8 @@
 package ua.com.juja.command;
 
 import ua.com.juja.model.DatabaseManager;
+import ua.com.juja.view.ActionMessages;
+import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.View;
 
 import java.util.LinkedHashMap;
@@ -8,7 +10,6 @@ import java.util.Map;
 
 public class DeleteRow implements Command {
 
-    private static final String COMMAND_SAMPLE = "delete|tableName|column|value";
     private DatabaseManager manager;
     private View view;
 
@@ -24,7 +25,7 @@ public class DeleteRow implements Command {
 
     @Override
     public void process(String command) {
-        parametersNumberValidation(COMMAND_SAMPLE, command);
+        parametersNumberValidation(CommandSamples.DELETE.toString(), command);
 
         String[] data = command.split("\\|");
         String tableName = data[1];
@@ -38,7 +39,7 @@ public class DeleteRow implements Command {
 
         manager.deleteRow(tableName, delete);
 
-        view.write(String.format("Record '%s' deleted.", delete.values().iterator().next()));
+        view.write(String.format(ActionMessages.DELETE.toString(), delete.values().iterator().next()));
         view.write(manager.getTableFormatData(tableName));
     }
 }

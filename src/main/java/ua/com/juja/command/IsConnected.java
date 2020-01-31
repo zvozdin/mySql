@@ -1,6 +1,8 @@
 package ua.com.juja.command;
 
 import ua.com.juja.model.DatabaseManager;
+import ua.com.juja.view.ActionMessages;
+import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.View;
 
 public class IsConnected implements Command {
@@ -21,7 +23,6 @@ public class IsConnected implements Command {
     @Override
     public void process(String command) {
         view.write(String.format(
-                "You cannot use command '%s' until you connect to database. Use connect|database|user|password",
-                command));
+                ActionMessages.NOT_CONNECTED.toString() + CommandSamples.CONNECT.toString(), command));
     }
 }

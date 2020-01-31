@@ -1,11 +1,11 @@
 package ua.com.juja.command;
 
 import ua.com.juja.model.DatabaseManager;
+import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.View;
 
 public class Find implements Command {
 
-    private static final String COMMAND_SAMPLE = "find|tableName";
     private DatabaseManager manager;
     private View view;
 
@@ -21,7 +21,7 @@ public class Find implements Command {
 
     @Override
     public void process(String command) {
-        parametersNumberValidation(COMMAND_SAMPLE, command);
+        parametersNumberValidation(CommandSamples.FIND.toString(), command);
 
         String[] data = command.split("\\|");
         String tableName = data[1];

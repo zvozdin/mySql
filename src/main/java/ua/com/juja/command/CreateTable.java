@@ -1,6 +1,8 @@
 package ua.com.juja.command;
 
 import ua.com.juja.model.DatabaseManager;
+import ua.com.juja.view.ActionMessages;
+import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.View;
 
 import java.util.LinkedHashSet;
@@ -8,7 +10,6 @@ import java.util.Set;
 
 public class CreateTable implements Command {
 
-    private static final String COMMAND_SAMPLE = "create|tableName|columnName";
     private DatabaseManager manager;
     private View view;
 
@@ -24,7 +25,7 @@ public class CreateTable implements Command {
 
     @Override
     public void process(String command) {
-        parametersNumberValidation(COMMAND_SAMPLE, command);
+        parametersNumberValidation(CommandSamples.CREATE.toString(), command);
 
         String[] data = command.split("\\|");
         String tableName = data[1];
@@ -35,6 +36,7 @@ public class CreateTable implements Command {
         }
 
         manager.createTable(tableName, columns);
-        view.write(String.format("Table '%s' created.", tableName));
+
+        view.write(String.format(ActionMessages.CREATE.toString(), tableName));
     }
 }

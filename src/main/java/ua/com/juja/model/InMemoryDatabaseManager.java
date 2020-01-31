@@ -1,5 +1,6 @@
 package ua.com.juja.model;
 
+import ua.com.juja.view.ActionMessages;
 import ua.com.juja.view.TableGenerator;
 
 import java.util.*;
@@ -19,8 +20,8 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     @Override
     public void createDatabase(String databaseName) {
         if (isDatabaseExist(databaseName)) {
-            throw new RuntimeException(String.format(
-                    "Database '%s' already exists", databaseName), new RuntimeException());
+            throw new IllegalArgumentException(String.format(
+                    ActionMessages.DATABASE_EXISTS.toString(), databaseName));
         }
         databases.add(databaseName);
     }
@@ -28,8 +29,8 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     @Override
     public void dropDatabase(String databaseName) {
         if (!isDatabaseExist(databaseName)) {
-            throw new RuntimeException(String.format(
-                    "Database '%s' doesn't exist", databaseName), new RuntimeException());
+            throw new IllegalArgumentException(String.format(
+                    ActionMessages.NOT_EXISTING_DATABASE.toString(), databaseName));
         }
         databases.remove(databaseName);
     }
@@ -37,8 +38,8 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     @Override
     public void createTable(String tableName, Set<String> columns) {
         if (tables.contains(tableName)) {
-            throw new IllegalArgumentException(String.format("" +
-                    "Table '%s' already exists", tableName), new IllegalArgumentException());
+            throw new IllegalArgumentException(String.format(
+                    ActionMessages.CREATE_EXISTING_TABLE.toString(), tableName));
         }
         tables.add(tableName);
         this.columns = columns;
@@ -103,6 +104,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     @Override
     public void deleteRow(String tableName, Map<String, String> delete) {
         notExistingTableValidation(tableName);
+
         String column = delete.keySet().iterator().next();
         Object value = delete.values().iterator().next();
         for (Map<String, String> element : data) {
@@ -130,7 +132,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     private void notExistingTableValidation(String tableName) {
         if (!tables.contains(tableName)) {
             throw new IllegalArgumentException(String.format("" +
-                    "Table '%s' doesn't exist", tableName), new IllegalArgumentException());
+                    ActionMessages.NOT_EXISTING_TABLE, tableName));
         }
     }
 }

@@ -1,6 +1,8 @@
 package ua.com.juja.command;
 
 import ua.com.juja.model.DatabaseManager;
+import ua.com.juja.view.ActionMessages;
+import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.View;
 
 import java.util.LinkedHashMap;
@@ -8,7 +10,6 @@ import java.util.Map;
 
 public class Update implements Command {
 
-    private static final String COMMAND_SAMPLE = "update|tableName|column1|value1|column2|value2";
     private DatabaseManager manager;
     private View view;
 
@@ -24,7 +25,7 @@ public class Update implements Command {
 
     @Override
     public void process(String command) {
-        parametersNumberValidation(COMMAND_SAMPLE, command);
+        parametersNumberValidation(CommandSamples.UPDATE.toString(), command);
 
         String[] data = command.split("\\|");
         String tableName = data[1];
@@ -37,7 +38,8 @@ public class Update implements Command {
 
         manager.update(tableName, set, where);
 
-        view.write(String.format("Record '%s' updated.", where.values().iterator().next()));
+        view.write(String.format(
+                ActionMessages.UPDATE.toString(), where.values().iterator().next()));
         view.write(manager.getTableFormatData(tableName));
     }
 }

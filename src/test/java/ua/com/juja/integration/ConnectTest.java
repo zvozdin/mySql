@@ -64,7 +64,7 @@ public class ConnectTest extends IntegrationTest {
                 // connect|databaseName
                 "Failed by a reason ==> Invalid parameters number separated by '|'.\n" +
                 "Expected 4. You enter ==> 2.\n" +
-                "Use command 'connect|business|root|root'\r\n" +
+                "Use command 'connect|database|user|password'\r\n" +
                 "Enter a command or help\r\n" +
                 // dropDatabase|testedDatabase
                 "Database 'testedDatabase' deleted.\r\n" +

@@ -1,6 +1,7 @@
 package ua.com.juja.command;
 
 import ua.com.juja.model.DatabaseManager;
+import ua.com.juja.view.ActionMessages;
 import ua.com.juja.view.View;
 
 public class Exit implements Command {
@@ -21,7 +22,7 @@ public class Exit implements Command {
     @Override
     public void process(String command) {
         manager.closeConnection();
-        view.write("See you soon!");
+        view.write(ActionMessages.EXIT.toString());
         throw new ExitException();
     }
 }

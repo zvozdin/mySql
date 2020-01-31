@@ -1,5 +1,6 @@
 package ua.com.juja.command;
 
+import ua.com.juja.view.ActionMessages;
 import ua.com.juja.view.View;
 
 public class Unsupported implements Command {
@@ -17,6 +18,7 @@ public class Unsupported implements Command {
 
     @Override
     public void process(String command) {
-        view.write(String.format("Not existing '%s' command.", command));
+        view.write(String.format(
+                ActionMessages.NOT_EXISTING_COMMAND.toString(), command));
     }
 }
