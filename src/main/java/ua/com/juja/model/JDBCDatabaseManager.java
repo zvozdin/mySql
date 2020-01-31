@@ -1,5 +1,6 @@
 package ua.com.juja.model;
 
+import ua.com.juja.ConnectParameters;
 import ua.com.juja.view.TableGenerator;
 
 import java.sql.*;
@@ -11,8 +12,9 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void connect(String database, String user, String password) {
+        ConnectParameters.get();
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName(ConnectParameters.driver);
         } catch (ClassNotFoundException e) {
             throw new IllegalStateException("Cannot find the driver in the classpath!", e);
         }
@@ -21,7 +23,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
                 connection.close();
             }
             connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/" + database + "?autoReconnect=true&useSSL=false", user, password);
+                    ConnectParameters.url + database + ConnectParameters.ssl, user, password);
         } catch (SQLException e) {
             connection = null;
             throw new RuntimeException(String.format(
@@ -130,8 +132,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         List<List<String>> rows = new ArrayList<>();
 
         try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("select * from " + tableName))
-        {
+             ResultSet resultSet = statement.executeQuery("select * from " + tableName)) {
             ResultSetMetaData metaData = resultSet.getMetaData();
             while (resultSet.next()) {
                 List<String> row = new ArrayList<>();
