@@ -1,10 +1,12 @@
 package ua.com.juja.command;
 
-import ua.com.juja.model.DataSet;
-import ua.com.juja.model.DatabaseManager;
 import org.junit.Before;
 import org.junit.Test;
+import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -35,14 +37,14 @@ public class CreateTableTest {
     @Test
     public void testProcess_CreateTable() {
         // given
-        DataSet input = new DataSet();
+        Map<String, String> input = new LinkedHashMap<>();
         input.put("id", "");
 
         // when
         command.process("create|test|id");
 
         // then
-        verify(manager, atMostOnce()).createTable("test", input.getNames());
+        verify(manager, atMostOnce()).createTable("test", input.keySet());
         verify(view).write("Table 'test' created.");
     }
 

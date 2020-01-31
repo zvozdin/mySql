@@ -3,8 +3,8 @@ package ua.com.juja.command;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class CreateTable implements Command {
 
@@ -29,7 +29,7 @@ public class CreateTable implements Command {
         String[] data = command.split("\\|");
         String tableName = data[1];
 
-        List<String> columns = new ArrayList<>();
+        Set<String> columns = new LinkedHashSet<>();
         for (int index = 2; index < data.length; index++) {
             columns.add(data[index]);
         }

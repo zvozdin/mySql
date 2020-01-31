@@ -3,9 +3,7 @@ package ua.com.juja.model;
 import ua.com.juja.view.TableGenerator;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class JDBCDatabaseManager implements DatabaseManager {
 
@@ -53,7 +51,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void createTable(String tableName, List<String> columns) {
+    public void createTable(String tableName, Set<String> columns) {
         if (getTablesNames().contains(tableName)) {
             throw new IllegalArgumentException(String.format(
                     "Table '%s' already exists", tableName)); // TODO extract messages into enum
@@ -63,7 +61,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         for (String column : columns) {
             sql += column + " VARCHAR(45) NOT NULL,";
         }
-        sql += " PRIMARY KEY (`" + columns.get(0) + "`))";
+        sql += " PRIMARY KEY (`" + columns.iterator().next() + "`))";
 
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql);
@@ -75,6 +73,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public void dropTable(String tableName) {
         notExistingTableValidation(tableName);
+
         try (Statement statement = connection.createStatement()) {
             statement.execute("drop table " + tableName);
         } catch (SQLException e) {
@@ -100,9 +99,10 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public List<String> getTableColumns(String tableName) {
+    public Set<String> getTableColumns(String tableName) {
         notExistingTableValidation(tableName);
-        List<String> result = new LinkedList<>();
+
+        Set<String> result = new LinkedHashSet<>();
         DatabaseMetaData data = null;
         try {
             data = connection.getMetaData();
@@ -123,10 +123,10 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public String getDataInTableFormat(String tableName) {
+    public String getTableFormatData(String tableName) {
         notExistingTableValidation(tableName);
 
-        List<String> columns = getTableColumns(tableName);
+        Set<String> columns = getTableColumns(tableName);
         List<List<String>> rows = new ArrayList<>();
 
         try (Statement statement = connection.createStatement();
@@ -140,8 +140,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
                 }
                 rows.add(row);
             }
-
-            return new TableGenerator().generateTable(columns, rows);
+            return new TableGenerator().generateTable(new LinkedList<>(columns), rows);
         } catch (SQLException e) {
             return e.getMessage();
         }
@@ -150,6 +149,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public void clear(String tableName) {
         notExistingTableValidation(tableName);
+
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("delete from " + tableName);
         } catch (SQLException e) {
@@ -158,8 +158,9 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void insert(String tableName, DataSet input) {
+    public void insert(String tableName, Map<String, String> input) {
         notExistingTableValidation(tableName);
+
         try (Statement statement = connection.createStatement()) {
             String columns = getColumnNamesFormated(input, "%s, ");
             String values = getValuesFormated(input, "'%s', ");
@@ -171,22 +172,22 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void update(String tableName, DataSet set, DataSet where) {
+    public void update(String tableName, Map<String, String> set, Map<String, String> where) {
         notExistingTableValidation(tableName);
-        String columnsSet = getColumnNamesFormated(set, "%s = ?, ");
-        String columnsWhere = getColumnNamesFormated(where, "%s = ?, ");
 
-        String sql = "UPDATE " + tableName + " SET " + columnsSet + " WHERE " + columnsWhere;
+        String setColumns = getColumnNamesFormated(set, "%s = ?, ");
+        String whereColumns = getColumnNamesFormated(where, "%s = ?, ");
+        String sql = "UPDATE " + tableName + " SET " + setColumns + " WHERE " + whereColumns;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int index = 1;
-            List<Object> valuesSet = set.getValues();
-            for (Object elementData : valuesSet) {
-                statement.setObject(index++, elementData);
+            Collection<String> setValues = set.values();
+            for (String value : setValues) {
+                statement.setString(index++, value);
             }
 
-            List<Object> valuesWhere = where.getValues();
-            for (Object elementData : valuesWhere) {
-                statement.setObject(index, elementData);
+            Collection<String> whereValues = where.values();
+            for (String value : whereValues) {
+                statement.setString(index, value);
             }
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -195,15 +196,16 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void deleteRow(String tableName, DataSet deleteValue) {
+    public void deleteRow(String tableName, Map<String, String> delete) {
         notExistingTableValidation(tableName);
-        String columnNames = getColumnNamesFormated(deleteValue, "%s = ?, ");
-        String sql = "delete from " + tableName + " where " + columnNames;
+
+        String columns = getColumnNamesFormated(delete, "%s = ?, ");
+        String sql = "delete from " + tableName + " where " + columns;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            List<Object> values = deleteValue.getValues();
+            Collection<String> values = delete.values();
             int index = 1;
-            for (Object elementData : values) {
-                preparedStatement.setObject(index++, elementData);
+            for (String value : values) {
+                preparedStatement.setString(index++, value);
             }
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -249,19 +251,19 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
     }
 
-    private String getColumnNamesFormated(DataSet input, String format) {
+    private String getColumnNamesFormated(Map<String, String> input, String format) {
         String result = "";
-        List<String> columnNames = input.getNames();
-        for (String column : columnNames) {
+        Set<String> columns = input.keySet();
+        for (String column : columns) {
             result += String.format(format, column);
         }
         return result.substring(0, result.length() - 2);
     }
 
-    private String getValuesFormated(DataSet input, String format) {
+    private String getValuesFormated(Map<String, String> input, String format) {
         String result = "";
-        List<Object> values = input.getValues();
-        for (Object value : values) {
+        Collection<String> values = input.values();
+        for (String value : values) {
             result += String.format(format, value);
         }
         return result.substring(0, result.length() - 2);

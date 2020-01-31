@@ -5,6 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 import ua.com.juja.ConnectParameters;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static org.junit.Assert.*;
 
 public abstract class DatabaseManagerTest {
@@ -69,12 +72,12 @@ public abstract class DatabaseManagerTest {
     @Test
     public void test_CreateTable_DropTable() {
         // create
-        manager.createTable("test", getDataSetForTable().getNames());
+        manager.createTable("test", getDataForTable().keySet());
         assertEquals("[test]", manager.getTablesNames().toString());
 
         // create already existing table
         try {
-            manager.createTable("test", getDataSetForTable().getNames());
+            manager.createTable("test", getDataForTable().keySet());
             fail("Expected Exception");
         } catch (Exception e) {
             assertEquals("Table 'test' already exists", e.getMessage());
@@ -96,7 +99,7 @@ public abstract class DatabaseManagerTest {
     @Test
     public void test_CreateTable_GetTableColumns() {
         // when
-        manager.createTable("test", getDataSetForTable().getNames());
+        manager.createTable("test", getDataForTable().keySet());
 
         // then
         assertEquals("[id, name, password]",
@@ -114,10 +117,10 @@ public abstract class DatabaseManagerTest {
     @Test
     public void test_Insert_GetDataInTable_ClearTable() {
         // given
-        manager.createTable("test", getDataSetForTable().getNames());
+        manager.createTable("test", getDataForTable().keySet());
 
         // when
-        manager.insert("test", getDataSetForTable());
+        manager.insert("test", getDataForTable());
 
         // then table data
         assertEquals("" +
@@ -125,10 +128,10 @@ public abstract class DatabaseManagerTest {
                 "|  id  |   name   |  password  |\n" +
                 "+------+----------+------------+\n" +
                 "|  1   |  user1   |    1111    |\n" +
-                "+------+----------+------------+", manager.getDataInTableFormat("test"));
+                "+------+----------+------------+", manager.getTableFormatData("test"));
 
         // when insert additional
-        DataSet addValue = new DataSet();
+        Map<String, String> addValue = new LinkedHashMap<>();
         addValue.put("id", "5");
         addValue.put("name", "user2");
         addValue.put("password", "7777");
@@ -141,7 +144,7 @@ public abstract class DatabaseManagerTest {
                 "+------+----------+------------+\n" +
                 "|  1   |  user1   |    1111    |\n" +
                 "|  5   |  user2   |    7777    |\n" +
-                "+------+----------+------------+", manager.getDataInTableFormat("test"));
+                "+------+----------+------------+", manager.getTableFormatData("test"));
 
         // when
         manager.clear("test");
@@ -151,11 +154,11 @@ public abstract class DatabaseManagerTest {
                 "+------+--------+------------+\n" +
                 "|  id  |  name  |  password  |\n" +
                 "+------+--------+------------+\n" +
-                "+------+--------+------------+", manager.getDataInTableFormat("test"));
+                "+------+--------+------------+", manager.getTableFormatData("test"));
 
-        // getDataInTableFormat from non existing table
+        // getTableFormatData from non existing table
         try {
-            manager.getDataInTableFormat("nonExistingTable");
+            manager.getTableFormatData("nonExistingTable");
             fail("Expected Exception");
         } catch (Exception e) {
             assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
@@ -173,23 +176,23 @@ public abstract class DatabaseManagerTest {
     @Test
     public void test_UpdateTableData_DeleteRow() { // TODO separate all tests into each test
         // given
-        manager.createTable("test", getDataSetForTable().getNames());
-        manager.insert("test", getDataSetForTable());
+        manager.createTable("test", getDataForTable().keySet());
+        manager.insert("test", getDataForTable());
 
         // insert into non existing table
         try {
-            manager.insert("nonExistingTable", getDataSetForTable());
+            manager.insert("nonExistingTable", getDataForTable());
             fail("Expected Exception");
         } catch (Exception e) {
             assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
         }
 
         // when update
-        DataSet set = new DataSet();
+        Map<String, String> set = new LinkedHashMap<>();
         set.put("name", "user1Changed");
         set.put("password", "0000Changed");
 
-        DataSet where = new DataSet();
+        Map<String, String> where = new LinkedHashMap<>();
         where.put("id", "1");
         manager.update("test", set, where);
 
@@ -199,7 +202,7 @@ public abstract class DatabaseManagerTest {
                 "|  id  |      name      |    password    |\n" +
                 "+------+----------------+----------------+\n" +
                 "|  1   |  user1Changed  |  0000Changed   |\n" +
-                "+------+----------------+----------------+", manager.getDataInTableFormat("test"));
+                "+------+----------------+----------------+", manager.getTableFormatData("test"));
 
         // update into non existing table
         try {
@@ -210,7 +213,7 @@ public abstract class DatabaseManagerTest {
         }
 
         // when delete
-        DataSet delete = new DataSet();
+        Map<String, String> delete = new LinkedHashMap<>();
         delete.put("name", "user1Changed");
         manager.deleteRow("test", delete);
 
@@ -219,7 +222,7 @@ public abstract class DatabaseManagerTest {
                 "+------+--------+------------+\n" +
                 "|  id  |  name  |  password  |\n" +
                 "+------+--------+------------+\n" +
-                "+------+--------+------------+", manager.getDataInTableFormat("test"));
+                "+------+--------+------------+", manager.getTableFormatData("test"));
 
         // delete into non existing table
         try {
@@ -235,8 +238,8 @@ public abstract class DatabaseManagerTest {
         assertTrue(manager.isConnected());
     }
 
-    private DataSet getDataSetForTable() {
-        DataSet input = new DataSet();
+    private Map<String, String> getDataForTable() {
+        Map<String, String> input = new LinkedHashMap<>();
         input.put("id", "1");
         input.put("name", "user1");
         input.put("password", "1111");

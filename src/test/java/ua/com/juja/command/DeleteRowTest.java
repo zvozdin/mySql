@@ -3,12 +3,13 @@ package ua.com.juja.command;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import ua.com.juja.model.DataSet;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -39,20 +40,20 @@ public class DeleteRowTest {
     @Test
     public void testProcess_DeleteRow() {
         // given
-        List<DataSet> users = new LinkedList<>();
-        DataSet user1 = new DataSet();
+        List<Map<String, String>> users = new LinkedList<>();
+        Map<String, String> user1 = new LinkedHashMap<>();
         user1.put("id", "1");
         user1.put("name", "user1");
         user1.put("password", "1111");
         users.add(user1);
 
-        DataSet user2 = new DataSet();
+        Map<String, String> user2 = new LinkedHashMap<>();
         user2.put("id", "2");
         user2.put("name", "user2");
         user2.put("password", "0000");
         users.add(user2);
 
-        when(manager.getDataInTableFormat("users"))
+        when(manager.getTableFormatData("users"))
                 .thenReturn("" +
                         "+------+----------+------------+\n" +
                         "|  id  |   name   |  password  |\n" +
@@ -66,7 +67,7 @@ public class DeleteRowTest {
 
         // then
         verify(manager, atMostOnce()).deleteRow("delete|users|name|user2", user2);
-        verify(manager).getDataInTableFormat("users");
+        verify(manager).getTableFormatData("users");
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(view, atLeastOnce()).write(captor.capture());

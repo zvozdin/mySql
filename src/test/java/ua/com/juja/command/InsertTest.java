@@ -2,12 +2,13 @@ package ua.com.juja.command;
 
 import org.junit.Before;
 import org.junit.Test;
-import ua.com.juja.model.DataSet;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -38,12 +39,12 @@ public class InsertTest {
     @Test
     public void testProcess_InsertData() {
         // given
-        DataSet user1 = new DataSet();
+        Map<String, String> user1 = new LinkedHashMap<>();
         user1.put("id", "1");
         user1.put("name", "user1");
         user1.put("password", "1111");
 
-        List<DataSet> users = new ArrayList<>();
+        List<Map<String, String>> users = new ArrayList<>();
 
         // when
         users.add(user1);

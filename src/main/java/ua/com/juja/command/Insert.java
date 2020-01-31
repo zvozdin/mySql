@@ -1,8 +1,10 @@
 package ua.com.juja.command;
 
-import ua.com.juja.model.DataSet;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Insert implements Command {
 
@@ -27,15 +29,15 @@ public class Insert implements Command {
         String[] data = command.split("\\|");
         String tableName = data[1];
 
-        DataSet insert = new DataSet();
+        Map<String,String> insert = new LinkedHashMap<>();
         for (int index = 1; index < data.length / 2; index++) {
-            String columnName = data[index * 2];
+            String column = data[index * 2];
             String value = data[index * 2 + 1];
-            insert.put(columnName, value);
+            insert.put(column, value);
         }
 
         manager.insert(tableName, insert);
 
-        view.write(String.format("Record '%s' added.", insert.getValues()));
+        view.write(String.format("Record '%s' added.", insert.values()));
     }
 }

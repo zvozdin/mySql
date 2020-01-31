@@ -2,12 +2,13 @@ package ua.com.juja.command;
 
 import org.junit.Before;
 import org.junit.Test;
-import ua.com.juja.model.DataSet;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -38,20 +39,20 @@ public class FindTest {
     @Test
     public void testProcess_FindData() {
         // given
-        List<DataSet> users = new LinkedList<>();
-        DataSet user1 = new DataSet();
+        List<Map<String, String>> users = new LinkedList<>();
+        Map<String, String> user1 = new LinkedHashMap<>();
         user1.put("id", "11");
         user1.put("name", "user1");
         user1.put("password", "****");
         users.add(user1);
 
-        DataSet user2 = new DataSet();
+        Map<String, String> user2 = new LinkedHashMap<>();
         user2.put("id", "12");
         user2.put("name", "user2");
         user2.put("password", "++++");
         users.add(user2);
 
-        when(manager.getDataInTableFormat("users"))
+        when(manager.getTableFormatData("users"))
                 .thenReturn("" +
                         "+------+----------+------------+\n" +
                         "|  id  |   name   |  password  |\n" +
@@ -64,7 +65,7 @@ public class FindTest {
         command.process("find|users");
 
         // then
-        verify(manager).getDataInTableFormat("users");
+        verify(manager).getTableFormatData("users");
         verify(view)
                 .write("" +
                         "+------+----------+------------+\n" +
@@ -78,7 +79,7 @@ public class FindTest {
     @Test
     public void testProcess_FindEmptyTable() {
         // given
-        when(manager.getDataInTableFormat("users"))
+        when(manager.getTableFormatData("users"))
                 .thenReturn("" +
                         "+------+--------+------------+\n" +
                         "|  id  |  name  |  password  |\n" +
@@ -89,7 +90,7 @@ public class FindTest {
         command.process("find|users");
 
         // then
-        verify(manager).getDataInTableFormat("users");
+        verify(manager).getTableFormatData("users");
         verify(view)
                 .write("" +
                         "+------+--------+------------+\n" +

@@ -26,6 +26,6 @@ public class Find implements Command {
         String[] data = command.split("\\|");
         String tableName = data[1];
 
-        view.write(manager.getDataInTableFormat(tableName));
+        view.write(manager.getTableFormatData(tableName));
     }
 }

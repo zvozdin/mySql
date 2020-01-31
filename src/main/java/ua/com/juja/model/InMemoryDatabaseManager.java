@@ -6,10 +6,10 @@ import java.util.*;
 
 public class InMemoryDatabaseManager implements DatabaseManager {
 
-    private List<DataSet> data = new LinkedList<>();
+    private List<Map<String, String>> data = new LinkedList<>();
     private List<String> tables = new LinkedList<>();
     private List<String> databases = new LinkedList<>();
-    private List<String> columns = new LinkedList<>();
+    private Set<String> columns = new LinkedHashSet<>();
 
     @Override
     public void connect(String database, String user, String password) {
@@ -35,7 +35,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void createTable(String tableName, List<String> columns) {
+    public void createTable(String tableName, Set<String> columns) {
         if (tables.contains(tableName)) {
             throw new IllegalArgumentException(String.format("" +
                     "Table '%s' already exists", tableName), new IllegalArgumentException());
@@ -56,24 +56,24 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public List<String> getTableColumns(String tableName) {
+    public Set<String> getTableColumns(String tableName) {
         notExistingTableValidation(tableName);
         return columns;
     }
 
     @Override
-    public String getDataInTableFormat(String tableName) {
+    public String getTableFormatData(String tableName) {
         notExistingTableValidation(tableName);
 
-        List<List<String>> rowsList = new ArrayList<>();
-        for (DataSet row : data) {
-            List<String> stringRow = new ArrayList<>();
-            for (Object value : row.getValues()) {
-                stringRow.add(value.toString());
+        List<List<String>> rows = new ArrayList<>();
+        for (Map<String, String> element : data) {
+            List<String> row = new ArrayList<>();
+            for (Object value : element.values()) {
+                row.add(value.toString());
             }
-            rowsList.add(stringRow);
+            rows.add(row);
         }
-        return new TableGenerator().generateTable(columns, rowsList);
+        return new TableGenerator().generateTable(new LinkedList<>(columns), rows); // TODO change 1st parametr in TAbleGenetrator to Set
     }
 
     @Override
@@ -83,29 +83,29 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void insert(String tableName, DataSet input) {
+    public void insert(String tableName, Map<String, String> input) {
         notExistingTableValidation(tableName);
         data.add(input);
     }
 
     @Override
-    public void update(String tableName, DataSet set, DataSet where) {
+    public void update(String tableName, Map<String, String> set, Map<String, String> where) {
         notExistingTableValidation(tableName);
-        String column = where.getNames().get(0);
-        Object value = where.getValues().get(0);
-        for (DataSet element : data) {
+
+        String column = where.keySet().iterator().next();
+        String value = where.values().iterator().next();
+        for (Map<String, String> element : data)
             if (element.get(column).equals(value)) {
-                element.update(set);
+                element.putAll(set);
             }
-        }
     }
 
     @Override
-    public void deleteRow(String tableName, DataSet delete) {
+    public void deleteRow(String tableName, Map<String, String> delete) {
         notExistingTableValidation(tableName);
-        String column = delete.getNames().get(0);
-        Object value = delete.getValues().get(0);
-        for (DataSet element : data) {
+        String column = delete.keySet().iterator().next();
+        Object value = delete.values().iterator().next();
+        for (Map<String, String> element : data) {
             if (element.get(column).equals(value)) {
                 data.remove(element);
             }
