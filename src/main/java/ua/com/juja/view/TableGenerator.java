@@ -16,17 +16,17 @@ public class TableGenerator {
         StringBuilder stringBuilder = new StringBuilder();
         int rowHeight = overRiddenHeaderHeight.length > 0 ? overRiddenHeaderHeight[0] : 1;
 
-        Map<Integer, Integer> columnsNumberAndWidth = getTableWidth(columns, rows);
+        Map<Integer, Integer> columnsNumberAndSize = getTableWidth(columns, rows);
 
-        createRowLine(stringBuilder, columns.size(), columnsNumberAndWidth);
+        createRowLine(stringBuilder, columns.size(), columnsNumberAndSize);
         stringBuilder.append(NEW_LINE);
 
         for (int headerIndex = 0; headerIndex < columns.size(); headerIndex++) {
-            fillCell(stringBuilder, columns.get(headerIndex), headerIndex, columnsNumberAndWidth);
+            fillCell(stringBuilder, columns.get(headerIndex), headerIndex, columnsNumberAndSize);
         }
 
         stringBuilder.append(NEW_LINE);
-        createRowLine(stringBuilder, columns.size(), columnsNumberAndWidth);
+        createRowLine(stringBuilder, columns.size(), columnsNumberAndSize);
 
         for (List<String> row : rows) {
             for (int i = 0; i < rowHeight; i++) {
@@ -34,12 +34,12 @@ public class TableGenerator {
             }
 
             for (int cellIndex = 0; cellIndex < row.size(); cellIndex++) {
-                fillCell(stringBuilder, row.get(cellIndex), cellIndex, columnsNumberAndWidth);
+                fillCell(stringBuilder, row.get(cellIndex), cellIndex, columnsNumberAndSize);
             }
         }
 
         stringBuilder.append(NEW_LINE);
-        createRowLine(stringBuilder, columns.size(), columnsNumberAndWidth);
+        createRowLine(stringBuilder, columns.size(), columnsNumberAndSize);
 
         return stringBuilder.toString();
     }
@@ -65,24 +65,24 @@ public class TableGenerator {
     }
 
     private Map<Integer, Integer> getTableWidth(List<String> columns, List<List<String>> rows) {
-        Map<Integer, Integer> columnsNumberAndWidth = new LinkedHashMap<>();
+        Map<Integer, Integer> columnsNumberAndSize = new LinkedHashMap<>();
 
-        setColumnsNameNumberAndWidth(columns, columnsNumberAndWidth);
+        setNamesNumberAndSize(columns, columnsNumberAndSize);
 
-        checkAndSetColumnsValueWidth(rows, columnsNumberAndWidth);
+        checkAndSetColumnsValueSize(rows, columnsNumberAndSize);
 
-        setColumnsDataToCenter(columns, columnsNumberAndWidth);
+        setColumnsDataToCenter(columns, columnsNumberAndSize);
 
-        return columnsNumberAndWidth;
+        return columnsNumberAndSize;
     }
 
-    private void setColumnsNameNumberAndWidth(List<String> columns, Map<Integer, Integer> columnsNumberAndWidth) {
+    public void setNamesNumberAndSize(List<String> columns, Map<Integer, Integer> columnsNumberAndWidth) {
         for (int index = 0; index < columns.size(); index++) {
             columnsNumberAndWidth.put(index, columns.get(index).length());
         }
     }
 
-    private void checkAndSetColumnsValueWidth(List<List<String>> rows, Map<Integer, Integer> columnsNumberAndWidth) {
+    private void checkAndSetColumnsValueSize(List<List<String>> rows, Map<Integer, Integer> columnsNumberAndWidth) {
         for (List<String> row : rows) {
             for (int index = 0; index < row.size(); index++) {
                 if (row.get(index).length() > columnsNumberAndWidth.get(index)) {
