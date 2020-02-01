@@ -1,4 +1,4 @@
-package ua.com.juja;
+package ua.com.juja.model;
 
 import java.io.FileReader;
 import java.io.IOException;

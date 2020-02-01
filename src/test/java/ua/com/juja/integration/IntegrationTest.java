@@ -1,7 +1,7 @@
 package ua.com.juja.integration;
 
 import org.junit.Before;
-import ua.com.juja.ConnectParameters;
+import ua.com.juja.model.ConnectParameters;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

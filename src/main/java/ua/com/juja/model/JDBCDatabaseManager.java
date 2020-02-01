@@ -1,6 +1,5 @@
 package ua.com.juja.model;
 
-import ua.com.juja.ConnectParameters;
 import ua.com.juja.view.ActionMessages;
 import ua.com.juja.view.TableGenerator;
 
