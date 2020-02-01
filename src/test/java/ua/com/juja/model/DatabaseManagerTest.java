@@ -47,7 +47,7 @@ public abstract class DatabaseManagerTest {
         try {
             manager.createDatabase("_test");
             fail("Expected Exception");
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             assertEquals("Database '_test' already exists", e.getMessage());
         }
 
@@ -59,7 +59,7 @@ public abstract class DatabaseManagerTest {
         try {
             manager.dropDatabase("_test");
             fail("Expected Exception");
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             assertEquals("Database '_test' doesn't exist", e.getMessage());
         }
     }
@@ -79,7 +79,7 @@ public abstract class DatabaseManagerTest {
         try {
             manager.createTable("test", getDataForTable().keySet());
             fail("Expected Exception");
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             assertEquals("Table 'test' already exists", e.getMessage());
         }
 
@@ -91,53 +91,77 @@ public abstract class DatabaseManagerTest {
         try {
             manager.dropTable("test");
             fail("Expected Exception");
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             assertEquals("Table 'test' doesn't exist", e.getMessage());
         }
     }
 
     @Test
-    public void test_CreateTable_GetTableColumns() {
+    public void test_GetTableColumns() {
         // when
         manager.createTable("test", getDataForTable().keySet());
 
         // then
         assertEquals("[id, name, password]",
                 manager.getTableColumns("test").toString());
+    }
 
-        // getTableColumns from non existing table
+    @Test
+    public void test_GetTableColumnsFromNotExistingTable() {
+        // when
         try {
             manager.getTableColumns("nonExistingTable");
             fail("Expected Exception");
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
+            // then
             assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
         }
     }
 
     @Test
-    public void test_Insert_GetDataInTable_ClearTable() {
+    public void test_GetTableFormatDataNonExistingTable() {
+        // when
+        try {
+            manager.getTableFormatData("nonExistingTable");
+            fail("Expected Exception");
+        } catch (IllegalArgumentException e) {
+            // then
+            assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
+        }
+    }
+
+    @Test
+    public void test_Insert_GetTableFormatData() {
         // given
         manager.createTable("test", getDataForTable().keySet());
 
         // when
         manager.insert("test", getDataForTable());
 
-        // then table data
+        // then
         assertEquals("" +
                 "+------+----------+------------+\n" +
                 "|  id  |   name   |  password  |\n" +
                 "+------+----------+------------+\n" +
                 "|  1   |  user1   |    1111    |\n" +
                 "+------+----------+------------+", manager.getTableFormatData("test"));
+    }
 
-        // when insert additional
-        Map<String, String> addValue = new LinkedHashMap<>();
-        addValue.put("id", "5");
-        addValue.put("name", "user2");
-        addValue.put("password", "7777");
-        manager.insert("test", addValue);
+    @Test
+    public void test_InsertTwoRecords() {
+        // given
+        manager.createTable("test", getDataForTable().keySet());
+        manager.insert("test", getDataForTable());
 
-        // then 2 rows
+        // when
+        Map<String, String> second = new LinkedHashMap<>();
+        second.put("id", "5");
+        second.put("name", "user2");
+        second.put("password", "7777");
+
+        manager.insert("test", second);
+
+        // then
         assertEquals("" +
                 "+------+----------+------------+\n" +
                 "|  id  |   name   |  password  |\n" +
@@ -145,90 +169,125 @@ public abstract class DatabaseManagerTest {
                 "|  1   |  user1   |    1111    |\n" +
                 "|  5   |  user2   |    7777    |\n" +
                 "+------+----------+------------+", manager.getTableFormatData("test"));
+    }
 
+    @Test
+    public void test_InsertIntoNonExistingTable() {
         // when
-        manager.clear("test");
-
-        // then clear table
-        assertEquals("" +
-                "+------+--------+------------+\n" +
-                "|  id  |  name  |  password  |\n" +
-                "+------+--------+------------+\n" +
-                "+------+--------+------------+", manager.getTableFormatData("test"));
-
-        // getTableFormatData from non existing table
         try {
-            manager.getTableFormatData("nonExistingTable");
+            manager.insert("nonExistingTable", getDataForTable());
             fail("Expected Exception");
-        } catch (Exception e) {
-            assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
-        }
-
-        // clear non existing table
-        try {
-            manager.clear("nonExistingTable");
-            fail("Expected Exception");
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
+            // then
             assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
         }
     }
 
     @Test
-    public void test_UpdateTableData_DeleteRow() { // TODO separate all tests into each test
+    public void test_Clear() {
         // given
         manager.createTable("test", getDataForTable().keySet());
         manager.insert("test", getDataForTable());
 
-        // insert into non existing table
+        // when
+        manager.clear("test");
+
+        // then
+        assertEquals("" +
+                "+------+--------+------------+\n" +
+                "|  id  |  name  |  password  |\n" +
+                "+------+--------+------------+\n" +
+                "+------+--------+------------+", manager.getTableFormatData("test"));
+    }
+
+
+    @Test
+    public void test_ClearNonExistingTable() {
+        // when
         try {
-            manager.insert("nonExistingTable", getDataForTable());
+            manager.clear("nonExistingTable");
             fail("Expected Exception");
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
+            // then
             assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
         }
+    }
 
-        // when update
+    @Test
+    public void test_UpdateTableData() {
+        // given
+        manager.createTable("test", getDataForTable().keySet());
+        manager.insert("test", getDataForTable());
+
+        // when
         Map<String, String> set = new LinkedHashMap<>();
         set.put("name", "user1Changed");
         set.put("password", "0000Changed");
 
         Map<String, String> where = new LinkedHashMap<>();
         where.put("id", "1");
+
         manager.update("test", set, where);
 
-        //then update
+        //then
         assertEquals("" +
                 "+------+----------------+----------------+\n" +
                 "|  id  |      name      |    password    |\n" +
                 "+------+----------------+----------------+\n" +
                 "|  1   |  user1Changed  |  0000Changed   |\n" +
                 "+------+----------------+----------------+", manager.getTableFormatData("test"));
+    }
 
-        // update into non existing table
+    @Test
+    public void test_UpdateNotExistingTableData() {
+        // when
+        Map<String, String> set = new LinkedHashMap<>();
+        set.put("name", "user1Changed");
+        set.put("password", "0000Changed");
+
+        Map<String, String> where = new LinkedHashMap<>();
+        where.put("id", "1");
+
         try {
             manager.update("nonExistingTable", set, where);
             fail("Expected Exception");
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
+            // then
             assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
         }
+    }
 
-        // when delete
+    @Test
+    public void test_DeleteRow() {
+        // given
+        manager.createTable("test", getDataForTable().keySet());
+        manager.insert("test", getDataForTable());
+
+        // when
         Map<String, String> delete = new LinkedHashMap<>();
-        delete.put("name", "user1Changed");
+        delete.put("name", "user1");
+
         manager.deleteRow("test", delete);
 
-        // then delete row
+        // then
         assertEquals("" +
                 "+------+--------+------------+\n" +
                 "|  id  |  name  |  password  |\n" +
                 "+------+--------+------------+\n" +
                 "+------+--------+------------+", manager.getTableFormatData("test"));
+    }
 
-        // delete into non existing table
+    @Test
+    public void test_DeleteRowNotExistingTable() {
+        // when
+        Map<String, String> delete = new LinkedHashMap<>();
+        delete.put("name", "user1");
+
         try {
             manager.deleteRow("nonExistingTable", delete);
             fail("Expected Exception");
         } catch (Exception e) {
+            // then
             assertEquals("Table 'nonExistingTable' doesn't exist", e.getMessage());
         }
     }
