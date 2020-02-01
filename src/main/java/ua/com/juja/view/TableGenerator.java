@@ -1,6 +1,6 @@
 package ua.com.juja.view;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,38 +12,34 @@ public class TableGenerator {
     private String TABLE_V_SPLIT_SYMBOL = "|";
     private String TABLE_H_SPLIT_SYMBOL = "-";
 
-    public String generateTable(List<String> headersList, List<List<String>> rowsList, int... overRiddenHeaderHeight) {
+    public String generateTable(List<String> columns, List<List<String>> rows, int... overRiddenHeaderHeight) {
         StringBuilder stringBuilder = new StringBuilder();
         int rowHeight = overRiddenHeaderHeight.length > 0 ? overRiddenHeaderHeight[0] : 1;
 
-        Map<Integer, Integer> columnMaxWidthMapping = getMaximumWidthOfTable(headersList, rowsList);
+        Map<Integer, Integer> columnsNumberAndWidth = getTableWidth(columns, rows);
 
-//        stringBuilder.append(NEW_LINE);
-//        stringBuilder.append(NEW_LINE);
-        createRowLine(stringBuilder, headersList.size(), columnMaxWidthMapping);
+        createRowLine(stringBuilder, columns.size(), columnsNumberAndWidth);
         stringBuilder.append(NEW_LINE);
 
-        for (int headerIndex = 0; headerIndex < headersList.size(); headerIndex++) {
-            fillCell(stringBuilder, headersList.get(headerIndex), headerIndex, columnMaxWidthMapping);
+        for (int headerIndex = 0; headerIndex < columns.size(); headerIndex++) {
+            fillCell(stringBuilder, columns.get(headerIndex), headerIndex, columnsNumberAndWidth);
         }
 
         stringBuilder.append(NEW_LINE);
-        createRowLine(stringBuilder, headersList.size(), columnMaxWidthMapping);
+        createRowLine(stringBuilder, columns.size(), columnsNumberAndWidth);
 
-        for (List<String> row : rowsList) {
+        for (List<String> row : rows) {
             for (int i = 0; i < rowHeight; i++) {
                 stringBuilder.append(NEW_LINE);
             }
 
             for (int cellIndex = 0; cellIndex < row.size(); cellIndex++) {
-                fillCell(stringBuilder, row.get(cellIndex), cellIndex, columnMaxWidthMapping);
+                fillCell(stringBuilder, row.get(cellIndex), cellIndex, columnsNumberAndWidth);
             }
         }
 
         stringBuilder.append(NEW_LINE);
-        createRowLine(stringBuilder, headersList.size(), columnMaxWidthMapping);
-//        stringBuilder.append(NEW_LINE);
-//        stringBuilder.append(NEW_LINE);
+        createRowLine(stringBuilder, columns.size(), columnsNumberAndWidth);
 
         return stringBuilder.toString();
     }
@@ -68,33 +64,40 @@ public class TableGenerator {
         }
     }
 
-    private Map<Integer, Integer> getMaximumWidthOfTable(List<String> headersList, List<List<String>> rowsList) {
-        Map<Integer, Integer> columnMaxWidthMapping = new HashMap<>();
-        for (int columnIndex = 0; columnIndex < headersList.size(); columnIndex++) {
-            columnMaxWidthMapping.put(columnIndex, 0);
-        }
+    private Map<Integer, Integer> getTableWidth(List<String> columns, List<List<String>> rows) {
+        Map<Integer, Integer> columnsNumberAndWidth = new LinkedHashMap<>();
 
-        for (int columnIndex = 0; columnIndex < headersList.size(); columnIndex++) {
-            if (headersList.get(columnIndex).length() > columnMaxWidthMapping.get(columnIndex)) {
-                columnMaxWidthMapping.put(columnIndex, headersList.get(columnIndex).length());
-            }
-        }
+        setColumnsNameNumberAndWidth(columns, columnsNumberAndWidth);
 
-        for (List<String> row : rowsList) {
-            for (int columnIndex = 0; columnIndex < row.size(); columnIndex++) {
-                if (row.get(columnIndex).length() > columnMaxWidthMapping.get(columnIndex)) {
-                    columnMaxWidthMapping.put(columnIndex, row.get(columnIndex).length());
+        checkAndSetColumnsValueWidth(rows, columnsNumberAndWidth);
+
+        setColumnsDataToCenter(columns, columnsNumberAndWidth);
+
+        return columnsNumberAndWidth;
+    }
+
+    private void setColumnsNameNumberAndWidth(List<String> columns, Map<Integer, Integer> columnsNumberAndWidth) {
+        for (int index = 0; index < columns.size(); index++) {
+            columnsNumberAndWidth.put(index, columns.get(index).length());
+        }
+    }
+
+    private void checkAndSetColumnsValueWidth(List<List<String>> rows, Map<Integer, Integer> columnsNumberAndWidth) {
+        for (List<String> row : rows) {
+            for (int index = 0; index < row.size(); index++) {
+                if (row.get(index).length() > columnsNumberAndWidth.get(index)) {
+                    columnsNumberAndWidth.put(index, row.get(index).length());
                 }
             }
         }
+    }
 
-        for (int columnIndex = 0; columnIndex < headersList.size(); columnIndex++) {
-            if (columnMaxWidthMapping.get(columnIndex) % 2 != 0) {
-                columnMaxWidthMapping.put(columnIndex, columnMaxWidthMapping.get(columnIndex) + 1);
+    private void setColumnsDataToCenter(List<String> columns, Map<Integer, Integer> columnsNumberAndWidth) {
+        for (int index = 0; index < columns.size(); index++) {
+            if (columnsNumberAndWidth.get(index) % 2 != 0) {
+                columnsNumberAndWidth.put(index, columnsNumberAndWidth.get(index) + 1);
             }
         }
-
-        return columnMaxWidthMapping;
     }
 
     private int getOptimumCellPadding(int cellIndex, int datalength, Map<Integer, Integer> columnMaxWidthMapping, int cellPaddingSize) {
