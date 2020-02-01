@@ -39,12 +39,12 @@ public class InsertTest {
     @Test
     public void testProcess_InsertData() {
         // given
+        List<Map<String, String>> users = new ArrayList<>();
+
         Map<String, String> user1 = new LinkedHashMap<>();
         user1.put("id", "1");
         user1.put("name", "user1");
         user1.put("password", "1111");
-
-        List<Map<String, String>> users = new ArrayList<>();
 
         // when
         users.add(user1);
@@ -56,21 +56,9 @@ public class InsertTest {
     }
 
     @Test
-    public void testProcess_InsertCommandWithInvalidParametersNumber() {
-        // not even parameters count
-        try { // TODO separate into 2 tests
-            command.process("insert|tableName|column|value|invalid");
-            fail("Expected IllegalArgumentException");
-        } catch (IllegalArgumentException e) {
-            // then
-            assertEquals("" +
-                    "Invalid parameters number separated by '|'.\n" +
-                    "Expected even count. You enter ==> 5.\n" +
-                    "Use command 'insert|tableName|column1|value1|column2|value2|...|columnN|valueN'", e.getMessage());
-        }
-
-        // min parameters count
+    public void testProcess_InsertCommandWithLessMinParametersNumber() {
         try {
+            // when
             command.process("insert|tableName|");
             fail("Expected IllegalArgumentException");
         } catch (IllegalArgumentException e) {
@@ -78,6 +66,21 @@ public class InsertTest {
             assertEquals("" +
                     "Invalid parameters number separated by '|'.\n" +
                     "Expected min 4. You enter ==> 2.\n" +
+                    "Use command 'insert|tableName|column1|value1|column2|value2|...|columnN|valueN'", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testProcess_InsertCommandWithNotEvenParametersNumber() {
+        try {
+            // when
+            command.process("insert|tableName|column|value|invalid");
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // then
+            assertEquals("" +
+                    "Invalid parameters number separated by '|'.\n" +
+                    "Expected even count. You enter ==> 5.\n" +
                     "Use command 'insert|tableName|column1|value1|column2|value2|...|columnN|valueN'", e.getMessage());
         }
     }
