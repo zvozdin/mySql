@@ -6,11 +6,11 @@ import java.util.Map;
 
 public class TableGenerator {
 
-    private int PADDING_SIZE = 2;
-    private String NEW_LINE = "\n";
-    private String TABLE_JOINT_SYMBOL = "+";
-    private String TABLE_V_SPLIT_SYMBOL = "|";
-    private String TABLE_H_SPLIT_SYMBOL = "-";
+    private static final int PADDINGS = 2;
+    private static final String NEW_LINE = "\n";
+    private static final String TABLE_JOINT_SYMBOL = "+";
+    private static final String TABLE_SPLIT_SYMBOL = "|";
+    private static final String TABLE_MINUS_SYMBOL = "-";
 
     public String generateTable(List<String> columns, List<List<String>> rows, int... overRiddenHeaderHeight) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -50,14 +50,15 @@ public class TableGenerator {
         }
     }
 
-    private void createRowLine(StringBuilder stringBuilder, int headersListSize, Map<Integer, Integer> columnMaxWidthMapping) {
-        for (int i = 0; i < headersListSize; i++) {
-            if (i == 0) {
+    void createRowLine(StringBuilder stringBuilder, int columnsNumber, Map<Integer, Integer> columnsNumberAndSize) {
+        for (int index = 0; index < columnsNumber; index++) {
+            if (index == 0) {
                 stringBuilder.append(TABLE_JOINT_SYMBOL);
             }
 
-            for (int j = 0; j < columnMaxWidthMapping.get(i) + PADDING_SIZE * 2; j++) {
-                stringBuilder.append(TABLE_H_SPLIT_SYMBOL);
+            Integer oneColumnWidth = columnsNumberAndSize.get(index);
+            for (int j = 0; j < oneColumnWidth + PADDINGS * 2; j++) {
+                stringBuilder.append(TABLE_MINUS_SYMBOL);
             }
 
             stringBuilder.append(TABLE_JOINT_SYMBOL);
@@ -113,9 +114,9 @@ public class TableGenerator {
     }
 
     private void fillCell(StringBuilder stringBuilder, String cell, int cellIndex, Map<Integer, Integer> columnMaxWidthMapping) {
-        int cellPaddingSize = getOptimumCellPadding(cellIndex, cell.length(), columnMaxWidthMapping, PADDING_SIZE);
+        int cellPaddingSize = getOptimumCellPadding(cellIndex, cell.length(), columnMaxWidthMapping, PADDINGS);
         if (cellIndex == 0) {
-            stringBuilder.append(TABLE_V_SPLIT_SYMBOL);
+            stringBuilder.append(TABLE_SPLIT_SYMBOL);
         }
 
         fillSpace(stringBuilder, cellPaddingSize);
@@ -125,6 +126,6 @@ public class TableGenerator {
         }
 
         fillSpace(stringBuilder, cellPaddingSize);
-        stringBuilder.append(TABLE_V_SPLIT_SYMBOL);
+        stringBuilder.append(TABLE_SPLIT_SYMBOL);
     }
 }

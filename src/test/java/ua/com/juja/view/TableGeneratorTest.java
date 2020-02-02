@@ -75,6 +75,19 @@ public class TableGeneratorTest {
                 tableGenerator.getTableWidth(new LinkedList<>(columns), rows).toString());
     }
 
+    @Test
+    public void test_CreateRowLine() {
+        // given
+        Map<Integer, Integer> columnsNumberAndSize = tableGenerator.getTableWidth(new LinkedList<>(columns), rows);
+        StringBuilder line = new StringBuilder();
+
+        // when
+        tableGenerator.createRowLine(line, columns.size(), columnsNumberAndSize);
+
+        // then
+        assertEquals("+------+------+--------+", line.toString());
+    }
+
     private static Map<String, String> getDataForTable() {
         Map<String, String> data = new LinkedHashMap<>();
         data.put("1", "12");
