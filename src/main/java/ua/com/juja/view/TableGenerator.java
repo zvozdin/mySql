@@ -18,15 +18,15 @@ public class TableGenerator {
 
         Map<Integer, Integer> columnsNumberAndSize = getTableWidth(columns, rows);
 
-        createRowLine(stringBuilder, columns.size(), columnsNumberAndSize);
+        createRowLine(stringBuilder, columns, columnsNumberAndSize);
         stringBuilder.append(NEW_LINE);
 
-        for (int headerIndex = 0; headerIndex < columns.size(); headerIndex++) {
-            fillCell(stringBuilder, columns.get(headerIndex), headerIndex, columnsNumberAndSize);
+        for (int columnIndex = 0; columnIndex < columns.size(); columnIndex++) {
+            fillCell(stringBuilder, columns.get(columnIndex), columnIndex, columnsNumberAndSize);
         }
-
         stringBuilder.append(NEW_LINE);
-        createRowLine(stringBuilder, columns.size(), columnsNumberAndSize);
+
+        createRowLine(stringBuilder, columns, columnsNumberAndSize);
 
         for (List<String> row : rows) {
             for (int i = 0; i < rowHeight; i++) {
@@ -39,7 +39,7 @@ public class TableGenerator {
         }
 
         stringBuilder.append(NEW_LINE);
-        createRowLine(stringBuilder, columns.size(), columnsNumberAndSize);
+        createRowLine(stringBuilder, columns, columnsNumberAndSize);
 
         return stringBuilder.toString();
     }
@@ -50,8 +50,8 @@ public class TableGenerator {
         }
     }
 
-    void createRowLine(StringBuilder stringBuilder, int columnsNumber, Map<Integer, Integer> columnsNumberAndSize) {
-        for (int index = 0; index < columnsNumber; index++) {
+    void createRowLine(StringBuilder stringBuilder, List<String> columns, Map<Integer, Integer> columnsNumberAndSize) {
+        for (int index = 0; index < columns.size(); index++) {
             if (index == 0) {
                 stringBuilder.append(TABLE_JOINT_SYMBOL);
             }
@@ -113,15 +113,15 @@ public class TableGenerator {
         return cellPaddingSize;
     }
 
-    private void fillCell(StringBuilder stringBuilder, String cell, int cellIndex, Map<Integer, Integer> columnMaxWidthMapping) {
-        int cellPaddingSize = getOptimumCellPadding(cellIndex, cell.length(), columnMaxWidthMapping, PADDINGS);
-        if (cellIndex == 0) {
+    private void fillCell(StringBuilder stringBuilder, String value, int columnIndex, Map<Integer, Integer> columnsNumberAndWidth) {
+        int cellPaddingSize = getOptimumCellPadding(columnIndex, value.length(), columnsNumberAndWidth, PADDINGS);
+        if (columnIndex == 0) {
             stringBuilder.append(TABLE_SPLIT_SYMBOL);
         }
 
         fillSpace(stringBuilder, cellPaddingSize);
-        stringBuilder.append(cell);
-        if (cell.length() % 2 != 0) {
+        stringBuilder.append(value);
+        if (value.length() % 2 != 0) {
             stringBuilder.append(" ");
         }
 

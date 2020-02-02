@@ -82,7 +82,7 @@ public class TableGeneratorTest {
         StringBuilder line = new StringBuilder();
 
         // when
-        tableGenerator.createRowLine(line, columns.size(), columnsNumberAndSize);
+        tableGenerator.createRowLine(line, new LinkedList<>(columns), columnsNumberAndSize);
 
         // then
         assertEquals("+------+------+--------+", line.toString());
