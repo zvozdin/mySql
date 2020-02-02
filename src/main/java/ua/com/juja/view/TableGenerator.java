@@ -64,25 +64,25 @@ public class TableGenerator {
         }
     }
 
-    private Map<Integer, Integer> getTableWidth(List<String> columns, List<List<String>> rows) {
+    Map<Integer, Integer> getTableWidth(List<String> columns, List<List<String>> rows) {
         Map<Integer, Integer> columnsNumberAndSize = new LinkedHashMap<>();
 
         setNamesNumberAndSize(columns, columnsNumberAndSize);
 
         checkAndSetColumnsValueSize(rows, columnsNumberAndSize);
 
-        setColumnsDataToCenter(columns, columnsNumberAndSize);
+        evenColumnsData(columns, columnsNumberAndSize);
 
         return columnsNumberAndSize;
     }
 
-    public void setNamesNumberAndSize(List<String> columns, Map<Integer, Integer> columnsNumberAndWidth) {
+    void setNamesNumberAndSize(List<String> columns, Map<Integer, Integer> columnsNumberAndWidth) {
         for (int index = 0; index < columns.size(); index++) {
             columnsNumberAndWidth.put(index, columns.get(index).length());
         }
     }
 
-    private void checkAndSetColumnsValueSize(List<List<String>> rows, Map<Integer, Integer> columnsNumberAndWidth) {
+    void checkAndSetColumnsValueSize(List<List<String>> rows, Map<Integer, Integer> columnsNumberAndWidth) {
         for (List<String> row : rows) {
             for (int index = 0; index < row.size(); index++) {
                 if (row.get(index).length() > columnsNumberAndWidth.get(index)) {
@@ -92,7 +92,7 @@ public class TableGenerator {
         }
     }
 
-    private void setColumnsDataToCenter(List<String> columns, Map<Integer, Integer> columnsNumberAndWidth) {
+    void evenColumnsData(List<String> columns, Map<Integer, Integer> columnsNumberAndWidth) {
         for (int index = 0; index < columns.size(); index++) {
             if (columnsNumberAndWidth.get(index) % 2 != 0) {
                 columnsNumberAndWidth.put(index, columnsNumberAndWidth.get(index) + 1);
