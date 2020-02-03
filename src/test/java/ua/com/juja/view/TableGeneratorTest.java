@@ -10,9 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class TableGeneratorTest {
 
     private TableGenerator tableGenerator;
-    private StringBuilder line;
     private Map<Integer, Integer> columnsNumberAndSize;
-    private Map<Integer, Integer> table;
     private List<String> columns;
     private List<List<String>> rows;
 
@@ -20,8 +18,6 @@ public class TableGeneratorTest {
     public void setUp() {
         // given
         tableGenerator = new TableGenerator();
-        line = new StringBuilder();
-        table = new LinkedHashMap<>();
         columns = new ArrayList<>(getDataForTable().keySet());
 
         List<String> row = new ArrayList<>(getDataForTable().values());
@@ -34,59 +30,58 @@ public class TableGeneratorTest {
     @Test
     public void test_ColumnsNameNumber() {
         // when
-        tableGenerator.setNamesNumberAndSize(columns, table);
+        tableGenerator.setColumnsNameNumberAndSize(columns);
 
         // then
-        assertEquals(columns.size(), table.size());
+        assertEquals(columns.size(), columnsNumberAndSize.size());
     }
 
     @Test
     public void test_ColumnsNameSize() {
         // when
-        tableGenerator.setNamesNumberAndSize(columns, table);
+        tableGenerator.setColumnsNameNumberAndSize(columns);
 
         // then
-        assertEquals("{0=1, 1=2, 2=4}", table.toString());
+        assertEquals("{0=1, 1=2, 2=4}", columnsNumberAndSize.toString());
     }
 
     @Test
     public void test_ColumnsValueSize() {
         // given
-        tableGenerator.setNamesNumberAndSize(columns, table);
+        tableGenerator.setColumnsNameNumberAndSize(columns);
 
         // when
-        tableGenerator.checkAndSetColumnsValueSize(rows, table);
+        tableGenerator.checkAndSetColumnsValueSize(rows);
 
         // then
-        assertEquals("{0=3, 1=2, 2=4}", table.toString());
+        assertEquals("{0=3, 1=2, 2=4}", columnsNumberAndSize.toString());
     }
 
     @Test
     public void test_EvenColumnsData() {
         // given
-        tableGenerator.setNamesNumberAndSize(columns, table);
-        tableGenerator.checkAndSetColumnsValueSize(rows, table);
+        tableGenerator.setColumnsNameNumberAndSize(columns);
+        tableGenerator.checkAndSetColumnsValueSize(rows);
 
         // when
-        tableGenerator.evenColumnsData(columns, table);
+        tableGenerator.evenColumnsData(columns);
 
         // then
-        assertEquals("{0=4, 1=2, 2=4}", table.toString());
+        assertEquals("{0=4, 1=2, 2=4}", columnsNumberAndSize.toString());
     }
 
     @Test
     public void test_GetTableWidth() {
-        assertEquals("{0=4, 1=2, 2=4}",
-                tableGenerator.getTableWidth(columns, rows).toString());
+        assertEquals("{0=4, 1=2, 2=4}", columnsNumberAndSize.toString());
     }
 
     @Test
-    public void test_CreateRowLine() {
+    public void test_DrawLine() {
         // when
-        tableGenerator.appendLine(line, columns, columnsNumberAndSize);
+        tableGenerator.drawLine(columns);
 
         // then
-        assertEquals("+--------+------+--------+", line.toString());
+        assertEquals("+--------+------+--------+", tableGenerator.getLine());
     }
 
     @Test
@@ -96,8 +91,7 @@ public class TableGeneratorTest {
         String value = columns.get(index);
 
         // when
-        int optimumPaddingSize = tableGenerator
-                .getOptimumPaddingSize(index, value.length(), columnsNumberAndSize, TableGenerator.PADDINGS);
+        int optimumPaddingSize = tableGenerator.getOptimumPaddingSize(index, value.length());
 
         // then
         assertEquals(3, optimumPaddingSize);
@@ -110,8 +104,7 @@ public class TableGeneratorTest {
         String value = columns.get(index);
 
         // when
-        int optimumPaddingSize = tableGenerator
-                .getOptimumPaddingSize(index, value.length(), columnsNumberAndSize, TableGenerator.PADDINGS);
+        int optimumPaddingSize = tableGenerator.getOptimumPaddingSize(index, value.length());
 
         // then
         assertEquals(2, optimumPaddingSize);
@@ -124,10 +117,10 @@ public class TableGeneratorTest {
         String value = columns.get(index);
 
         // when
-        tableGenerator.fillColumn(line, value, index, columnsNumberAndSize);
+        tableGenerator.fillColumn(index, value);
 
         // then
-        assertEquals("|   1    |", line.toString());
+        assertEquals("|   1    |", tableGenerator.getLine());
     }
 
     @Test
@@ -137,30 +130,30 @@ public class TableGeneratorTest {
         String value = columns.get(index);
 
         // when
-        tableGenerator.fillColumn(line, value, index, columnsNumberAndSize);
+        tableGenerator.fillColumn(index, value);
 
         // then
-        assertEquals("  1234  |", line.toString());
+        assertEquals("  1234  |", tableGenerator.getLine());
     }
 
     @Test
     public void test_PutNameData() {
         // when
-        tableGenerator.putData(line, columns, columnsNumberAndSize);
+        tableGenerator.putData(columns);
 
         // then
-        assertEquals("|   1    |  12  |  1234  |", line.toString());
+        assertEquals("|   1    |  12  |  1234  |", tableGenerator.getLine());
     }
 
     @Test
     public void test_PutValueData_1row() {
         // when
         for (List<String> row : rows) {
-            tableGenerator.putData(line, row, columnsNumberAndSize);
+            tableGenerator.putData(row);
         }
 
         // then
-        assertEquals("|  123   |  12  |   1    |", line.toString());
+        assertEquals("|  123   |  12  |   1    |", tableGenerator.getLine());
     }
 
     @Test
@@ -171,14 +164,13 @@ public class TableGeneratorTest {
 
         // when
         for (List<String> row : rows) {
-            tableGenerator.putData(line, row, columnsNumberAndSize);
-            line.append("\n");
+            tableGenerator.putData(row);
         }
 
         // then
         assertEquals("" +
-                "|  123   |  12  |   1    |\n" +
-                "|  123   |  12  |   1    |\n", line.toString());
+                "|  123   |  12  |   1    |" +
+                "|  123   |  12  |   1    |", tableGenerator.getLine());
     }
 
     @Test
