@@ -10,30 +10,29 @@ public class TableGenerator {
     private static final String SPLIT = "|";
     private static final String MINUS = "-";
 
-    private StringBuilder line;
+    private StringBuilder line = new StringBuilder();
     private Map<Integer, Integer> columnsNumberAndSize;
 
     public String generateTable(Set<String> columnsName, List<List<String>> rows) {
         List<String> columns = new ArrayList<>(columnsName);
 
-        line = new StringBuilder();
         columnsNumberAndSize = getTableWidth(columns, rows);
 
-        appendLine(line, columns);
+        drawLine(columns);
         line.append(NEW_LINE);
 
-        putData(line, columns);
+        putData(columns);
         line.append(NEW_LINE);
 
-        appendLine(line, columns);
+        drawLine(columns);
         line.append(NEW_LINE);
 
         for (List<String> row : rows) {
-            putData(line, row);
+            putData(row);
             line.append(NEW_LINE);
         }
 
-        appendLine(line, columns);
+        drawLine(columns);
 
         return line.toString();
     }
@@ -74,42 +73,42 @@ public class TableGenerator {
         }
     }
 
-    void appendLine(StringBuilder table, List<String> columns) {
+    void drawLine(List<String> columns) {
         for (int index = 0; index < columns.size(); index++) {
             if (index == 0) {
-                table.append(PLUS);
+                line.append(PLUS);
             }
 
             Integer oneColumnWidth = columnsNumberAndSize.get(index);
             for (int j = 0; j < oneColumnWidth + PADDINGS * 2; j++) {
-                table.append(MINUS);
+                line.append(MINUS);
             }
 
-            table.append(PLUS);
+            line.append(PLUS);
         }
     }
 
-    void putData(StringBuilder table, List<String> data) {
+    void putData(List<String> data) {
         for (int index = 0; index < data.size(); index++) {
             String value = data.get(index);
-            fillColumn(table, value, index);
+            fillColumn(index, value);
         }
     }
 
-    void fillColumn(StringBuilder table, String value, int index) {
+    void fillColumn(int index, String value) {
         int paddingSize = getOptimumPaddingSize(index, value.length());
         if (index == 0) {
-            table.append(SPLIT);
+            line.append(SPLIT);
         }
 
-        fillSpace(table, paddingSize);
-        table.append(value);
+        fillSpace(paddingSize);
+        line.append(value);
         if (value.length() % 2 != 0) {
-            table.append(" ");
+            line.append(" ");
         }
 
-        fillSpace(table, paddingSize);
-        table.append(SPLIT);
+        fillSpace(paddingSize);
+        line.append(SPLIT);
     }
 
     int getOptimumPaddingSize(int index, int valueLength) {
@@ -124,9 +123,13 @@ public class TableGenerator {
         return PADDINGS;
     }
 
-    private void fillSpace(StringBuilder table, int length) {
+    private void fillSpace(int length) {
         for (int i = 0; i < length; i++) {
-            table.append(" ");
+            line.append(" ");
         }
+    }
+
+    public String getLine() {
+        return line.toString();
     }
 }

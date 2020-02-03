@@ -10,7 +10,6 @@ import static org.junit.Assert.assertEquals;
 public class TableGeneratorTest {
 
     private TableGenerator tableGenerator;
-    private StringBuilder line;
     private Map<Integer, Integer> columnsNumberAndSize;
     private List<String> columns;
     private List<List<String>> rows;
@@ -19,7 +18,6 @@ public class TableGeneratorTest {
     public void setUp() {
         // given
         tableGenerator = new TableGenerator();
-        line = new StringBuilder();
         columns = new ArrayList<>(getDataForTable().keySet());
 
         List<String> row = new ArrayList<>(getDataForTable().values());
@@ -78,12 +76,12 @@ public class TableGeneratorTest {
     }
 
     @Test
-    public void test_CreateRowLine() {
+    public void test_DrawLine() {
         // when
-        tableGenerator.appendLine(line, columns);
+        tableGenerator.drawLine(columns);
 
         // then
-        assertEquals("+--------+------+--------+", line.toString());
+        assertEquals("+--------+------+--------+", tableGenerator.getLine());
     }
 
     @Test
@@ -119,10 +117,10 @@ public class TableGeneratorTest {
         String value = columns.get(index);
 
         // when
-        tableGenerator.fillColumn(line, value, index);
+        tableGenerator.fillColumn(index, value);
 
         // then
-        assertEquals("|   1    |", line.toString());
+        assertEquals("|   1    |", tableGenerator.getLine());
     }
 
     @Test
@@ -132,30 +130,30 @@ public class TableGeneratorTest {
         String value = columns.get(index);
 
         // when
-        tableGenerator.fillColumn(line, value, index);
+        tableGenerator.fillColumn(index, value);
 
         // then
-        assertEquals("  1234  |", line.toString());
+        assertEquals("  1234  |", tableGenerator.getLine());
     }
 
     @Test
     public void test_PutNameData() {
         // when
-        tableGenerator.putData(line, columns);
+        tableGenerator.putData(columns);
 
         // then
-        assertEquals("|   1    |  12  |  1234  |", line.toString());
+        assertEquals("|   1    |  12  |  1234  |", tableGenerator.getLine());
     }
 
     @Test
     public void test_PutValueData_1row() {
         // when
         for (List<String> row : rows) {
-            tableGenerator.putData(line, row);
+            tableGenerator.putData(row);
         }
 
         // then
-        assertEquals("|  123   |  12  |   1    |", line.toString());
+        assertEquals("|  123   |  12  |   1    |", tableGenerator.getLine());
     }
 
     @Test
@@ -166,14 +164,13 @@ public class TableGeneratorTest {
 
         // when
         for (List<String> row : rows) {
-            tableGenerator.putData(line, row);
-            line.append("\n");
+            tableGenerator.putData(row);
         }
 
         // then
         assertEquals("" +
-                "|  123   |  12  |   1    |\n" +
-                "|  123   |  12  |   1    |\n", line.toString());
+                "|  123   |  12  |   1    |" +
+                "|  123   |  12  |   1    |", tableGenerator.getLine());
     }
 
     @Test
