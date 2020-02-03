@@ -1,58 +1,56 @@
-# Учебный проект mySql
+# *Training project* mySql
 ***
 
 ![Build Status](https://travis-ci.com/zvozdin/mySql.svg?branch=master)
 ***
 
-### **Техническое задание**
+### **Technical task**
 
-Приложение на языке Java, реализующее функционал консольного клиента   
-для работы с конкретной базой данных. 
+Java application implements console client to work with the database 
 
-   *Требования*:
-* приложение должно использовать паттерн MVC 
-* приложение должно иметь консольный интерфейс для    
-   взаимодействия с пользователем.  
-* должны быть реализованы следующие консольные команды:  
+   *Requirements*:
+* use MVC pattern; 
+* have a console interface for user interaction;  
+* the following console commands should be implemented:  
   * **сonnect**  
-    * команда для подключения к соответствующей БД:  
-      * формат команды: connect|database|username|password, где  
-            - database - имя БД,    
-            - username -  имя пользователя БД,    
-            - password - пароль пользователя БД.  
-    * формат вывода: текстовое сообщение с результатом выполнения операции 
+    * command to connect to the suit database;  
+    * command format: connect|database|user|password, where  
+          - database - database name,    
+          - user -  user name,    
+          - password - user password;
+    * output format: operation result text message; 
     
   * **tables**  
-    * команда выводит список всех таблиц  
-      * формат команды: tables (без параметров)
-      * формат вывода: [table1, table2, table3]  
+    * command to list all the tables;    
+    * command format: list;
+    * output format: [table1, table2, table3]  
       
   * **clear**
-    * команда очищает содержимое указанной таблицы  
-    * формат команды: clear|tableName, где    
-          - tableName - имя очищаемой таблицы  
-    * формат вывода: текстовое сообщение с результатом выполнения операции  
+    * command to clear the data table;  
+    * command format: clear|table, where      
+          - table - table name;  
+    * output format: operation result text message;   
     
   * **drop**
-    * команда удаляет заданную таблицу
-    * формат команды: drop|tableName, где  
-          - tableName - имя удаляемой таблицы  
-    * формат вывода: текстовое сообщение с результатом выполнения операции
+    * command to delete the table;
+    * command format: drop|table, where  
+          - table - table name;  
+    * output format: operation result text message;  
     
   * **create**
-    * команда создает новую таблицу с заданными полями
-    * формат команды: create|tableName|column1|column2| ... |columnN, где  
-          - tableName - имя таблицы,  
-          - column1 - имя первого столбца,     
-          - column2 - имя второго столбца,    
-          - columnN - имя n-го столбца;  
-    * формат вывода: текстовое сообщение с результатом выполнения операции
+    * command to create a new table;
+    * command format: create|table|column1|column2| ... |columnN, where
+          - table - table name,  
+          - column1 - first column name,     
+          - column2 - second column name,    
+          - columnN - N-th column name;  
+    * output format: operation result text message;  
     
-  * **find**  
-    * команда для получения содержимого указанной таблицы    
-    * формат команды: find|tableName, где    
-          - tableName - имя таблицы     
-    * формат вывода: табличка в консольном формате  
+  * **find**
+    * command to get the data table;        
+    * command format: find|table, where  
+          - table - table name;     
+    * output format: table in format:    
     
              +---------+---------+---------+  
              | column1 | column2 | columnN |  
@@ -61,46 +59,47 @@
              +---------+---------+---------+  
              
   * **insert**
-    * команда для вставки одной строки в заданную таблицу  
-    * формат команды:  
-   insert|tableName|column1|value1|column2|value2| ... |columnN|valueN, где       
-          - tableName - имя таблицы,  
-          - column1 - имя первого столбца  
-          - value1 - значение первого столбца  
-          - column2 - имя второго столбца  
-          - value2 - значение второго столбца  
-          - columnN - имя n-го столбца  
-          - valueN - значение n-го столбца  
-    * формат вывода: текстовое сообщение с результатом выполнения операции  
+    * command to insert one row into the table;    
+    * command format:  
+      insert|table|column1|value1|column2|value2| ... |columnN|valueN, where    
+          - table - table name,  
+          - column1 - first column name,       
+          - value1 - first column value,  
+          - column2 - second column name,  
+          - value2 - second column value,   
+          - columnN - N-th column name,  
+          - valueN - N-th column value;  
+    * output format: operation result text message;  
     
   * **update**
-    * команда обновит запись, установив значение column1 = value1,   
-   для которой соблюдается условие column2 = value2  
-    * формат команды: update|tableName|column1|value1|column2|value2, где  
-          - tableName - имя таблицы  
-          - column1 - имя обновляемого столбца  
-          - value1 - значение обновляемого столбца  
-          - column2 -  имя столбца записи которое проверяется  
-          - value2 - значение, которому должен соответствовать столбец column2 для обновляемой записи  
-    * формат вывода: табличный, как при find без удаленных записей   
+    * command to update the record by setting   
+      column1 = value1, where column2 = value2  
+    * command format: update|table|column1|value1|column2|value2, where  
+          - table - table name,  
+          - column1 - column name to update,    
+          - value1 - column value to update,      
+          - column2 - column name to be checked,     
+          - value2 - column2's value that must match to update the record;  
+    * output format: table;  
     
   * **delete**
-    * команда удаляет одну или несколько записей для которых соблюдается условие column = value  
-    * формат команды: delete|tableName|column|value, где  
-          - tableName - имя таблицы  
-          - сolumn - имя столбца записи, которая удаляеться  
-          - value - значение, которому должен соответствовать столбец column1 для удаляемой записи  
-    * формат вывода: табличный, как при find со старыми значениями удаляемых записей.
+    * command to delete one or more records where column = value;  
+    * command format: delete|table|column|value, where  
+          - table - table name,  
+          - сolumn - column name to delete,  
+          - value - column's value that must match to delete the record;  
+    * output format: table;  
     
   * **help**
-    * команда выводит в консоль список всех доступных команд
-    * формат команды: help (без параметров)
-    * формат вывода: текст описания команд
+    * command to display all available commands list;  
+    * command format: help;  
+    * output format: commands description text;  
     
   * **exit**
-    * команда для отключения от БД и выход из приложения
-    * формат команды exit (без параметров)
-    * формат вывода: текстовое сообщение с результатом выполнения операции
+    * command to disconnect the database and close the application;  
+    * output format: exit;  
+    * output format: operation result text message.
     
-***!!! Для выполнения всех тестов необходимо ввести имя своей базы данных, имя юзера и пароль в   
+***!!! To perform all tests, you must enter   
+your database name, user name and password in    
 src/main/resources/db.properties***
