@@ -1,5 +1,8 @@
 package ua.com.juja.command;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public interface Command {
 
     boolean canProcess(String command);
@@ -17,5 +20,16 @@ public interface Command {
         }
 
         throw new InvalidParametersNumberException(sampleParameters.length, inputParameters.length, sample);
+    }
+
+    default Map<String, String> getCommandParameters(String[] data) {
+        Map<String, String> command = new LinkedHashMap<>();
+        for (int index = 1; index < data.length / 2; index++) {
+            String column = data[index * 2];
+            String value = data[index * 2 + 1];
+            command.put(column, value);
+        }
+
+        return command;
     }
 }

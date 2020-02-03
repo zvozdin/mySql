@@ -5,7 +5,6 @@ import ua.com.juja.view.ActionMessages;
 import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.View;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Insert implements Command {
@@ -30,12 +29,7 @@ public class Insert implements Command {
         String[] data = command.split("\\|");
         String tableName = data[1];
 
-        Map<String,String> insert = new LinkedHashMap<>();
-        for (int index = 1; index < data.length / 2; index++) {
-            String column = data[index * 2];
-            String value = data[index * 2 + 1];
-            insert.put(column, value);
-        }
+        Map<String, String> insert = getCommandParameters(data);
 
         manager.insert(tableName, insert);
 

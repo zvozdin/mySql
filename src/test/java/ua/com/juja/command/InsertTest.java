@@ -56,6 +56,15 @@ public class InsertTest {
     }
 
     @Test
+    public void testCommand_GetCommandParameters() {
+        // given
+        String[] data = {"insert", "tableName", "id", "1", "name", "user1", "password", "1111"};
+
+        // then
+        assertEquals("{id=1, name=user1, password=1111}", command.getCommandParameters(data).toString());
+    }
+
+    @Test
     public void testProcess_InsertCommandWithLessMinParametersNumber() {
         try {
             // when

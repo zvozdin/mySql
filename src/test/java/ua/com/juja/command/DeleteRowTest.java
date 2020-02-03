@@ -82,6 +82,15 @@ public class DeleteRowTest {
     }
 
     @Test
+    public void testCommand_GetCommandParameters() {
+        // given
+        String[] data = {"delete", "tableName", "id", "1"};
+
+        // then
+        assertEquals("{id=1}", command.getCommandParameters(data).toString());
+    }
+
+    @Test
     public void testProcess_DeleteRowCommandWithInvalidParametersNumber() {
         // when
         try {
