@@ -10,6 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class TableGeneratorTest {
 
     private TableGenerator tableGenerator;
+    private StringBuilder line;
     private Map<Integer, Integer> columnsNumberAndSize;
     private Map<Integer, Integer> table;
     private List<String> columns;
@@ -19,6 +20,7 @@ public class TableGeneratorTest {
     public void setUp() {
         // given
         tableGenerator = new TableGenerator();
+        line = new StringBuilder();
         table = new LinkedHashMap<>();
         columns = new ArrayList<>(getDataForTable().keySet());
 
@@ -80,11 +82,8 @@ public class TableGeneratorTest {
 
     @Test
     public void test_CreateRowLine() {
-        // given
-        StringBuilder line = new StringBuilder();
-
         // when
-        tableGenerator.createRowLine(line, columns, columnsNumberAndSize);
+        tableGenerator.appendLine(line, columns, columnsNumberAndSize);
 
         // then
         assertEquals("+--------+------+--------+", line.toString());
@@ -121,7 +120,6 @@ public class TableGeneratorTest {
     @Test
     public void test_FillColumn_NameLessValue() {
         // given
-        StringBuilder line = new StringBuilder();
         Integer index = 0;
         String value = columns.get(index);
 
@@ -135,7 +133,6 @@ public class TableGeneratorTest {
     @Test
     public void test_FillColumn_NameMoreValue() {
         // given
-        StringBuilder line = new StringBuilder();
         Integer index = 2;
         String value = columns.get(index);
 
@@ -148,9 +145,6 @@ public class TableGeneratorTest {
 
     @Test
     public void test_PutNameData() {
-        // given
-        StringBuilder line = new StringBuilder();
-
         // when
         tableGenerator.putData(line, columns, columnsNumberAndSize);
 
@@ -158,7 +152,46 @@ public class TableGeneratorTest {
         assertEquals("|   1    |  12  |  1234  |", line.toString());
     }
 
-    private static Map<String, String> getDataForTable() {
+    @Test
+    public void test_PutValueData_1row() {
+        // when
+        for (List<String> row : rows) {
+            tableGenerator.putData(line, row, columnsNumberAndSize);
+        }
+
+        // then
+        assertEquals("|  123   |  12  |   1    |", line.toString());
+    }
+
+    @Test
+    public void test_PutValueData_2rows() {
+        // given
+        List<String> row2 = new ArrayList<>(getDataForTable().values());
+        rows.add(row2);
+
+        // when
+        for (List<String> row : rows) {
+            tableGenerator.putData(line, row, columnsNumberAndSize);
+            line.append("\n");
+        }
+
+        // then
+        assertEquals("" +
+                "|  123   |  12  |   1    |\n" +
+                "|  123   |  12  |   1    |\n", line.toString());
+    }
+
+    @Test
+    public void test_GenerateTable() {
+        assertEquals("" +
+                "+--------+------+--------+\n" +
+                "|   1    |  12  |  1234  |\n" +
+                "+--------+------+--------+\n" +
+                "|  123   |  12  |   1    |\n" +
+                "+--------+------+--------+", tableGenerator.generateTable(columns, rows));
+    }
+
+    private Map<String, String> getDataForTable() {
         Map<String, String> data = new LinkedHashMap<>();
         data.put("1", "123");
         data.put("12", "12");
