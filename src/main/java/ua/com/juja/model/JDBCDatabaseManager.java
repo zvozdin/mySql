@@ -141,7 +141,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
                 }
                 rows.add(row);
             }
-            return new TableGenerator().generateTable(new LinkedList<>(columns), rows);
+            return new TableGenerator().generateTable(columns, rows);
         } catch (SQLException e) {
             return e.getMessage();
         }

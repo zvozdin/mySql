@@ -188,7 +188,7 @@ public class TableGeneratorTest {
                 "|   1    |  12  |  1234  |\n" +
                 "+--------+------+--------+\n" +
                 "|  123   |  12  |   1    |\n" +
-                "+--------+------+--------+", tableGenerator.generateTable(columns, rows));
+                "+--------+------+--------+", tableGenerator.generateTable(getDataForTable().keySet(), rows));
     }
 
     private Map<String, String> getDataForTable() {

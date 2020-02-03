@@ -74,7 +74,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
             }
             rows.add(row);
         }
-        return new TableGenerator().generateTable(new LinkedList<>(columns), rows); // TODO change 1st parametr in TAbleGenetrator to Set
+        return new TableGenerator().generateTable(columns, rows);
     }
 
     @Override

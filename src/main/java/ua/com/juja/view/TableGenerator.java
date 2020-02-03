@@ -1,8 +1,6 @@
 package ua.com.juja.view;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TableGenerator {
 
@@ -12,7 +10,8 @@ public class TableGenerator {
     private static final String SPLIT = "|";
     private static final String MINUS = "-";
 
-    public String generateTable(List<String> columns, List<List<String>> rows) {
+    public String generateTable(Set<String> columnsSet, List<List<String>> rows) {
+        List<String> columns = new ArrayList<>(columnsSet);
         StringBuilder table = new StringBuilder();
 
         Map<Integer, Integer> columnsNumberAndSize = getTableWidth(columns, rows);
