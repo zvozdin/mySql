@@ -7,15 +7,15 @@ public interface Command {
     void process(String command);
 
     default void parametersNumberValidation(String sample, String input) {
-        String[] sampleArr = sample.split("\\|");
-        String[] inputArr = input.split("\\|");
-        if (sampleArr.length == inputArr.length ||
-            input.startsWith("create|") && inputArr.length > sampleArr.length ||
-            input.startsWith("insert|") && inputArr.length > sampleArr.length && inputArr.length % 2 == 0)
+        String[] sampleParameters = sample.split("\\|");
+        String[] inputParameters = input.split("\\|");
+        if (sampleParameters.length == inputParameters.length ||
+            input.startsWith("create|") && inputParameters.length > sampleParameters.length ||
+            input.startsWith("insert|") && inputParameters.length > sampleParameters.length && inputParameters.length % 2 == 0)
         {
             return;
         }
 
-        throw new InvalidParametersNumberException(sampleArr.length, inputArr.length, sample);
+        throw new InvalidParametersNumberException(sampleParameters.length, inputParameters.length, sample);
     }
 }

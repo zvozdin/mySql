@@ -5,14 +5,14 @@ import ua.com.juja.view.CommandSamples;
 
 public class InvalidParametersNumberException extends IllegalArgumentException {
 
-    public InvalidParametersNumberException(int sample, int input, String sampleTxt) {
-        if (sampleTxt.startsWith("create|")) {
+    public InvalidParametersNumberException(int sample, int input, String commandSample) {
+        if (commandSample.startsWith("create|")) {
             throw new IllegalArgumentException(String.format(
                     ActionMessages.INVALID_NUMBER_MIN.toString() + CommandSamples.USE_CREATE.toString(),
                     sample, input));
         }
 
-        if (sampleTxt.startsWith("insert|")) {
+        if (commandSample.startsWith("insert|")) {
             if (input < sample) {
                 throw new IllegalArgumentException(String.format(
                         ActionMessages.INVALID_NUMBER_MIN.toString() + CommandSamples.USE_INSERT.toString(),
@@ -26,6 +26,6 @@ public class InvalidParametersNumberException extends IllegalArgumentException {
 
         throw new IllegalArgumentException(String.format(
                 ActionMessages.INVALID_NUMBER.toString(),
-                sample, input, sampleTxt));
+                sample, input, commandSample));
     }
 }
