@@ -13,15 +13,13 @@ public class InvalidParametersNumberException extends IllegalArgumentException {
         }
 
         if (commandSample.startsWith("insert|")) {
-            if (input < sample) {
-                throw new IllegalArgumentException(String.format(
-                        ActionMessages.INVALID_NUMBER_MIN.toString() + CommandSamples.USE_INSERT.toString(),
-                        sample, input));
-            } else {
-                throw new IllegalArgumentException(String.format(
-                        ActionMessages.INVALID_NUMBER_EVEN.toString() + CommandSamples.USE_INSERT.toString(),
-                        input));
-            }
+            throw new IllegalArgumentException((input < sample)
+                    ? String.format(
+                    ActionMessages.INVALID_NUMBER_MIN.toString() + CommandSamples.USE_INSERT.toString(),
+                    sample, input)
+                    : String.format(
+                    ActionMessages.INVALID_NUMBER_EVEN.toString() + CommandSamples.USE_INSERT.toString(),
+                    input));
         }
 
         throw new IllegalArgumentException(String.format(
