@@ -32,6 +32,6 @@
         		to delete content from the 'tableName'<br>
         	exit<br>
         		to exit from the program<br>
-    <a href="menu">Menu</a>
+    <a href="menu">menu</a>
     </body>
 </html>

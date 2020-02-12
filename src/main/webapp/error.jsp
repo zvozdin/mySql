@@ -4,6 +4,6 @@
         <title>mysql</title>
     </head>
     <body>
-        Cannot load this page. You can go to <a href="menu">Menu</a><br>
+        Cannot load this page. You can go to <a href="menu">menu</a><br>
     </body>
 </html>
