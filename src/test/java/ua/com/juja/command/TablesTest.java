@@ -37,26 +37,26 @@ public class TablesTest {
     @Test
     public void testProcess_List() {
         // given
-        when(manager.getTablesNames()).thenReturn(Arrays.asList(new String[]{"test1", "test2"}));
+        when(manager.getTables()).thenReturn(Arrays.asList(new String[]{"test1", "test2"}));
 
         // when
         command.process("list");
 
         // then
-        verify(manager).getTablesNames();
+        verify(manager).getTables();
         verify(view).write("[test1, test2]");
     }
 
     @Test
     public void testProcess_EmptyList() {
         // given
-        when(manager.getTablesNames()).thenReturn(Arrays.asList(new String[0]));
+        when(manager.getTables()).thenReturn(Arrays.asList(new String[0]));
 
         // when
         command.process("list");
 
         // then
-        verify(manager).getTablesNames();
+        verify(manager).getTables();
         verify(view).write("[]");
     }
 }

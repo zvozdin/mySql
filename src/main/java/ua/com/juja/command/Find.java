@@ -2,6 +2,7 @@ package ua.com.juja.command;
 
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.CommandSamples;
+import ua.com.juja.view.TableGenerator;
 import ua.com.juja.view.View;
 
 public class Find implements Command {
@@ -26,6 +27,7 @@ public class Find implements Command {
         String[] data = command.split("\\|");
         String tableName = data[1];
 
-        view.write(manager.getTableFormatData(tableName));
+        view.write(new TableGenerator()
+                .generateTable(manager.getColumns(tableName), manager.getRows(tableName)));
     }
 }

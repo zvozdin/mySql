@@ -16,11 +16,11 @@ public interface DatabaseManager {
 
     void dropTable(String tableName);
 
-    List<String> getTablesNames();
+    List<String> getTables();
 
-    Set<String> getTableColumns(String tableName);
+    Set<String> getColumns(String tableName);
 
-    String getTableFormatData(String tableName);
+    List<List<String>> getRows(String tableName);
 
     void clear(String tableName);
 
