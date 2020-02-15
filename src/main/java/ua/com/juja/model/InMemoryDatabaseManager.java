@@ -1,7 +1,6 @@
 package ua.com.juja.model;
 
 import ua.com.juja.view.ActionMessages;
-import ua.com.juja.view.TableGenerator;
 
 import java.util.*;
 
@@ -52,18 +51,18 @@ public class InMemoryDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public List<String> getTablesNames() {
+    public List<String> getTables() {
         return tables;
     }
 
     @Override
-    public Set<String> getTableColumns(String tableName) {
+    public Set<String> getColumns(String tableName) {
         notExistingTableValidation(tableName);
         return columns;
     }
 
     @Override
-    public String getTableFormatData(String tableName) {
+    public List<List<String>> getRows(String tableName) {
         notExistingTableValidation(tableName);
 
         List<List<String>> rows = new ArrayList<>();
@@ -74,7 +73,7 @@ public class InMemoryDatabaseManager implements DatabaseManager {
             }
             rows.add(row);
         }
-        return new TableGenerator().generateTable(columns, rows);
+        return rows;
     }
 
     @Override

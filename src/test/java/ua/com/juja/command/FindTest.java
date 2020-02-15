@@ -5,10 +5,7 @@ import org.junit.Test;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -52,20 +49,26 @@ public class FindTest {
         user2.put("password", "++++");
         users.add(user2);
 
-        when(manager.getTableFormatData("users"))
-                .thenReturn("" +
-                        "+------+----------+------------+\n" +
-                        "|  id  |   name   |  password  |\n" +
-                        "+------+----------+------------+\n" +
-                        "|  11  |  user1   |    ****    |\n" +
-                        "|  12  |  user2   |    ++++    |\n" +
-                        "+------+----------+------------+");
+        List<List<String>> rows = new ArrayList<>();
+        for (Map<String, String> element : users) {
+            List<String> row = new ArrayList<>();
+            for (String value : element.values()) {
+                row.add(value);
+            }
+            rows.add(row);
+        }
+
+        when(manager.getColumns("users"))
+                .thenReturn(new LinkedHashSet<>(new LinkedList<>(Arrays.asList("id", "name", "password"))));
+        when(manager.getRows("users"))
+                .thenReturn(rows);
 
         // when
         command.process("find|users");
 
         // then
-        verify(manager).getTableFormatData("users");
+        verify(manager).getColumns("users");
+        verify(manager).getRows("users");
         verify(view)
                 .write("" +
                         "+------+----------+------------+\n" +
@@ -79,24 +82,22 @@ public class FindTest {
     @Test
     public void testProcess_FindEmptyTable() {
         // given
-        when(manager.getTableFormatData("users"))
-                .thenReturn("" +
-                        "+------+--------+------------+\n" +
-                        "|  id  |  name  |  password  |\n" +
-                        "+------+--------+------------+\n" +
-                        "+------+--------+------------");
+        when(manager.getColumns("users"))
+                .thenReturn(new LinkedHashSet<>(new LinkedList<>(Arrays.asList("id", "name", "password"))));
+        when(manager.getRows("users"))
+                .thenReturn(new ArrayList<>());
 
         // when
         command.process("find|users");
 
         // then
-        verify(manager).getTableFormatData("users");
+        verify(manager).getRows("users");
         verify(view)
                 .write("" +
                         "+------+--------+------------+\n" +
                         "|  id  |  name  |  password  |\n" +
                         "+------+--------+------------+\n" +
-                        "+------+--------+------------");
+                        "+------+--------+------------+");
     }
 
     @Test

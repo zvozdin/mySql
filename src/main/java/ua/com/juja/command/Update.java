@@ -3,6 +3,7 @@ package ua.com.juja.command;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.ActionMessages;
 import ua.com.juja.view.CommandSamples;
+import ua.com.juja.view.TableGenerator;
 import ua.com.juja.view.View;
 
 import java.util.LinkedHashMap;
@@ -40,6 +41,7 @@ public class Update implements Command {
 
         view.write(String.format(
                 ActionMessages.UPDATE.toString(), where.values().iterator().next()));
-        view.write(manager.getTableFormatData(tableName));
+        view.write(new TableGenerator()
+                .generateTable(manager.getColumns(tableName), manager.getRows(tableName)));
     }
 }

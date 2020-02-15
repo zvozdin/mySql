@@ -20,6 +20,6 @@ public class Tables implements Command {
 
     @Override
     public void process(String command) {
-        view.write(manager.getTablesNames().toString());
+        view.write(manager.getTables().toString());
     }
 }
