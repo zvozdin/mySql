@@ -6,10 +6,7 @@ import org.mockito.ArgumentCaptor;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -53,21 +50,28 @@ public class DeleteRowTest {
         user2.put("password", "0000");
         users.add(user2);
 
-        when(manager.getTableFormatData("users"))
-                .thenReturn("" +
-                        "+------+----------+------------+\n" +
-                        "|  id  |   name   |  password  |\n" +
-                        "+------+----------+------------+\n" +
-                        "|  1   |  user1   |    1111    |\n" +
-                        "+------+----------+------------+");
+        when(manager.getColumns("users"))
+                .thenReturn(((LinkedList<Map<String, String>>) users).getFirst().keySet());
+
+        users.remove(user2);
+        List<List<String>> rows = new ArrayList<>();
+        for (Map<String, String> element : users) {
+            List<String> row = new ArrayList<>();
+            for (String value : element.values()) {
+                row.add(value);
+            }
+            rows.add(row);
+        }
+        when(manager.getRows("users"))
+                .thenReturn(rows);
 
         // when
-        users.remove(user2);
         command.process("delete|users|name|user2");
 
         // then
         verify(manager, atMostOnce()).deleteRow("delete|users|name|user2", user2);
-        verify(manager).getTableFormatData("users");
+        verify(manager).getColumns("users");
+        verify(manager).getRows("users");
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(view, atLeastOnce()).write(captor.capture());

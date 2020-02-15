@@ -1,7 +1,6 @@
 package ua.com.juja.model;
 
 import ua.com.juja.view.ActionMessages;
-import ua.com.juja.view.TableGenerator;
 
 import java.sql.*;
 import java.util.*;
@@ -54,7 +53,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void createTable(String tableName, Set<String> columns) {
-        if (getTablesNames().contains(tableName)) {
+        if (getTables().contains(tableName)) {
             throw new IllegalArgumentException(String.format(
                     ActionMessages.CREATE_EXISTING_TABLE.toString(), tableName));
         }
@@ -84,7 +83,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public List<String> getTablesNames() {
+    public List<String> getTables() {
         List<String> result = new LinkedList<>();
         try {
             DatabaseMetaData data = connection.getMetaData();
@@ -101,7 +100,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public Set<String> getTableColumns(String tableName) {
+    public Set<String> getColumns(String tableName) {
         notExistingTableValidation(tableName);
 
         Set<String> result = new LinkedHashSet<>();
@@ -125,10 +124,9 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public String getTableFormatData(String tableName) {
+    public List<List<String>> getRows(String tableName) {
         notExistingTableValidation(tableName);
 
-        Set<String> columns = getTableColumns(tableName);
         List<List<String>> rows = new ArrayList<>();
 
         try (Statement statement = connection.createStatement();
@@ -141,9 +139,9 @@ public class JDBCDatabaseManager implements DatabaseManager {
                 }
                 rows.add(row);
             }
-            return new TableGenerator().generateTable(columns, rows);
+            return rows;
         } catch (SQLException e) {
-            return e.getMessage();
+            return null;
         }
     }
 
@@ -247,7 +245,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     private void notExistingTableValidation(String tableName) {
-        if (!getTablesNames().contains(tableName)) {
+        if (!getTables().contains(tableName)) {
             throw new IllegalArgumentException(String.format(
                     ActionMessages.NOT_EXISTING_TABLE.toString(), tableName));
         }

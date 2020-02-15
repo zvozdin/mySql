@@ -65,14 +65,14 @@ public abstract class DatabaseManagerTest {
 
     @Test
     public void test_GetTablesNames_EmptyDatabase() {
-        assertEquals("[]", manager.getTablesNames().toString());
+        assertEquals("[]", manager.getTables().toString());
     }
 
     @Test
     public void test_CreateTable_DropTable() {
         // create
         manager.createTable("test", getDataForTable().keySet());
-        assertEquals("[test]", manager.getTablesNames().toString());
+        assertEquals("[test]", manager.getTables().toString());
 
         // create already existing table
         try {
@@ -84,7 +84,7 @@ public abstract class DatabaseManagerTest {
 
         // drop
         manager.dropTable("test");
-        assertEquals("[]", manager.getTablesNames().toString());
+        assertEquals("[]", manager.getTables().toString());
 
         // drop non existing table
         try {
@@ -102,14 +102,14 @@ public abstract class DatabaseManagerTest {
 
         // then
         assertEquals("[id, name, password]",
-                manager.getTableColumns("test").toString());
+                manager.getColumns("test").toString());
     }
 
     @Test
     public void test_GetTableColumnsFromNotExistingTable() {
         // when
         try {
-            manager.getTableColumns("nonExistingTable");
+            manager.getColumns("nonExistingTable");
             fail("Expected Exception");
         } catch (IllegalArgumentException e) {
             // then
@@ -121,7 +121,7 @@ public abstract class DatabaseManagerTest {
     public void test_GetTableFormatDataNonExistingTable() {
         // when
         try {
-            manager.getTableFormatData("nonExistingTable");
+            manager.getRows("nonExistingTable");
             fail("Expected Exception");
         } catch (IllegalArgumentException e) {
             // then
@@ -138,12 +138,7 @@ public abstract class DatabaseManagerTest {
         manager.insert("test", getDataForTable());
 
         // then
-        assertEquals("" +
-                "+------+----------+------------+\n" +
-                "|  id  |   name   |  password  |\n" +
-                "+------+----------+------------+\n" +
-                "|  1   |  user1   |    1111    |\n" +
-                "+------+----------+------------+", manager.getTableFormatData("test"));
+        assertEquals("[[1, user1, 1111]]", manager.getRows("test").toString());
     }
 
     @Test
@@ -161,13 +156,9 @@ public abstract class DatabaseManagerTest {
         manager.insert("test", second);
 
         // then
-        assertEquals("" +
-                "+------+----------+------------+\n" +
-                "|  id  |   name   |  password  |\n" +
-                "+------+----------+------------+\n" +
-                "|  1   |  user1   |    1111    |\n" +
-                "|  5   |  user2   |    7777    |\n" +
-                "+------+----------+------------+", manager.getTableFormatData("test"));
+        assertEquals("[" +
+                "[1, user1, 1111], " +
+                "[5, user2, 7777]]", manager.getRows("test").toString());
     }
 
     @Test
@@ -192,11 +183,7 @@ public abstract class DatabaseManagerTest {
         manager.clear("test");
 
         // then
-        assertEquals("" +
-                "+------+--------+------------+\n" +
-                "|  id  |  name  |  password  |\n" +
-                "+------+--------+------------+\n" +
-                "+------+--------+------------+", manager.getTableFormatData("test"));
+        assertEquals("[]", manager.getRows("test").toString());
     }
 
 
@@ -229,12 +216,7 @@ public abstract class DatabaseManagerTest {
         manager.update("test", set, where);
 
         //then
-        assertEquals("" +
-                "+------+----------------+----------------+\n" +
-                "|  id  |      name      |    password    |\n" +
-                "+------+----------------+----------------+\n" +
-                "|  1   |  user1Changed  |  0000Changed   |\n" +
-                "+------+----------------+----------------+", manager.getTableFormatData("test"));
+        assertEquals("[[1, user1Changed, 0000Changed]]", manager.getRows("test").toString());
     }
 
     @Test
@@ -269,11 +251,7 @@ public abstract class DatabaseManagerTest {
         manager.deleteRow("test", delete);
 
         // then
-        assertEquals("" +
-                "+------+--------+------------+\n" +
-                "|  id  |  name  |  password  |\n" +
-                "+------+--------+------------+\n" +
-                "+------+--------+------------+", manager.getTableFormatData("test"));
+        assertEquals("[]", manager.getRows("test").toString());
     }
 
     @Test
