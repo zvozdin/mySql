@@ -8,19 +8,21 @@ import java.util.List;
 
 public class ServiceImpl implements Service {
 
-    DatabaseManager manager;
-
-    public ServiceImpl() {
-        manager = new JDBCDatabaseManager();
-    }
-
     @Override
     public List<String> commands() {
-        return Arrays.asList("help", "menu", "connect");
+        return Arrays.asList("help", "menu", "connect", "find");
     }
 
     @Override
-    public void connect(String database, String user, String password) {
+    public DatabaseManager connect(String database, String user, String password) {
+        DatabaseManager manager = new JDBCDatabaseManager();
         manager.connect(database, user, password);
+
+        return manager;
+    }
+
+    @Override
+    public List<List<String>> find(DatabaseManager manager, String tableName) {
+        return getTableData(manager, tableName);
     }
 }

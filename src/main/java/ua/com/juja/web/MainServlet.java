@@ -1,5 +1,6 @@
 package ua.com.juja.web;
 
+import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.service.Service;
 import ua.com.juja.service.ServiceImpl;
 
@@ -24,13 +25,29 @@ public class MainServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = getAction(req);
 
+        if (action.startsWith("/connect")) {
+            req.getRequestDispatcher("connect.jsp").forward(req, resp);
+            return;
+        }
+
+        DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("db_manager");
+        if (manager == null) {
+            resp.sendRedirect("connect");
+            return;
+        }
+
         if (action.startsWith("/menu") || action.equals("/")) {
             req.setAttribute("items", service.commands());
             req.getRequestDispatcher("menu.jsp").forward(req, resp);
+
         } else if (action.startsWith("/help")) {
             req.getRequestDispatcher("help.jsp").forward(req, resp);
-        } else if (action.startsWith("/connect")) {
-            req.getRequestDispatcher("connect.jsp").forward(req, resp);
+
+        } else if (action.startsWith("/find")) {
+            String tableName = req.getParameter("table");
+            req.setAttribute("table", service.find(manager, tableName));
+            req.getRequestDispatcher("find.jsp").forward(req, resp);
+
         } else {
             req.getRequestDispatcher("error.jsp").forward(req, resp);
         }
@@ -45,7 +62,8 @@ public class MainServlet extends HttpServlet {
             String user = req.getParameter("user");
             String password = req.getParameter("password");
             try {
-                service.connect(database, user, password);
+                DatabaseManager manager = service.connect(database, user, password);
+                req.getSession().setAttribute("db_manager", manager);
                 resp.sendRedirect("menu");
             } catch (Exception e) {
                 req.setAttribute("message", e.getMessage());
