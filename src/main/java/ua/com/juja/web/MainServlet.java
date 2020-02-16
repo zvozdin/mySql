@@ -28,11 +28,7 @@ public class MainServlet extends HttpServlet {
         DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("manager");
 
         if (action.startsWith("/connect")) {
-            if (manager != null) {
-                resp.sendRedirect("menu");
-            } else {
-                req.getRequestDispatcher("connect.jsp").forward(req, resp);
-            }
+            req.getRequestDispatcher("connect.jsp").forward(req, resp);
             return;
         }
 
@@ -48,17 +44,14 @@ public class MainServlet extends HttpServlet {
         } else if (action.startsWith("/help")) {
             req.getRequestDispatcher("help.jsp").forward(req, resp);
 
-        } else if (action.startsWith("/find")) {
-            String command = "find";
-            req.setAttribute("command", command);
-            req.getRequestDispatcher("setTable.jsp").forward(req, resp);
-
-        } else if (action.startsWith("/clear")) {
-            String command = "clear";
-            req.setAttribute("command", command);
-            req.getRequestDispatcher("setTable.jsp").forward(req, resp);
-
         } else {
+            for (String command : service.commands()) {
+                if (action.startsWith("/" + command)) {
+                    req.setAttribute("command", command);
+                    req.getRequestDispatcher("setName.jsp").forward(req, resp);
+                    return;
+                }
+            }
             req.getRequestDispatcher("error.jsp").forward(req, resp);
         }
     }
@@ -66,26 +59,31 @@ public class MainServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = getAction(req);
+        DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("manager");
         try {
             if (action.startsWith("/connect")) {
                 String database = req.getParameter("database");
                 String user = req.getParameter("user");
                 String password = req.getParameter("password");
-                    DatabaseManager manager = service.connect(database, user, password);
-                    req.getSession().setAttribute("manager", manager);
-                    resp.sendRedirect("menu");
+                manager = service.connect(database, user, password);
+                req.getSession().setAttribute("manager", manager);
+                resp.sendRedirect("menu");
+                return;
 
-            } else if (action.startsWith("/find")) {
-                String table = req.getParameter("find");
-                    DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("manager");
-                    req.setAttribute("rows", service.find(manager, table));
-                    req.getRequestDispatcher("table.jsp").forward(req, resp);
+            } else if (action.startsWith("/newDatabase")) {
+                String databaseName = req.getParameter("newDatabase");
+                req.setAttribute("report", service.newDatabase(manager, databaseName));
+                req.getRequestDispatcher("database.jsp").forward(req, resp);
+                return;
 
-            } else if (action.startsWith("/clear")) {
-                String table = req.getParameter("clear");
-                    DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("manager");
-                    req.setAttribute("rows", service.clear(manager, table));
-                    req.getRequestDispatcher("table.jsp").forward(req, resp);
+            } else {
+                for (String command : service.commands()) {
+                    if (action.startsWith("/" + command)) {
+                        req.setAttribute("rows", service.find(manager, req.getParameter(command)));
+                        req.getRequestDispatcher("table.jsp").forward(req, resp);
+                        return;
+                    }
+                }
             }
         } catch (Exception e) {
             req.setAttribute("message", e.getMessage());

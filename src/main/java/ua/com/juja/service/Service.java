@@ -15,6 +15,8 @@ public interface Service {
 
     List<List<String>> clear(DatabaseManager manager, String table);
 
+    String newDatabase(DatabaseManager manager, String databaseName);
+
     default List<List<String>> getTableData(DatabaseManager manager, String tableName) {
         List<List<String>> rows = new ArrayList<>();
         rows.add(new ArrayList<>(manager.getColumns(tableName)));

@@ -2,6 +2,7 @@ package ua.com.juja.service;
 
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.model.JDBCDatabaseManager;
+import ua.com.juja.view.ActionMessages;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +16,7 @@ public class ServiceImpl implements Service {
                 "menu",
                 "connect",
                 "find",
+                "newDatabase",
                 "create table",
                 "clear"
         );
@@ -38,5 +40,11 @@ public class ServiceImpl implements Service {
         manager.clear(table);
 
         return find(manager, table);
+    }
+
+    @Override
+    public String newDatabase(DatabaseManager manager, String databaseName) {
+        manager.createDatabase(databaseName);
+        return String.format(ActionMessages.DATABASE_NEW.toString(), databaseName);
     }
 }

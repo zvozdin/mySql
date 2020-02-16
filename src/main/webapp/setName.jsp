@@ -5,7 +5,7 @@
     </head>
     <body>
         <form action="${command}" method="post">
-            Table Name:<br>
+            Name:<br>
             <input type="text" name="${command}"><br>
             <br>
             <input type="submit" value="${command}">
