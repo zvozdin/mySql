@@ -15,7 +15,9 @@ public class ServiceImpl implements Service {
                 "menu",
                 "connect",
                 "find",
-                "create table");
+                "create table",
+                "clear"
+        );
     }
 
     @Override
@@ -29,5 +31,12 @@ public class ServiceImpl implements Service {
     @Override
     public List<List<String>> find(DatabaseManager manager, String tableName) {
         return getTableData(manager, tableName);
+    }
+
+    @Override
+    public List<List<String>> clear(DatabaseManager manager, String table) {
+        manager.clear(table);
+
+        return find(manager, table);
     }
 }

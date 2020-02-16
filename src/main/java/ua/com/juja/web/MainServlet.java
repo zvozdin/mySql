@@ -49,7 +49,14 @@ public class MainServlet extends HttpServlet {
             req.getRequestDispatcher("help.jsp").forward(req, resp);
 
         } else if (action.startsWith("/find")) {
-            req.getRequestDispatcher("findTable.jsp").forward(req, resp);
+            String command = "find";
+            req.setAttribute("command", command);
+            req.getRequestDispatcher("setTable.jsp").forward(req, resp);
+
+        } else if (action.startsWith("/clear")) {
+            String command = "clear";
+            req.setAttribute("command", command);
+            req.getRequestDispatcher("setTable.jsp").forward(req, resp);
 
         } else {
             req.getRequestDispatcher("error.jsp").forward(req, resp);
@@ -59,31 +66,30 @@ public class MainServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = getAction(req);
+        try {
+            if (action.startsWith("/connect")) {
+                String database = req.getParameter("database");
+                String user = req.getParameter("user");
+                String password = req.getParameter("password");
+                    DatabaseManager manager = service.connect(database, user, password);
+                    req.getSession().setAttribute("manager", manager);
+                    resp.sendRedirect("menu");
 
-        if (action.startsWith("/connect")) {
-            String database = req.getParameter("database");
-            String user = req.getParameter("user");
-            String password = req.getParameter("password");
-            try {
-                DatabaseManager manager = service.connect(database, user, password);
-                req.getSession().setAttribute("manager", manager);
-                resp.sendRedirect("menu");
-            } catch (Exception e) {
-                req.setAttribute("message", e.getMessage());
-                req.getRequestDispatcher("error.jsp").forward(req, resp);
-            }
-        }
+            } else if (action.startsWith("/find")) {
+                String table = req.getParameter("find");
+                    DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("manager");
+                    req.setAttribute("rows", service.find(manager, table));
+                    req.getRequestDispatcher("table.jsp").forward(req, resp);
 
-        if (action.startsWith("/find")) {
-            String table = req.getParameter("table");
-            try {
-                DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("manager");
-                req.setAttribute("rows", service.find(manager, table));
-                req.getRequestDispatcher("findResult.jsp").forward(req, resp);
-            } catch (Exception e) {
-                req.setAttribute("message", e.getMessage());
-                req.getRequestDispatcher("error.jsp").forward(req, resp);
+            } else if (action.startsWith("/clear")) {
+                String table = req.getParameter("clear");
+                    DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("manager");
+                    req.setAttribute("rows", service.clear(manager, table));
+                    req.getRequestDispatcher("table.jsp").forward(req, resp);
             }
+        } catch (Exception e) {
+            req.setAttribute("message", e.getMessage());
+            req.getRequestDispatcher("error.jsp").forward(req, resp);
         }
     }
 

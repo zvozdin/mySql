@@ -13,6 +13,8 @@ public interface Service {
 
     List<List<String>> find(DatabaseManager manager, String tableName);
 
+    List<List<String>> clear(DatabaseManager manager, String table);
+
     default List<List<String>> getTableData(DatabaseManager manager, String tableName) {
         List<List<String>> rows = new ArrayList<>();
         rows.add(new ArrayList<>(manager.getColumns(tableName)));

@@ -13,7 +13,7 @@
             Password:<br>
             <input type="password" name="password"><br><br>
 
-            <input type="submit" value="Connect">
+            <input type="submit" value="connect">
         </form>
     </body>
 </html>
