@@ -10,7 +10,12 @@ public class ServiceImpl implements Service {
 
     @Override
     public List<String> commands() {
-        return Arrays.asList("help", "menu", "connect", "find");
+        return Arrays.asList(
+                "help",
+                "menu",
+                "connect",
+                "find",
+                "create table");
     }
 
     @Override

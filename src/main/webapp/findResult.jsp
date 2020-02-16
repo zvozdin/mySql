@@ -1,11 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
     <head>
-        <title>mysql</title>
+        <title>mysql | find | result</title>
     </head>
     <body>
         <table border="1">
-            <c:forEach items="${table}" var="row">
+            <c:forEach items="${rows}" var="row">
                 <tr>
                     <c:forEach items="${row}" var="element">
                         <td>
@@ -15,6 +15,7 @@
                 </tr>
             </c:forEach>
         </table>
-        <a href="menu">menu</a>
+        <br>
+        <a href="menu">menu</a> <a href="help">help</a>
     </body>
 </html>
