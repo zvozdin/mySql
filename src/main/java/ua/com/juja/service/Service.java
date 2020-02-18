@@ -11,11 +11,13 @@ public interface Service {
 
     DatabaseManager connect(String database, String user, String password);
 
+    String newDatabase(DatabaseManager manager, String databaseName);
+
+    String dropDatabase(DatabaseManager manager, String databaseName);
+
     List<List<String>> find(DatabaseManager manager, String tableName);
 
-    List<List<String>> clear(DatabaseManager manager, String table);
-
-    String newDatabase(DatabaseManager manager, String databaseName);
+    List<List<String>> clear(DatabaseManager manager, String tableName);
 
     default List<List<String>> getTableData(DatabaseManager manager, String tableName) {
         List<List<String>> rows = new ArrayList<>();

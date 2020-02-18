@@ -6,6 +6,7 @@
     <body>
         Ooops! Something went wrong.<br>
         ${message}<br>
+        <br>
         <a href="menu">menu</a> <a href="help">help</a>
     </body>
 </html>

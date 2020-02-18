@@ -42,13 +42,16 @@ public class MainServlet extends HttpServlet {
             req.getRequestDispatcher("menu.jsp").forward(req, resp);
 
         } else if (action.startsWith("/help")) {
+            // TODO in help.jsp make commands as references
             req.getRequestDispatcher("help.jsp").forward(req, resp);
 
         } else {
             for (String command : service.commands()) {
                 if (action.startsWith("/" + command)) {
                     req.setAttribute("command", command);
-                    req.getRequestDispatcher("setName.jsp").forward(req, resp);
+                    req.getRequestDispatcher(command == "newDatabase" || command == "dropDatabase"
+                            ? "setDatabaseName.jsp"
+                            : "setTableName.jsp").forward(req, resp);
                     return;
                 }
             }
@@ -59,7 +62,9 @@ public class MainServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = getAction(req);
+
         DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("manager");
+
         try {
             if (action.startsWith("/connect")) {
                 String database = req.getParameter("database");
@@ -70,15 +75,21 @@ public class MainServlet extends HttpServlet {
                 resp.sendRedirect("menu");
                 return;
 
-            } else if (action.startsWith("/newDatabase")) {
-                String databaseName = req.getParameter("newDatabase");
-                req.setAttribute("report", service.newDatabase(manager, databaseName));
+            } else if (action.startsWith("/newDatabase") || action.startsWith("/dropDatabase")) {
+                req.setAttribute("report", action.startsWith("/newDatabase")
+                        ? service.newDatabase(manager, req.getParameter("newDatabase"))
+                        : service.dropDatabase(manager, req.getParameter("dropDatabase")));
                 req.getRequestDispatcher("database.jsp").forward(req, resp);
                 return;
 
             } else {
                 for (String command : service.commands()) {
+
+
                     if (action.startsWith("/" + command)) {
+
+
+                        req.setAttribute("report", service.commands());
                         req.setAttribute("rows", service.find(manager, req.getParameter(command)));
                         req.getRequestDispatcher("table.jsp").forward(req, resp);
                         return;

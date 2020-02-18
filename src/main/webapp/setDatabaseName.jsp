@@ -5,12 +5,11 @@
     </head>
     <body>
         <form action="${command}" method="post">
-            Name:<br>
+            Database Name:<br>
             <input type="text" name="${command}"><br>
             <br>
             <input type="submit" value="${command}">
         </form>
-        <br>
         <a href="menu">menu</a> <a href="help">help</a>
     </body>
 </html>

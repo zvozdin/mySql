@@ -4,7 +4,7 @@
         <title>mysql | database | result</title>
     </head>
     <body>
-        ${report}
+        ${report}<br>
         <br>
         <a href="menu">menu</a> <a href="help">help</a>
     </body>

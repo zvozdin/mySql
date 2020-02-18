@@ -17,6 +17,7 @@ public class ServiceImpl implements Service {
                 "connect",
                 "find",
                 "newDatabase",
+                "dropDatabase",
                 "create table",
                 "clear"
         );
@@ -31,20 +32,25 @@ public class ServiceImpl implements Service {
     }
 
     @Override
+    public String newDatabase(DatabaseManager manager, String databaseName) {
+        manager.createDatabase(databaseName);
+        return String.format(ActionMessages.DATABASE_NEW.toString(), databaseName);
+    }
+
+    @Override
+    public String dropDatabase(DatabaseManager manager, String databaseName) {
+        manager.dropDatabase(databaseName);
+        return String.format(ActionMessages.DROP_DB.toString(), databaseName);
+    }
+
+    @Override
     public List<List<String>> find(DatabaseManager manager, String tableName) {
         return getTableData(manager, tableName);
     }
 
     @Override
-    public List<List<String>> clear(DatabaseManager manager, String table) {
-        manager.clear(table);
-
-        return find(manager, table);
-    }
-
-    @Override
-    public String newDatabase(DatabaseManager manager, String databaseName) {
-        manager.createDatabase(databaseName);
-        return String.format(ActionMessages.DATABASE_NEW.toString(), databaseName);
+    public List<List<String>> clear(DatabaseManager manager, String tableName) {
+        manager.clear(tableName);
+        return find(manager, tableName);
     }
 }
