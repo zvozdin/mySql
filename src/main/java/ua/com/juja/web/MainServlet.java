@@ -3,6 +3,7 @@ package ua.com.juja.web;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.service.Service;
 import ua.com.juja.service.ServiceImpl;
+import ua.com.juja.view.ActionMessages;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -79,24 +80,26 @@ public class MainServlet extends HttpServlet {
                 req.setAttribute("report", action.startsWith("/newDatabase")
                         ? service.newDatabase(manager, req.getParameter("newDatabase"))
                         : service.dropDatabase(manager, req.getParameter("dropDatabase")));
-                req.getRequestDispatcher("database.jsp").forward(req, resp);
+                req.getRequestDispatcher("report.jsp").forward(req, resp);
                 return;
 
             } else {
-                for (String command : service.commands()) {
-
-
-                    if (action.startsWith("/" + command)) {
-
-
-                        req.setAttribute("report", service.commands());
+                String command = action.substring(1);
+                switch (command) {
+                    case "find":
                         req.setAttribute("rows", service.find(manager, req.getParameter(command)));
                         req.getRequestDispatcher("table.jsp").forward(req, resp);
-                        return;
-                    }
+                        break;
+                    case "clear":
+                        service.clear(manager, req.getParameter(command));
+                        req.setAttribute(
+                                "report", String.format(ActionMessages.CLEAR.toString(), req.getParameter(command)));
+                        req.getRequestDispatcher("report.jsp").forward(req, resp);
+                        break;
                 }
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             req.setAttribute("message", e.getMessage());
             req.getRequestDispatcher("error.jsp").forward(req, resp);
         }

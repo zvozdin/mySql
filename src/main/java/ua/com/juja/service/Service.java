@@ -17,7 +17,7 @@ public interface Service {
 
     List<List<String>> find(DatabaseManager manager, String tableName);
 
-    List<List<String>> clear(DatabaseManager manager, String tableName);
+    void clear(DatabaseManager manager, String tableName);
 
     default List<List<String>> getTableData(DatabaseManager manager, String tableName) {
         List<List<String>> rows = new ArrayList<>();

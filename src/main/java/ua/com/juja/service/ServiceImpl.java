@@ -49,8 +49,7 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-    public List<List<String>> clear(DatabaseManager manager, String tableName) {
+    public void clear(DatabaseManager manager, String tableName) {
         manager.clear(tableName);
-        return find(manager, tableName);
     }
 }
