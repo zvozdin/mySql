@@ -76,28 +76,29 @@ public class MainServlet extends HttpServlet {
                 resp.sendRedirect("menu");
                 return;
 
-            } else if (action.startsWith("/newDatabase") || action.startsWith("/dropDatabase")) {
-                req.setAttribute("report", action.startsWith("/newDatabase")
-                        ? service.newDatabase(manager, req.getParameter("newDatabase"))
-                        : service.dropDatabase(manager, req.getParameter("dropDatabase")));
-                req.getRequestDispatcher("report.jsp").forward(req, resp);
+            } else if (action.startsWith("/find")) {
+                req.setAttribute("rows", service.find(manager, req.getParameter("find")));
+                req.getRequestDispatcher("table.jsp").forward(req, resp);
                 return;
 
             } else {
                 String command = action.substring(1);
-                String tableName = req.getParameter(command);
+                String name = req.getParameter(command);
                 switch (command) {
-                    case "find":
-                        req.setAttribute("rows", service.find(manager, tableName));
-                        req.getRequestDispatcher("table.jsp").forward(req, resp);
+                    case "newDatabase":
+                        service.newDatabase(manager, name);
+                        req.setAttribute("report", String.format(ActionMessages.DATABASE_NEW.toString(), name));
+                        break;
+                    case "dropDatabase":
+                        service.dropDatabase(manager, name);
+                        req.setAttribute("report", String.format(ActionMessages.DROP_DB.toString(), name));
                         break;
                     case "clear":
-                        service.clear(manager, tableName);
-                        req.setAttribute(
-                                "report", String.format(ActionMessages.CLEAR.toString(), tableName));
-                        req.getRequestDispatcher("report.jsp").forward(req, resp);
+                        service.clear(manager, name);
+                        req.setAttribute("report", String.format(ActionMessages.CLEAR.toString(), name));
                         break;
                 }
+                req.getRequestDispatcher("report.jsp").forward(req, resp);
             }
         } catch (
                 Exception e) {
