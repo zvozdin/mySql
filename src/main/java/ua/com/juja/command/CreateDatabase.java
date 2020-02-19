@@ -5,6 +5,11 @@ import ua.com.juja.view.ActionMessages;
 import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.View;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 public class CreateDatabase implements Command {
 
     private DatabaseManager manager;
@@ -30,5 +35,10 @@ public class CreateDatabase implements Command {
         manager.createDatabase(databaseName);
 
         view.write(String.format(ActionMessages.DATABASE_NEW.toString(), databaseName));
+    }
+
+    @Override
+    public void processWeb(DatabaseManager manager, String name, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
     }
 }

@@ -1,5 +1,6 @@
 package ua.com.juja.service;
 
+import ua.com.juja.command.*;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.model.JDBCDatabaseManager;
 
@@ -9,16 +10,21 @@ import java.util.List;
 public class ServiceImpl implements Service {
 
     @Override
-    public List<String> commands() {
+    public List<Command> commands() {
         return Arrays.asList(
-                "help",
-                "menu",
-                "connect",
-                "find",
-                "newDatabase",
-                "dropDatabase",
-                "create table",
-                "clear"
+//                "help",
+//                "menu",
+//                "connect",
+//                "find",
+//                "newDatabase",
+//                "dropDatabase",
+//                "create table",
+//                "clear"
+                new Help(),
+                new Menu(),
+                new Connect(this),
+                new Find(this),
+                new Clear(this)
         );
     }
 

@@ -1,5 +1,6 @@
 package ua.com.juja.service;
 
+import ua.com.juja.command.Command;
 import ua.com.juja.model.DatabaseManager;
 
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import java.util.List;
 
 public interface Service {
 
-    List<String> commands();
+    List<Command> commands();
 
     DatabaseManager connect(String database, String user, String password);
 

@@ -1,9 +1,14 @@
 package ua.com.juja.command;
 
+import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.view.View;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Help implements Command {
@@ -12,6 +17,10 @@ public class Help implements Command {
 
     public Help(View view) {
         this.view = view;
+    }
+
+    public Help() {
+
     }
 
     @Override
@@ -30,5 +39,15 @@ public class Help implements Command {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void processWeb(DatabaseManager manager, String name, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    }
+
+    @Override
+    public String toString() {
+        return "help";
     }
 }

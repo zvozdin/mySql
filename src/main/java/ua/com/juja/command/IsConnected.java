@@ -5,6 +5,11 @@ import ua.com.juja.view.ActionMessages;
 import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.View;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 public class IsConnected implements Command {
 
     private DatabaseManager manager;
@@ -24,5 +29,10 @@ public class IsConnected implements Command {
     public void process(String command) {
         view.write(String.format(
                 ActionMessages.NOT_CONNECTED.toString() + CommandSamples.CONNECT.toString(), command));
+    }
+
+    @Override
+    public void processWeb(DatabaseManager manager, String name, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
     }
 }

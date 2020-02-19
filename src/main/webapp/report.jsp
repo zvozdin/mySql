@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
     <head>
-        <title>mysql | database | result</title>
+        <title>mysql | ${report} | result</title>
     </head>
     <body>
         ${report}<br>

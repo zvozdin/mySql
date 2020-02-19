@@ -6,6 +6,10 @@ import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.TableGenerator;
 import ua.com.juja.view.View;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -43,5 +47,10 @@ public class Update implements Command {
                 ActionMessages.UPDATE.toString(), where.values().iterator().next()));
         view.write(new TableGenerator()
                 .generateTable(manager.getColumns(tableName), manager.getRows(tableName)));
+    }
+
+    @Override
+    public void processWeb(DatabaseManager manager, String name, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
     }
 }
