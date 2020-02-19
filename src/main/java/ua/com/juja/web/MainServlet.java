@@ -85,15 +85,16 @@ public class MainServlet extends HttpServlet {
 
             } else {
                 String command = action.substring(1);
+                String tableName = req.getParameter(command);
                 switch (command) {
                     case "find":
-                        req.setAttribute("rows", service.find(manager, req.getParameter(command)));
+                        req.setAttribute("rows", service.find(manager, tableName));
                         req.getRequestDispatcher("table.jsp").forward(req, resp);
                         break;
                     case "clear":
-                        service.clear(manager, req.getParameter(command));
+                        service.clear(manager, tableName);
                         req.setAttribute(
-                                "report", String.format(ActionMessages.CLEAR.toString(), req.getParameter(command)));
+                                "report", String.format(ActionMessages.CLEAR.toString(), tableName));
                         req.getRequestDispatcher("report.jsp").forward(req, resp);
                         break;
                 }
