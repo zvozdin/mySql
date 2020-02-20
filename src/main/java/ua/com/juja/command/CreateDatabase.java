@@ -39,8 +39,7 @@ public class CreateDatabase implements Command {
     }
 
     @Override
-    public void processWeb(
-            DatabaseManager manager, String databaseName, HttpServletRequest req, HttpServletResponse resp)
+    public void processWeb(DatabaseManager manager, String databaseName, HttpServletRequest req, HttpServletResponse resp)
     {
         manager.createDatabase(databaseName);
         req.setAttribute("report", String.format(ActionMessages.DATABASE_NEW.toString(), databaseName));

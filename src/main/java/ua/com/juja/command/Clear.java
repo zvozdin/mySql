@@ -38,8 +38,7 @@ public class Clear implements Command {
     }
 
     @Override
-    public void processWeb(
-            DatabaseManager manager, String tableName, HttpServletRequest req, HttpServletResponse resp)
+    public void processWeb(DatabaseManager manager, String tableName, HttpServletRequest req, HttpServletResponse resp)
     {
         manager.clear(tableName);
         req.setAttribute("report", String.format(ActionMessages.CLEAR.toString(), tableName));

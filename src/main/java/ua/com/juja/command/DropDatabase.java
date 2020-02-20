@@ -39,8 +39,7 @@ public class DropDatabase implements Command {
     }
 
     @Override
-    public void processWeb(
-            DatabaseManager manager, String databaseName, HttpServletRequest req, HttpServletResponse resp)
+    public void processWeb(DatabaseManager manager, String databaseName, HttpServletRequest req, HttpServletResponse resp)
     {
         manager.dropDatabase(databaseName);
         req.setAttribute("report", String.format(ActionMessages.DROP_DB.toString(), databaseName));
