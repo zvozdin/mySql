@@ -39,12 +39,15 @@ public class MainServlet extends HttpServlet {
         }
 
         if (action.startsWith("/menu") || action.equals("/")) {
+            // todo replaced / and /menu to web.xml into separate Servlet
             int length = service.commands().toString().length();
-            req.setAttribute("commands", service.commands().toString().substring(1, length - 1));
+            req.setAttribute("commands", service.commands()
+                    .toString().substring(1, length - 1));
             req.getRequestDispatcher("menu.jsp").forward(req, resp);
 
         } else if (action.startsWith("/help")) {
             // TODO in help.jsp make commands as references
+            // todo replaced /help to web.xml into separate Servlet
             req.getRequestDispatcher("help.jsp").forward(req, resp);
 
         } else {
@@ -77,39 +80,22 @@ public class MainServlet extends HttpServlet {
                 resp.sendRedirect("menu");
                 return;
 
-            } /*else if (action.startsWith("/find")) {
-                req.setAttribute("rows", service.find(manager, req.getParameter("find")));
-                req.getRequestDispatcher("table.jsp").forward(req, resp);
-                return;
-
-            }*/ else {
+            } else {
                 action = action.substring(1);
                 String name = req.getParameter(action);
-//                switch (command) {
-//                    case "newDatabase":
-//                        service.newDatabase(manager, name);
-//                        req.setAttribute("report", String.format(ActionMessages.DATABASE_NEW.toString(), name));
-//                        break;
-//                    case "dropDatabase":
-//                        service.dropDatabase(manager, name);
-//                        req.setAttribute("report", String.format(ActionMessages.DROP_DB.toString(), name));
-//                        break;
-//                    case "clear":
-//                        service.clear(manager, name);
-//                        req.setAttribute("report", String.format(ActionMessages.CLEAR.toString(), name));
-//                        break;
-//                }
-//                req.getRequestDispatcher("report.jsp").forward(req, resp);
-
                 for (Command command : service.commands()) {
                     if (action.equals(command.toString())) {
                         command.processWeb(manager, name, req, resp);
+                        if (action.equals("find")) {
+                            req.getRequestDispatcher("table.jsp").forward(req, resp);
+                            return;
+                        }
+                        req.getRequestDispatcher("report.jsp").forward(req, resp);
                         return;
                     }
                 }
             }
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             req.setAttribute("message", e.getMessage());
             req.getRequestDispatcher("error.jsp").forward(req, resp);
         }

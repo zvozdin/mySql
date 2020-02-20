@@ -15,5 +15,6 @@
 
             <input type="submit" value="connect">
         </form>
+        <a href="menu">menu</a> <a href="help">help</a>
     </body>
 </html>

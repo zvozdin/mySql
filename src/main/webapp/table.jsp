@@ -4,6 +4,7 @@
         <title>mysql | table | result</title>
     </head>
     <body>
+        ${report}
         <table border="1">
             <c:forEach items="${rows}" var="row">
                 <tr>

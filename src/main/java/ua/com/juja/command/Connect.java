@@ -1,7 +1,6 @@
 package ua.com.juja.command;
 
 import ua.com.juja.model.DatabaseManager;
-import ua.com.juja.service.Service;
 import ua.com.juja.view.ActionMessages;
 import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.View;
@@ -15,15 +14,13 @@ public class Connect implements Command {
 
     private DatabaseManager manager;
     private View view;
-    private Service service;
 
     public Connect(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
     }
 
-    public Connect(Service service) {
-        this.service = service;
+    public Connect() {
     }
 
     @Override
@@ -47,7 +44,7 @@ public class Connect implements Command {
 
     @Override
     public void processWeb(DatabaseManager manager, String name, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        // todo replace to here from MainServlet
     }
 
     @Override

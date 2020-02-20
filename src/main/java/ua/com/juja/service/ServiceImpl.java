@@ -12,19 +12,12 @@ public class ServiceImpl implements Service {
     @Override
     public List<Command> commands() {
         return Arrays.asList(
-//                "help",
-//                "menu",
-//                "connect",
-//                "find",
-//                "newDatabase",
-//                "dropDatabase",
-//                "create table",
-//                "clear"
                 new Help(),
-                new Menu(),
-                new Connect(this),
-                new Find(this),
-                new Clear(this)
+                new Connect(),
+                new CreateDatabase(),
+                new DropDatabase(),
+                new Find(),
+                new Clear()
         );
     }
 

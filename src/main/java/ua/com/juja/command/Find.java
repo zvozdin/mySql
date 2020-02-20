@@ -1,29 +1,26 @@
 package ua.com.juja.command;
 
 import ua.com.juja.model.DatabaseManager;
-import ua.com.juja.service.Service;
 import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.TableGenerator;
 import ua.com.juja.view.View;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Find implements Command {
 
     private DatabaseManager manager;
     private View view;
-    private Service service;
 
     public Find(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
     }
 
-    public Find(Service service) {
-        this.service = service;
+    public Find() {
     }
 
     @Override
@@ -43,9 +40,14 @@ public class Find implements Command {
     }
 
     @Override
-    public void processWeb(DatabaseManager manager, String tableName, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("rows", service.find(manager, tableName));
-        req.getRequestDispatcher("table.jsp").forward(req, resp);
+    public void processWeb(
+            DatabaseManager manager, String tableName, HttpServletRequest req, HttpServletResponse resp)
+    {
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(new ArrayList<>(manager.getColumns(tableName)));
+        rows.addAll(manager.getRows(tableName));
+
+        req.setAttribute("rows", rows);
     }
 
     @Override
