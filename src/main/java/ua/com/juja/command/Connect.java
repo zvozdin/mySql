@@ -1,14 +1,13 @@
 package ua.com.juja.command;
 
 import ua.com.juja.model.DatabaseManager;
+import ua.com.juja.model.JDBCDatabaseManager;
 import ua.com.juja.view.ActionMessages;
 import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.View;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 public class Connect implements Command {
 
@@ -43,8 +42,16 @@ public class Connect implements Command {
     }
 
     @Override
-    public void processWeb(DatabaseManager manager, String name, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // todo replace to here from MainServlet
+    public void processWeb(DatabaseManager manager, String name, HttpServletRequest req, HttpServletResponse resp)
+    {
+        String database = req.getParameter("database");
+        String user = req.getParameter("user");
+        String password = req.getParameter("password");
+
+        manager = new JDBCDatabaseManager();
+        manager.connect(database, user, password);
+
+        req.getSession().setAttribute("manager", manager);
     }
 
     @Override

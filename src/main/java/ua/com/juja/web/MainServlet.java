@@ -66,33 +66,25 @@ public class MainServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = getAction(req);
-
         DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("manager");
 
         try {
-            if (action.startsWith("/connect")) {
-                String database = req.getParameter("database");
-                String user = req.getParameter("user");
-                String password = req.getParameter("password");
-                manager = service.connect(database, user, password);
-                req.getSession().setAttribute("manager", manager);
-                resp.sendRedirect("menu");
-                return;
-
-            } else {
-                action = action.substring(1);
-                String name = req.getParameter(action);
-                for (Command command : service.commands()) {
-                    if (action.equals(command.toString())) {
-                        command.processWeb(manager, name, req, resp);
-                        if (action.equals("find")) {
-                            req.getRequestDispatcher("table.jsp").forward(req, resp);
-                            return;
-                        }
-                        req.getRequestDispatcher("report.jsp").forward(req, resp);
+            String action = getAction(req).substring(1);
+            String name = req.getParameter(action);
+            for (Command command : service.commands()) {
+                if (action.equals(command.toString())) {
+                    command.processWeb(manager, name, req, resp);
+                    if (action.equals("connect")) {
+                        resp.sendRedirect("menu");
                         return;
                     }
+
+                    if (action.equals("find")) {
+                        req.getRequestDispatcher("table.jsp").forward(req, resp);
+                        return;
+                    }
+                    req.getRequestDispatcher("report.jsp").forward(req, resp);
+                    return;
                 }
             }
         } catch (Exception e) {
