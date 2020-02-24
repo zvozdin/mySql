@@ -54,9 +54,7 @@ public class MainServlet extends HttpServlet {
             for (Command command : service.commands()) {
                 if (action.startsWith("/" + command.toString())) {
                     req.setAttribute("command", command.toString());
-                    req.getRequestDispatcher(command.toString() == "newDatabase" || command.toString() == "dropDatabase"
-                            ? "setDatabaseName.jsp"
-                            : "setTableName.jsp").forward(req, resp);
+                    req.getRequestDispatcher("setName.jsp").forward(req, resp);
                     return;
                 }
             }
@@ -69,6 +67,11 @@ public class MainServlet extends HttpServlet {
         DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("manager");
 
         try {
+            if (req.getParameter("next") != null) {
+                req.getRequestDispatcher("createTable.jsp").forward(req, resp);
+                return;
+            }
+
             String action = getAction(req).substring(1);
             String name = req.getParameter(action);
             for (Command command : service.commands()) {

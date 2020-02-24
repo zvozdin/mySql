@@ -15,6 +15,7 @@ public class ServiceImpl implements Service {
                 new CreateDatabase(),
                 new DropDatabase(),
                 new Find(),
+                new CreateTable(),
                 new Clear()
         );
     }
