@@ -5,33 +5,32 @@
     </head>
     <body>
         Existing commands:<br>
-        	help<br>
+        	<a href="help">help</a><br>
         		to display a list of commands<br>
-        	connect|databaseName|user|password<br>
+        	<a href="connect">connect</a>|database|user|password<br>
         		to connect to the database<br>
-        	newDatabase|databaseName<br>
+        	<a href="newDatabase">newDatabase</a><br>
         		to create a new database<br>
-        	dropDatabase|databaseName<br>
+        	<a href="dropDatabase">dropDatabase</a><br>
         		to delete the database<br>
         	list<br>
         		to display a list of tables<br>
-        	create|tableName|column1|column2|...|columnN<br>
+        	<a href="newTable">newTable</a><br>
         		to create a new table<br>
-        	drop|tableName<br>
+        	<a href="dropTable">dropTable</a><br>
         		to delete the table<br>
-        	find|tableName<br>
-        		to retrieve content from the 'tableName'<br>
-        	insert|tableName|column1|value1|column2|value2|...|columnN|valueN<br>
+        	<a href="find">find</a><br>
+        		to display content from the 'tableName'<br>
+        	insert<br>
         		to record content to the 'tableName'<br>
-        	update|tableName|column1|value1|column2|value2<br>
+        	update<br>
         		to update the content in the 'tableName'<br>
         			set column1 = value1 where column2 = value2<br>
-        	delete|tableName|column|value<br>
+        	delete<br>
         		to delete content where column = value<br>
-        	clear|tableName<br>
-        		to delete content from the 'tableName'<br>
-        	exit<br>
-        		to exit from the program<br>
+        	<a href="clear">clear</a><br>
+        		to delete content from the 'tableName'<br><br>
+
     <a href="menu">menu</a>
     </body>
 </html>
