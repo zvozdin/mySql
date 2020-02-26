@@ -6,7 +6,7 @@
     <body>
         <c:set var="command" scope="session" value="${command}"/>
         <c:choose>
-            <c:when test="${command == 'newDatabase'}">
+            <c:when test="${command == 'newDatabase' || command == 'dropDatabase'}">
                 <form action="${command}" method="post">
                     Database Name:<br>
                     <input type="text" name="${command}"><br>
@@ -14,19 +14,14 @@
                     <input type="submit" value="${command}">
                     </form>
             </c:when>
-            <c:when test="${command == 'dropDatabase'}">
-                <form action="${command}" method="post">
-                    Database Name:<br>
-                    <input type="text" name="${command}"><br>
-                    <br>
-                    <input type="submit" value="${command}">
-                </form>
-            </c:when>
             <c:when test="${command == 'newTable'}">
-                <form action="createTable.jsp" method="get">
+                <form action="${command}" method="post">
                     Table Name:<br>
-                    <input type="text" name="${command}"><br>
-                    <br>
+                    <input type="text" name="${command}"><br><br>
+
+                    Columns Names separated by '|':<br>
+                    <input type="text" name="columns"><br><br>
+
                     <input type="submit" value="${command}">
                 </form>
             </c:when>

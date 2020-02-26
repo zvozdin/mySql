@@ -5,12 +5,9 @@ import ua.com.juja.view.ActionMessages;
 import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.View;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 public class CreateTable implements Command {
 
@@ -20,6 +17,10 @@ public class CreateTable implements Command {
     public CreateTable(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
+    }
+
+    public CreateTable() {
+
     }
 
     @Override
@@ -45,7 +46,15 @@ public class CreateTable implements Command {
     }
 
     @Override
-    public void processWeb(DatabaseManager manager, String name, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void processWeb(DatabaseManager manager, String tableName, HttpServletRequest req, HttpServletResponse resp) {
+        Set<String> columns = new LinkedHashSet<>(Arrays.asList(req.getParameter("columns").split("\\|")));
+        manager.createTable(tableName, columns);
 
+        req.setAttribute("report", String.format(ActionMessages.CREATE.toString(), tableName));
+    }
+
+    @Override
+    public String toString() {
+        return "newTable";
     }
 }

@@ -67,13 +67,9 @@ public class MainServlet extends HttpServlet {
         DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("manager");
 
         try {
-            if (req.getParameter("next") != null) {
-                req.getRequestDispatcher("createTable.jsp").forward(req, resp);
-                return;
-            }
-
             String action = getAction(req).substring(1);
             String name = req.getParameter(action);
+
             for (Command command : service.commands()) {
                 if (action.equals(command.toString())) {
                     command.processWeb(manager, name, req, resp);
