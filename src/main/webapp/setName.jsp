@@ -19,7 +19,8 @@
                     Table Name:<br>
                     <input type="text" name="${command}"><br><br>
 
-                    Columns Names separated by '|':<br>
+                    Columns Names separated by '|'<br>
+                    column1|column2|...|columnN :<br>
                     <input type="text" name="columns"><br><br>
 
                     <input type="submit" value="${command}">

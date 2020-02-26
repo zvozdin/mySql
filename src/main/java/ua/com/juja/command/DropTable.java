@@ -20,6 +20,10 @@ public class DropTable implements Command {
         this.view = view;
     }
 
+    public DropTable() {
+
+    }
+
     @Override
     public boolean canProcess(String command) {
         return command.startsWith("drop|");
@@ -38,7 +42,14 @@ public class DropTable implements Command {
     }
 
     @Override
-    public void processWeb(DatabaseManager manager, String name, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void processWeb(DatabaseManager manager, String tableName, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        manager.dropTable(tableName);
 
+        req.setAttribute("report", String.format(ActionMessages.DROP.toString(), tableName));
+    }
+
+    @Override
+    public String toString() {
+        return "dropTable";
     }
 }
