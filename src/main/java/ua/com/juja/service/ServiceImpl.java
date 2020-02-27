@@ -14,6 +14,7 @@ public class ServiceImpl implements Service {
                 new Connect(),
                 new CreateDatabase(),
                 new DropDatabase(),
+                new Tables(),
                 new Find(),
                 new CreateTable(),
                 new DropTable(),

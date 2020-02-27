@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 public class MainServlet extends HttpServlet {
 
@@ -40,10 +41,17 @@ public class MainServlet extends HttpServlet {
 
         if (action.startsWith("/menu") || action.equals("/")) {
             // todo replaced / and /menu to web.xml into separate Servlet
-            int length = service.commands().toString().length();
-            req.setAttribute("commands", service.commands()
-                    .toString().substring(1, length - 1));
+            List<Command> commands = service.commands();
+            req.setAttribute("commands", commands.toString()
+                    .substring(1, commands.toString().length() - 1));
             req.getRequestDispatcher("menu.jsp").forward(req, resp);
+
+        } else if (action.startsWith("/tables")) {
+            // todo replaced /tables to web.xml into separate Servlet
+            List<String> tables = manager.getTables();
+            req.setAttribute("report", tables.toString()
+                    .substring(1, tables.toString().length() - 1));
+            req.getRequestDispatcher("report.jsp").forward(req, resp);
 
         } else if (action.startsWith("/help")) {
             // TODO in help.jsp make commands as references
