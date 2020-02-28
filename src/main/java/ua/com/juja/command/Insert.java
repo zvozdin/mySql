@@ -5,10 +5,8 @@ import ua.com.juja.view.ActionMessages;
 import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.View;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Map;
 
 public class Insert implements Command {
@@ -45,7 +43,7 @@ public class Insert implements Command {
     }
 
     @Override
-    public void processWeb(DatabaseManager manager, String tableName, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void processWeb(DatabaseManager manager, String tableName, HttpServletRequest req, HttpServletResponse resp) {
         String[] split = req.getParameter("columns").split("\\|");
         String[] data = new String[split.length + 2];
         System.arraycopy(split, 0, data, 2, split.length);

@@ -40,8 +40,7 @@ public class Find implements Command {
     }
 
     @Override
-    public void processWeb(DatabaseManager manager, String tableName, HttpServletRequest req, HttpServletResponse resp)
-    {
+    public void processWeb(DatabaseManager manager, String tableName, HttpServletRequest req, HttpServletResponse resp) {
         List<List<String>> rows = new ArrayList<>();
         rows.add(new ArrayList<>(manager.getColumns(tableName)));
         rows.addAll(manager.getRows(tableName));

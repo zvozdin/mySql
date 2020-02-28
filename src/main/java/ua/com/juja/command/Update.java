@@ -6,10 +6,8 @@ import ua.com.juja.view.CommandSamples;
 import ua.com.juja.view.TableGenerator;
 import ua.com.juja.view.View;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -21,6 +19,10 @@ public class Update implements Command {
     public Update(DatabaseManager manager, View view) {
         this.manager = manager;
         this.view = view;
+    }
+
+    public Update() {
+
     }
 
     @Override
@@ -50,7 +52,25 @@ public class Update implements Command {
     }
 
     @Override
-    public void processWeb(DatabaseManager manager, String name, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void processWeb(DatabaseManager manager, String tableName, HttpServletRequest req, HttpServletResponse resp) {
+        String[] data = req.getParameter("columns").split("\\|");
 
+        Map<String, String> set = new LinkedHashMap<>();
+        set.put(data[0], data[1]);
+
+        Map<String, String> where = new LinkedHashMap<>();
+        where.put(data[2], data[3]);
+
+        tableName = req.getParameter("table");
+
+        manager.update(tableName, set, where);
+
+        req.setAttribute("report", String.format(ActionMessages.UPDATE.toString(), tableName));
+        new Find().processWeb(manager, tableName, req, resp);
+    }
+
+    @Override
+    public String toString() {
+        return "update";
     }
 }

@@ -23,7 +23,7 @@
         		to display content from the 'tableName'<br>
         	<a href="insert">insert</a><br>
         		to record content to the 'tableName'<br>
-        	update<br>
+        	<a href="update">update</a><br>
         		to update the content in the 'tableName'<br>
         			set column1 = value1 where column2 = value2<br>
         	delete<br>
