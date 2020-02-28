@@ -14,20 +14,16 @@
                     <input type="submit" value="${command}">
                     </form>
             </c:when>
-            <c:when test="${command == 'newTable'}">
+            <c:when test="${command == 'dropTable'}">
                 <form action="${command}" method="post">
                     Table Name:<br>
-                    <input type="text" name="${command}"><br><br>
-
-                    Columns Names separated by '|'<br>
-                    column1|column2|...|columnN :<br>
-                    <input type="text" name="columns"><br><br>
-
+                    <input type="text" name="${command}"><br>
+                    <br>
                     <input type="submit" value="${command}">
-                </form>
+                    </form>
             </c:when>
             <c:otherwise>
-                <form action="${command}" method="post">
+                <form action="edit.jsp" method="get">
                     Table Name:<br>
                     <input type="text" name="${command}"><br>
                     <br>

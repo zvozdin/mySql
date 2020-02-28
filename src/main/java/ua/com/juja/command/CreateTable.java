@@ -47,7 +47,9 @@ public class CreateTable implements Command {
 
     @Override
     public void processWeb(DatabaseManager manager, String tableName, HttpServletRequest req, HttpServletResponse resp) {
-        Set<String> columns = new LinkedHashSet<>(Arrays.asList(req.getParameter("columns").split("\\|")));
+        tableName = req.getParameter("table");
+        Set<String> columns = new LinkedHashSet<>(Arrays.asList(req.getParameter("columns")
+                .split("\\|")));
         manager.createTable(tableName, columns);
 
         req.setAttribute("report", String.format(ActionMessages.CREATE.toString(), tableName));

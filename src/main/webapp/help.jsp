@@ -13,7 +13,7 @@
         		to create a new database<br>
         	<a href="dropDatabase">dropDatabase</a><br>
         		to delete the database<br>
-        	list<br>
+        	<a href="tables">tables</a><br>
         		to display a list of tables<br>
         	<a href="newTable">newTable</a><br>
         		to create a new table<br>
