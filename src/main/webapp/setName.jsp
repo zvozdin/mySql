@@ -5,6 +5,7 @@
     </head>
     <body>
         <c:set var="command" scope="session" value="${command}"/>
+
         <c:choose>
             <c:when test="${command == 'newDatabase' || command == 'dropDatabase'}">
                 <form action="${command}" method="post">
@@ -14,7 +15,7 @@
                     <input type="submit" value="${command}">
                     </form>
             </c:when>
-            <c:when test="${command == 'dropTable'}">
+            <c:when test="${command == 'dropTable' || command == 'find'}">
                 <form action="${command}" method="post">
                     Table Name:<br>
                     <input type="text" name="${command}"><br>

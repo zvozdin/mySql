@@ -18,6 +18,7 @@ public class ServiceImpl implements Service {
                 new Find(),
                 new CreateTable(),
                 new DropTable(),
+                new Insert(),
                 new Clear()
         );
     }

@@ -21,6 +21,10 @@ public class Insert implements Command {
         this.view = view;
     }
 
+    public Insert() {
+
+    }
+
     @Override
     public boolean canProcess(String command) {
         return command.startsWith("insert|");
@@ -41,7 +45,22 @@ public class Insert implements Command {
     }
 
     @Override
-    public void processWeb(DatabaseManager manager, String name, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void processWeb(DatabaseManager manager, String tableName, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String[] split = req.getParameter("columns").split("\\|");
+        String[] data = new String[split.length + 2];
+        System.arraycopy(split, 0, data, 2, split.length);
 
+        Map<String, String> insert = getCommandParameters(data);
+        tableName = req.getParameter("table");
+
+        manager.insert(tableName, insert);
+
+        req.setAttribute("report", String.format(ActionMessages.INSERT.toString(), tableName));
+        new Find().processWeb(manager, tableName, req, resp);
+    }
+
+    @Override
+    public String toString() {
+        return "insert";
     }
 }

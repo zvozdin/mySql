@@ -21,7 +21,7 @@
         		to delete the table<br>
         	<a href="find">find</a><br>
         		to display content from the 'tableName'<br>
-        	insert<br>
+        	<a href="insert">insert</a><br>
         		to record content to the 'tableName'<br>
         	update<br>
         		to update the content in the 'tableName'<br>
