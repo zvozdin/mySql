@@ -15,7 +15,7 @@
                     <input type="submit" value="${command}">
                     </form>
             </c:when>
-            <c:when test="${command == 'dropTable' || command == 'find'}">
+            <c:when test="${command == 'dropTable' || command == 'find' || command == 'clear'}">
                 <form action="${command}" method="post">
                     Table Name:<br>
                     <input type="text" name="${command}"><br>

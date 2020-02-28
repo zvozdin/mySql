@@ -88,7 +88,8 @@ public class MainServlet extends HttpServlet {
 
                     if (action.equals("find") ||
                         action.equals("insert") ||
-                        action.equals("update"))
+                        action.equals("update") ||
+                        action.equals("delete"))
                     {
                         req.getRequestDispatcher("table.jsp").forward(req, resp);
                         return;

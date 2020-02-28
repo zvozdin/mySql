@@ -53,7 +53,7 @@ public class Insert implements Command {
 
         manager.insert(tableName, insert);
 
-        req.setAttribute("report", String.format(ActionMessages.INSERT.toString(), tableName));
+        req.setAttribute("report", String.format(ActionMessages.INSERT.toString(), insert.values()));
         new Find().processWeb(manager, tableName, req, resp);
     }
 

@@ -65,7 +65,7 @@ public class Update implements Command {
 
         manager.update(tableName, set, where);
 
-        req.setAttribute("report", String.format(ActionMessages.UPDATE.toString(), tableName));
+        req.setAttribute("report", String.format(ActionMessages.UPDATE.toString(), where.values().iterator().next()));
         new Find().processWeb(manager, tableName, req, resp);
     }
 

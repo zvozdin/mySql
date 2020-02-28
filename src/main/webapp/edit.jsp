@@ -45,15 +45,20 @@
                     <input type="submit" value="${command}">
                     </form>
             </c:when>
-                    <c:otherwise>
-                        <form action="edit.jsp" method="get">
-                            Table Name:<br>
-                            <input type="text" scope="session"  name="${command}"><br>
-                            <br>
-                            <input type="submit" value="${command}">
-                        </form>
-                    </c:otherwise>
-                </c:choose>
+            <c:when test="${command == 'delete'}">
+                <%
+                    String tableName = request.getParameter("delete");
+                    request.setAttribute("tableName", tableName);
+                %>
+                <form action="${command}" method="post">
+                    <input type="hidden" name="table" value="${tableName}">
+                    Columns with Values to delete separated by '|'<br>
+                    column|value :<br>
+                    <input type="text" name="columns"><br><br>
+                    <input type="submit" value="${command}">
+                </form>
+            </c:when>
+        </c:choose>
 
         <a href="menu">menu</a> <a href="help">help</a>
     </body>

@@ -20,6 +20,7 @@ public class ServiceImpl implements Service {
                 new DropTable(),
                 new Insert(),
                 new Update(),
+                new DeleteRow(),
                 new Clear()
         );
     }
