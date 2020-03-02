@@ -29,34 +29,16 @@ public class MainServlet extends HttpServlet {
 
         DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("manager");
 
-        if (action.startsWith("/connect")) {
+        if (action.startsWith("/connect") || manager == null) {
             req.getRequestDispatcher("connect.jsp").forward(req, resp);
             return;
         }
 
-        if (manager == null) {
-            resp.sendRedirect("connect");
-            return;
-        }
-
         if (action.startsWith("/menu") || action.equals("/")) {
-            // todo replaced / and /menu to web.xml into separate Servlet
             List<Command> commands = service.commands();
             req.setAttribute("commands", commands.toString()
                     .substring(1, commands.toString().length() - 1));
             req.getRequestDispatcher("menu.jsp").forward(req, resp);
-
-        } else if (action.startsWith("/tables")) {
-            // todo replaced /tables to web.xml into separate Servlet
-            List<String> tables = manager.getTables();
-            req.setAttribute("report", tables.toString()
-                    .substring(1, tables.toString().length() - 1));
-            req.getRequestDispatcher("report.jsp").forward(req, resp);
-
-        } else if (action.startsWith("/help")) {
-            // TODO in help.jsp make commands as references
-            // todo replaced /help to web.xml into separate Servlet
-            req.getRequestDispatcher("help.jsp").forward(req, resp);
 
         } else {
             for (Command command : service.commands()) {
@@ -87,10 +69,9 @@ public class MainServlet extends HttpServlet {
                     }
 
                     if (action.equals("find") ||
-                        action.equals("insert") ||
-                        action.equals("update") ||
-                        action.equals("delete"))
-                    {
+                            action.equals("insert") ||
+                            action.equals("update") ||
+                            action.equals("delete")) {
                         req.getRequestDispatcher("table.jsp").forward(req, resp);
                         return;
                     }

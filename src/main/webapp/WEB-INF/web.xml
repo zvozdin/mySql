@@ -11,9 +11,26 @@
         <servlet-name>MainServlet</servlet-name>
         <servlet-class>ua.com.juja.web.MainServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>HelpServlet</servlet-name>
+        <servlet-class>ua.com.juja.web.HelpServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HelpServlet</servlet-name>
+        <url-pattern>/help</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TablesServlet</servlet-name>
+        <servlet-class>ua.com.juja.web.TablesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TablesServlet</servlet-name>
+        <url-pattern>/tables</url-pattern>
     </servlet-mapping>
 </web-app>
