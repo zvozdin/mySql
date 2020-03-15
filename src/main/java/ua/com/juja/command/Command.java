@@ -11,8 +11,10 @@ import java.util.Map;
 
 public interface Command {
 
+    // TODO delete method
     boolean canProcess(String command);
 
+    // TODO delete method
     void process(String command);
 
     void processWeb(DatabaseManager manager, String name, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;

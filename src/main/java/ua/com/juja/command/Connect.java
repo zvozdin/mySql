@@ -1,5 +1,10 @@
 package ua.com.juja.command;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.model.JDBCDatabaseManager;
 import ua.com.juja.view.ActionMessages;
@@ -9,10 +14,13 @@ import ua.com.juja.view.View;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class Connect implements Command {
+@Component
+public class Connect implements Command, ApplicationContextAware {
 
+    @Autowired
     private DatabaseManager manager;
     private View view;
+    private ApplicationContext context;
 
     public Connect(DatabaseManager manager, View view) {
         this.manager = manager;
@@ -42,20 +50,25 @@ public class Connect implements Command {
     }
 
     @Override
-    public void processWeb(DatabaseManager manager, String name, HttpServletRequest req, HttpServletResponse resp)
-    {
+    public void processWeb(DatabaseManager manager, String name, HttpServletRequest req, HttpServletResponse resp) {
         String database = req.getParameter("database");
         String user = req.getParameter("user");
         String password = req.getParameter("password");
 
-        manager = new JDBCDatabaseManager();
-        manager.connect(database, user, password);
+        this.manager = context.getBean("JDBCDatabaseManager", JDBCDatabaseManager.class);
 
-        req.getSession().setAttribute("manager", manager);
+        this.manager.connect(database, user, password);
+
+        req.getSession().setAttribute("manager", this.manager);
     }
 
     @Override
     public String toString() {
         return "connect";
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        context = applicationContext;
     }
 }

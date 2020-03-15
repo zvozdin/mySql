@@ -1,10 +1,14 @@
 package ua.com.juja.model;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import ua.com.juja.view.ActionMessages;
 
 import java.sql.*;
 import java.util.*;
 
+@Component
+@Scope("prototype")
 public class JDBCDatabaseManager implements DatabaseManager {
 
     private Connection connection;

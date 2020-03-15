@@ -1,10 +1,12 @@
 package ua.com.juja.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import ua.com.juja.command.Command;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.service.Service;
-import ua.com.juja.service.ServiceImpl;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,13 +16,14 @@ import java.util.List;
 
 public class MainServlet extends HttpServlet {
 
-    Service service;
+    @Autowired
+    private Service service;
 
     @Override
-    public void init() throws ServletException {
-        super.init();
-
-        service = new ServiceImpl();
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+                config.getServletContext());
     }
 
     @Override
@@ -71,7 +74,8 @@ public class MainServlet extends HttpServlet {
                     if (action.equals("find") ||
                             action.equals("insert") ||
                             action.equals("update") ||
-                            action.equals("delete")) {
+                            action.equals("delete"))
+                    {
                         req.getRequestDispatcher("table.jsp").forward(req, resp);
                         return;
                     }
@@ -80,6 +84,7 @@ public class MainServlet extends HttpServlet {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             req.setAttribute("message", e.getMessage());
             req.getRequestDispatcher("error.jsp").forward(req, resp);
         }
