@@ -11,6 +11,7 @@ import ua.com.juja.service.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -87,7 +88,20 @@ public class MainController {
         }
 
         request.setAttribute("command", "find");
-            return "setName";
+        return "setName";
+    }
+
+    @RequestMapping(value = "/find", method = RequestMethod.POST)
+    public String finding(HttpServletRequest request, HttpSession session) {
+        DatabaseManager manager = getManager(session);
+        String tableName = request.getParameter("find");
+
+        List<List<String>> rows = new ArrayList<>();
+        rows.add(new ArrayList<>(manager.getColumns(tableName)));
+        rows.addAll(manager.getRows(tableName));
+
+        request.setAttribute("rows", rows);
+        return "table";
     }
 
     @Lookup
