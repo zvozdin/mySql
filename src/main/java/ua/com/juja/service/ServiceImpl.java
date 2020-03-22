@@ -18,6 +18,7 @@ public class ServiceImpl implements Service {
     @Qualifier("menu")
     private Action menu;
 
+    // TODO return List<String> without Action interface. Then delete action package
     @Override
     public List<Action> getActions() {
         return Arrays.asList(
