@@ -13,7 +13,7 @@
                     <input type="text" name="${command}"><br>
                     <br>
                     <input type="submit" value="${command}">
-                    </form>
+                </form>
             </c:when>
             <c:when test="${command == 'dropTable' || command == 'find' || command == 'clear'}">
                 <form action="${command}" method="post">
@@ -21,7 +21,7 @@
                     <input type="text" name="${command}"><br>
                     <br>
                     <input type="submit" value="${command}">
-                    </form>
+                </form>
             </c:when>
             <c:otherwise>
                 <form action="edit.jsp" method="get">

@@ -1,10 +1,12 @@
 package ua.com.juja.service;
 
-import ua.com.juja.command.Command;
+import ua.com.juja.controller.action.Action;
 
 import java.util.List;
 
 public interface Service {
 
-    List<Command> commands();
+    List<Action> getActions();
+
+    Action getAction(String url);
 }

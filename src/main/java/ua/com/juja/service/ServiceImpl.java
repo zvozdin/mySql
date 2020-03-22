@@ -1,8 +1,9 @@
 package ua.com.juja.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import ua.com.juja.command.*;
+import ua.com.juja.controller.action.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,23 +12,36 @@ import java.util.List;
 public class ServiceImpl implements Service {
 
     @Autowired
-    private Command connect;
+    @Qualifier("connectAction")
+    private Action connect;
 
     @Override
-    public List<Command> commands() {
+    public List<Action> getActions() {
         return Arrays.asList(
-                new Help(),
+                new HelpAction(),
                 connect,
-                new CreateDatabase(),
-                new DropDatabase(),
-                new Tables(),
-                new Find(),
-                new CreateTable(),
-                new DropTable(),
-                new Insert(),
-                new Update(),
-                new DeleteRow(),
-                new Clear()
+                new CreateDatabaseAction(),
+                new DropDatabaseAction(),
+                new TablesAction(),
+                new FindAction(),
+                new CreateTableAction(),
+                new DropTableAction(),
+                new InsertAction(),
+                new UpdateAction(),
+                new DeleteAction(),
+                new CleartAction(),
+                new Menu(),
+                new ErrorAction()
         );
+    }
+
+    @Override
+    public Action getAction(String url) {
+        for (Action action : getActions()) {
+            if (action.canProcess(url)) {
+                return action;
+            }
+        }
+        return new NullAction();
     }
 }
