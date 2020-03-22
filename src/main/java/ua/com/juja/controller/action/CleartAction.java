@@ -1,8 +1,7 @@
 package ua.com.juja.controller.action;
 
-import ua.com.juja.model.DatabaseManager;
-import ua.com.juja.service.Service;
 import ua.com.juja.model.ActionMessages;
+import ua.com.juja.model.DatabaseManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +16,7 @@ public class CleartAction implements Action {
     }
 
     @Override
-    public void get(Service service, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("command", this.toString());
         goToJsp("setName.jsp", req, resp);
     }

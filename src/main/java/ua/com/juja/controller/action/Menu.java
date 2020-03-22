@@ -1,5 +1,6 @@
 package ua.com.juja.controller.action;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.com.juja.service.Service;
 
@@ -12,8 +13,8 @@ import java.util.List;
 @Component
 public class Menu implements Action {
 
-//    @Autowired
-//    private Service serv;
+    @Autowired
+    private Service service;
 
     @Override
     public boolean canProcess(String url) {
@@ -21,7 +22,7 @@ public class Menu implements Action {
     }
 
     @Override
-    public void get(Service service, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Action> commands = service.getActions();
         commands = commands.subList(0, commands.size() - 2);
 

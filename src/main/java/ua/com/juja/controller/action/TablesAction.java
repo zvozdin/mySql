@@ -1,7 +1,6 @@
 package ua.com.juja.controller.action;
 
 import ua.com.juja.model.DatabaseManager;
-import ua.com.juja.service.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +16,7 @@ public class TablesAction implements Action {
     }
 
     @Override
-    public void get(Service service, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("manager");
         if (manager == null) {
             resp.sendRedirect("connect");

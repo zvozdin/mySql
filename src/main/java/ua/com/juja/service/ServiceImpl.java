@@ -14,6 +14,9 @@ public class ServiceImpl implements Service {
     @Autowired
     @Qualifier("connectAction")
     private Action connect;
+    @Autowired
+    @Qualifier("menu")
+    private Action menu;
 
     @Override
     public List<Action> getActions() {
@@ -30,7 +33,7 @@ public class ServiceImpl implements Service {
                 new UpdateAction(),
                 new DeleteAction(),
                 new CleartAction(),
-                new Menu(),
+                menu,
                 new ErrorAction()
         );
     }

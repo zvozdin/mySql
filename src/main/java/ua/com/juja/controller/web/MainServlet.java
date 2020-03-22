@@ -26,7 +26,7 @@ public class MainServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        service.getAction(getActionName(req)).get(service, req, resp);
+        service.getAction(getActionName(req)).get(req, resp);
     }
 
     @Override

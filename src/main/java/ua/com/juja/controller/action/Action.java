@@ -1,8 +1,7 @@
 package ua.com.juja.controller.action;
 
-import ua.com.juja.model.DatabaseManager;
-import ua.com.juja.service.Service;
 import ua.com.juja.model.ActionMessages;
+import ua.com.juja.model.DatabaseManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +12,7 @@ public interface Action {
 
     boolean canProcess(String url);
 
-    void get(Service service, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;
+    void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;
 
     void post(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException;
 

@@ -1,7 +1,5 @@
 package ua.com.juja.controller.action;
 
-import ua.com.juja.service.Service;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +13,7 @@ public class ErrorAction implements Action {
     }
 
     @Override
-    public void get(Service service, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("message", "Wrong address");
         goToJsp("error.jsp", req, resp);
     }

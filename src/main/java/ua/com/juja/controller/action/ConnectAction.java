@@ -3,7 +3,6 @@ package ua.com.juja.controller.action;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Component;
 import ua.com.juja.model.DatabaseManager;
-import ua.com.juja.service.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +18,7 @@ public class ConnectAction implements Action {
     }
 
     @Override
-    public void get(Service service, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         goToJsp("connect.jsp", req, resp);
     }
 
