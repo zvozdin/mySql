@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import ua.com.juja.controller.action.Action;
 import ua.com.juja.model.DatabaseManager;
@@ -82,9 +79,9 @@ public class MainController {
             return "redirect:/connect";
         }
 
-        List<String> tables = manager.getTables();
-        String tablesWithoutBrackets = tables.toString().substring(1, tables.toString().length() - 1);
-        model.addAttribute("tables", tablesWithoutBrackets);
+        List<String> tablesWithBrackets = manager.getTables();
+        String tables = tablesWithBrackets.toString().substring(1, tablesWithBrackets.toString().length() - 1);
+        model.addAttribute("tables", tables);
         return "tables";
     }
 
@@ -99,11 +96,13 @@ public class MainController {
         return "setName";
     }
 
-    @RequestMapping(value = "/find", params = {"table"}, method = RequestMethod.POST)
+    @RequestMapping(value = "/tables/{table}", method = RequestMethod.GET)
     public String finding(Model model,
-                          @RequestParam(value = "table") String tableName,
+                          @PathVariable(value = "table") String tableNameWithSpaceAtStart,
                           HttpSession session) {
         DatabaseManager manager = getManager(session);
+
+        String tableName = tableNameWithSpaceAtStart.substring(1);
 
         List<List<String>> rows = new ArrayList<>();
         rows.add(new ArrayList<>(manager.getColumns(tableName)));
