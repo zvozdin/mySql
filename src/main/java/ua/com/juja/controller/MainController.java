@@ -3,14 +3,19 @@ package ua.com.juja.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import ua.com.juja.controller.action.Action;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.service.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,17 +36,21 @@ public class MainController {
     }
 
     @RequestMapping(value = "/menu", method = RequestMethod.GET)
-    public String menu(HttpServletRequest request) {
+    public String menu(Model model) {
         List<Action> commands = service.getActions();
         commands = commands.subList(0, commands.size() - 2);
 
-        request.setAttribute("commands", commands.toString()
+        model.addAttribute("commands", commands.toString()
                 .substring(1, commands.toString().length() - 1));
         return "menu";
     }
 
     @RequestMapping(value = "/connect", method = RequestMethod.GET)
-    public String connect(HttpSession session) {
+    public String connect(HttpSession session, Model model) {
+        String page = (String) session.getAttribute("fromPage");
+        session.removeAttribute("fromPage");
+        model.addAttribute("connection", new Connection(page));
+
         if (getManager(session) == null) {
             return "connect";
         } else {
@@ -50,57 +59,57 @@ public class MainController {
     }
 
     @RequestMapping(value = "/connect", method = RequestMethod.POST)
-    public String connecting(HttpServletRequest request, HttpSession session) {
+    public String connecting(@ModelAttribute("connection") Connection connection,
+                             ModelMap model, HttpSession session) {
         try {
-            String database = request.getParameter("database");
-            String user = request.getParameter("user");
-            String password = request.getParameter("password");
-
             DatabaseManager manager = getDatabaseManager();
-            manager.connect(database, user, password);
+            manager.connect(connection.getDatabase(), connection.getUser(), connection.getPassword());
 
             session.setAttribute("manager", manager);
-            return "redirect:/menu";
+            return "redirect:" + connection.getPage();
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("message", e.getMessage());
+            model.addAttribute("message", e.getMessage());
             return "error";
         }
     }
 
     @RequestMapping(value = "/tables", method = RequestMethod.GET)
-    public String tables(HttpSession session, HttpServletRequest request) {
+    public String tables(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);
         if (manager == null) {
+            session.setAttribute("fromPage", "/tables");
             return "redirect:/connect";
         }
 
         List<String> tables = manager.getTables();
         String tablesWithoutBrackets = tables.toString().substring(1, tables.toString().length() - 1);
-        request.setAttribute("tables", tablesWithoutBrackets);
+        model.addAttribute("tables", tablesWithoutBrackets);
         return "tables";
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET)
-    public String find(HttpServletRequest request, HttpSession session) {
+    public String find(HttpSession session) {
         if (getManager(session) == null) {
+            session.setAttribute("fromPage", "/find");
             return "redirect:/connect";
         }
 
-        request.setAttribute("command", "find");
+        session.setAttribute("command", "find");
         return "setName";
     }
 
-    @RequestMapping(value = "/find", method = RequestMethod.POST)
-    public String finding(HttpServletRequest request, HttpSession session) {
+    @RequestMapping(value = "/find", params = {"table"}, method = RequestMethod.POST)
+    public String finding(Model model,
+                          @RequestParam(value = "table") String tableName,
+                          HttpSession session) {
         DatabaseManager manager = getManager(session);
-        String tableName = request.getParameter("find");
 
         List<List<String>> rows = new ArrayList<>();
         rows.add(new ArrayList<>(manager.getColumns(tableName)));
         rows.addAll(manager.getRows(tableName));
 
-        request.setAttribute("rows", rows);
+        model.addAttribute("rows", rows);
         return "table";
     }
 
