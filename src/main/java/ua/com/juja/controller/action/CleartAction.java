@@ -25,7 +25,7 @@ public class CleartAction implements Action {
     public void post(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         DatabaseManager manager = getManager(req, resp);
 
-        String tableName = req.getParameter("clear");
+        String tableName = req.getParameter("table");
         manager.clear(tableName);
 
         doReport(ActionMessages.CLEAR, tableName, req, resp);

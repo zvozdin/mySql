@@ -27,7 +27,7 @@ public class FindAction implements Action {
         DatabaseManager manager = (DatabaseManager) req.getSession().getAttribute("manager");
 
         if (manager != null) {
-            String tableName = req.getParameter("find");
+            String tableName = req.getParameter("table");
             List<List<String>> rows = new ArrayList<>();
             rows.add(new ArrayList<>(manager.getColumns(tableName)));
             rows.addAll(manager.getRows(tableName));

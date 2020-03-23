@@ -18,7 +18,7 @@
             <c:when test="${command == 'dropTable' || command == 'find' || command == 'clear'}">
                 <form action="${command}" method="post">
                     Table Name:<br>
-                    <input type="text" name="${command}"><br>
+                    <input type="text" name="table"><br>
                     <br>
                     <input type="submit" value="${command}">
                 </form>

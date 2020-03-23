@@ -25,7 +25,7 @@ public class DropTableAction implements Action {
     public void post(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         DatabaseManager manager = getManager(req, resp);
 
-        String tableName = req.getParameter("dropTable");
+        String tableName = req.getParameter("table");
         manager.dropTable(tableName);
 
         doReport(ActionMessages.DROP, tableName, req, resp);
