@@ -27,7 +27,6 @@ public class ServiceImpl implements Service {
                 new CreateDatabaseAction(),
                 new DropDatabaseAction(),
                 new TablesAction(),
-                new FindAction(),
                 new CreateTableAction(),
                 new DropTableAction(),
                 new InsertAction(),

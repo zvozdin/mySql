@@ -6,9 +6,13 @@
     </head>
     <body>
         <table border="1">
-            <tr><td></td> <td>Tables</td></tr>
+            <tr>
+                <td></td> <td>Tables</td>
+            </tr>
             <c:forEach items="${tables}" var="table" varStatus="loop">
-                <tr><td>${loop.count}</td> <td><a href="tables/${table}">${table}</a></td></tr>
+                <tr>
+                    <td>${loop.count}</td><td><a href="${command}/${table}">${table}</a></td>
+                </tr>
             </c:forEach>
         </table>
         <br>
