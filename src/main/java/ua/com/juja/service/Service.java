@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface Service {
 
-    List<String> getActions();
+    List<String> getCommands();
 }

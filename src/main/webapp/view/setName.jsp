@@ -4,13 +4,11 @@
         <title>mysql | ${command} | tableName</title>
     </head>
     <body>
-        <c:set var="command" scope="session" value="${command}"/>
-
         <c:choose>
             <c:when test="${command == 'newDatabase'}">
-                <form action="${command}" method="post">
+                <form action="${command}/${name}" method="get">
                     Database Name:<br>
-                    <input type="text" name="${command}"><br>
+                    <input type="text" name="name"><br>
                     <br>
                     <input type="submit" value="${command}">
                 </form>

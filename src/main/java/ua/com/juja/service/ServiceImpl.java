@@ -9,11 +9,11 @@ import java.util.List;
 public class ServiceImpl implements Service {
 
     @Override
-    public List<String> getActions() {
+    public List<String> getCommands() {
         return Arrays.asList(
                 "help",
                 "connect",
-//                "newDatabase",
+                "newDatabase",
                 "dropDatabase",
                 "tables",
 //                "newTable",
