@@ -5,6 +5,7 @@
         <title>mysql | tables</title>
     </head>
     <body>
+        ${report}
         <table border="1">
             <tr>
                 <td></td> <td>Tables</td>
@@ -16,6 +17,6 @@
             </c:forEach>
         </table>
         <br>
-        <a href="menu">menu</a> <a href="help">help</a>
+        <a href="/mySql/menu">menu</a> <a href="/mySql/help">help</a>
     </body>
 </html>

@@ -106,7 +106,7 @@ public class MainController {
     }
 
     @RequestMapping(value = "/clear/{table}", method = RequestMethod.GET)
-    public String clearTable(Model model,
+    public String clear(Model model,
                         @PathVariable(value = "table") String tableName,
                         HttpSession session) {
         DatabaseManager manager = getManager(session);
@@ -116,6 +116,29 @@ public class MainController {
         model.addAttribute("report", String.format(ActionMessages.CLEAR.toString(), tableName));
         model.addAttribute("rows", getRows(manager, tableName));
         return "table";
+    }
+
+    @RequestMapping(value = "/dropTable", method = RequestMethod.GET)
+    public String dropTable(Model model, HttpSession session) {
+        DatabaseManager manager = getManager(session);
+
+        if (managerNull("/dropTable", manager, session)) return "redirect:/connect";
+
+        model.addAttribute("command", "dropTable");
+        model.addAttribute("tables", getTables(manager));
+        return "tables";
+    }
+
+    @RequestMapping(value = "/dropTable/{table}", method = RequestMethod.GET)
+    public String dropTable(Model model,
+                             @PathVariable(value = "table") String tableName,
+                             HttpSession session) {
+        DatabaseManager manager = getManager(session);
+
+        manager.dropTable(tableName);
+
+        model.addAttribute("report", String.format(ActionMessages.DROP.toString(), tableName));
+        return "report";
     }
 
     @Lookup
