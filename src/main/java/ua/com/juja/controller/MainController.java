@@ -86,11 +86,9 @@ public class MainController {
 
     @RequestMapping(value = "/tables/{table}", method = RequestMethod.GET)
     public String table(Model model,
-                          @PathVariable(value = "table") String tableNameWithSpaceAtStart,
+                          @PathVariable(value = "table") String tableName,
                           HttpSession session) {
         DatabaseManager manager = getManager(session);
-
-        String tableName = tableNameWithSpaceAtStart.substring(1);
 
         model.addAttribute("rows", getRows(manager, tableName));
         return "table";
@@ -109,11 +107,10 @@ public class MainController {
 
     @RequestMapping(value = "/clear/{table}", method = RequestMethod.GET)
     public String clearTable(Model model,
-                        @PathVariable(value = "table") String tableNameWithSpaceAtStart,
+                        @PathVariable(value = "table") String tableName,
                         HttpSession session) {
         DatabaseManager manager = getManager(session);
 
-        String tableName = tableNameWithSpaceAtStart.substring(1);
         manager.clear(tableName);
 
         model.addAttribute("report", String.format(ActionMessages.CLEAR.toString(), tableName));
