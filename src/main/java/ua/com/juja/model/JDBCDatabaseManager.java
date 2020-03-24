@@ -45,6 +45,24 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     @Override
+    public List<String> getDatabases() {
+        List<String> result = new LinkedList<>();
+        try {
+            DatabaseMetaData data = connection.getMetaData();
+            ResultSet databases = data.getCatalogs();
+            while (databases.next()) {
+                result.add(databases.getString(1));
+            }
+
+            databases.close();
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return result;
+        }
+    }
+
+    @Override
     public void dropDatabase(String databaseName) {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("drop database " + databaseName);
@@ -222,18 +240,10 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public boolean isDatabaseExist(String databaseName) {
-        try {
-            DatabaseMetaData metaData = connection.getMetaData();
-            ResultSet resultSet = metaData.getCatalogs();
-            while (resultSet.next()) {
-                String data = resultSet.getString(1);
-                if (databaseName.equals(data)) {
-                    return true;
-                }
+        for (String database : getDatabases()) {
+            if (databaseName.equals(database)) {
+                return true;
             }
-            resultSet.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return false;
     }

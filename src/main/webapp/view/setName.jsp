@@ -7,18 +7,10 @@
         <c:set var="command" scope="session" value="${command}"/>
 
         <c:choose>
-            <c:when test="${command == 'newDatabase' || command == 'dropDatabase'}">
+            <c:when test="${command == 'newDatabase'}">
                 <form action="${command}" method="post">
                     Database Name:<br>
                     <input type="text" name="${command}"><br>
-                    <br>
-                    <input type="submit" value="${command}">
-                </form>
-            </c:when>
-            <c:when test="${command == 'dropTable' || command == 'find' || command == 'clear'}">
-                <form action="${command}" method="post">
-                    Table Name:<br>
-                    <input type="text" name="table"><br>
                     <br>
                     <input type="submit" value="${command}">
                 </form>

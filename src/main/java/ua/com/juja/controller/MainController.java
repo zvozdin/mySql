@@ -72,20 +72,41 @@ public class MainController {
         }
     }
 
+    @RequestMapping(value = "/dropDatabase", method = RequestMethod.GET)
+    public String dropDatabase(Model model, HttpSession session) {
+        DatabaseManager manager = getManager(session);
+
+        if (managerNull("/dropDatabase", manager, session)) return "redirect:/connect";
+
+        setAttributes("Databases", getFormattedTable(manager.getDatabases()), "dropDatabase", model);
+        return "tables";
+    }
+
+    @RequestMapping(value = "/dropDatabase/{name}", method = RequestMethod.GET)
+    public String dropDatabase(Model model,
+                        @PathVariable(value = "name") String databaseName,
+                        HttpSession session) {
+        DatabaseManager manager = getManager(session);
+
+        manager.dropDatabase(databaseName);
+
+        model.addAttribute("report", String.format(ActionMessages.DROP_DB.toString(), databaseName));
+        return "report";
+    }
+
     @RequestMapping(value = "/tables", method = RequestMethod.GET)
     public String tables(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);
 
         if (managerNull("/tables", manager, session)) return "redirect:/connect";
 
-        model.addAttribute("tables", getTables(manager));
-        model.addAttribute("command", "tables");
+        setAttributes("Tables", getFormattedTable(manager.getTables()), "tables", model);
         return "tables";
     }
 
-    @RequestMapping(value = "/tables/{table}", method = RequestMethod.GET)
+    @RequestMapping(value = "/tables/{name}", method = RequestMethod.GET)
     public String table(Model model,
-                        @PathVariable(value = "table") String tableName,
+                        @PathVariable(value = "name") String tableName,
                         HttpSession session) {
         DatabaseManager manager = getManager(session);
 
@@ -99,14 +120,13 @@ public class MainController {
 
         if (managerNull("/clear", manager, session)) return "redirect:/connect";
 
-        model.addAttribute("command", "clear");
-        model.addAttribute("tables", getTables(manager));
+        setAttributes("Tables", getFormattedTable(manager.getTables()), "clear", model);
         return "tables";
     }
 
-    @RequestMapping(value = "/clear/{table}", method = RequestMethod.GET)
+    @RequestMapping(value = "/clear/{name}", method = RequestMethod.GET)
     public String clear(Model model,
-                        @PathVariable(value = "table") String tableName,
+                        @PathVariable(value = "name") String tableName,
                         HttpSession session) {
         DatabaseManager manager = getManager(session);
 
@@ -123,14 +143,13 @@ public class MainController {
 
         if (managerNull("/dropTable", manager, session)) return "redirect:/connect";
 
-        model.addAttribute("command", "dropTable");
-        model.addAttribute("tables", getTables(manager));
+        setAttributes("Tables", getFormattedTable(manager.getTables()), "dropTable", model);
         return "tables";
     }
 
-    @RequestMapping(value = "/dropTable/{table}", method = RequestMethod.GET)
+    @RequestMapping(value = "/dropTable/{name}", method = RequestMethod.GET)
     public String dropTable(Model model,
-                            @PathVariable(value = "table") String tableName,
+                            @PathVariable(value = "name") String tableName,
                             HttpSession session) {
         DatabaseManager manager = getManager(session);
 
@@ -145,9 +164,8 @@ public class MainController {
         return null;
     }
 
-    private String getTables(DatabaseManager manager) {
-        List<String> tablesWithBrackets = manager.getTables();
-        return tablesWithBrackets.toString().substring(1, tablesWithBrackets.toString().length() - 1);
+    private String getFormattedTable(List<String> data) {
+        return data.toString().substring(1, data.toString().length() - 1);
     }
 
     private List<List<String>> getRows(DatabaseManager manager, String tableName) {
@@ -159,6 +177,12 @@ public class MainController {
 
     private DatabaseManager getManager(HttpSession session) {
         return (DatabaseManager) session.getAttribute("manager");
+    }
+
+    private void setAttributes(String head, String tableData, String command, Model model) {
+        model.addAttribute("head", head);
+        model.addAttribute("tables", tableData);
+        model.addAttribute("command", command);
     }
 
     private boolean managerNull(String fromPage, DatabaseManager manager, HttpSession session) {

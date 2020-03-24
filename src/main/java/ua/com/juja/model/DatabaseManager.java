@@ -10,6 +10,8 @@ public interface DatabaseManager {
 
     void connect(String database, String user, String password);
 
+    List<String> getDatabases();
+
     void createDatabase(String databaseName);
 
     void dropDatabase(String databaseName);

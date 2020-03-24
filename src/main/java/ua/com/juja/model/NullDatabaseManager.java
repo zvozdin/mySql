@@ -10,6 +10,11 @@ public class NullDatabaseManager implements DatabaseManager {
     }
 
     @Override
+    public List<String> getDatabases() {
+        return null;
+    }
+
+    @Override
     public void createDatabase(String databaseName) {
 
     }

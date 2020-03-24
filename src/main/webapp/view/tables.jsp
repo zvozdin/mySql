@@ -2,17 +2,17 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
     <head>
-        <title>mysql | tables</title>
+        <title>mysql | ${head}</title>
     </head>
     <body>
         ${report}
         <table border="1">
             <tr>
-                <td></td> <td>Tables</td>
+                <td></td> <td>${head}</td>
             </tr>
-            <c:forEach items="${tables}" var="table" varStatus="loop">
+            <c:forEach items="${tables}" var="name" varStatus="loop">
                 <tr>
-                    <td>${loop.count}</td><td><a href="${command}/${fn:trim(table)}">${table}</a></td>
+                    <td>${loop.count}</td><td><a href="${command}/${fn:trim(name)}">${name}</a></td>
                 </tr>
             </c:forEach>
         </table>

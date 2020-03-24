@@ -13,14 +13,14 @@ public class ServiceImpl implements Service {
         return Arrays.asList(
                 "help",
                 "connect",
-                "newDatabase",
+//                "newDatabase",
                 "dropDatabase",
                 "tables",
-                "newTable",
+//                "newTable",
                 "dropTable",
-                "insert",
-                "update",
-                "delete",
+//                "insert",
+//                "update",
+//                "delete",
                 "clear"
         );
     }
