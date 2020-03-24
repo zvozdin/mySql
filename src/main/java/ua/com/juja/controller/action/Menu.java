@@ -23,7 +23,7 @@ public class Menu implements Action {
 
     @Override
     public void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Action> commands = service.getActions();
+        List<String> commands = service.getActions();
         commands = commands.subList(0, commands.size() - 2);
 
         req.setAttribute("commands", commands.toString()

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import ua.com.juja.controller.action.Action;
 import ua.com.juja.model.ActionMessages;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.service.Service;
@@ -36,11 +35,11 @@ public class MainController {
 
     @RequestMapping(value = "/menu", method = RequestMethod.GET)
     public String menu(Model model) {
-        List<Action> commands = service.getActions();
-        commands = commands.subList(0, commands.size() - 2);
+        List<String> commandsListWithBrackets = service.getActions();
+        String commands = commandsListWithBrackets.toString()
+                .substring(1, commandsListWithBrackets.toString().length() - 1);
 
-        model.addAttribute("commands", commands.toString()
-                .substring(1, commands.toString().length() - 1));
+        model.addAttribute("commands", commands);
         return "menu";
     }
 
@@ -86,8 +85,8 @@ public class MainController {
 
     @RequestMapping(value = "/tables/{table}", method = RequestMethod.GET)
     public String table(Model model,
-                          @PathVariable(value = "table") String tableName,
-                          HttpSession session) {
+                        @PathVariable(value = "table") String tableName,
+                        HttpSession session) {
         DatabaseManager manager = getManager(session);
 
         model.addAttribute("rows", getRows(manager, tableName));
@@ -131,8 +130,8 @@ public class MainController {
 
     @RequestMapping(value = "/dropTable/{table}", method = RequestMethod.GET)
     public String dropTable(Model model,
-                             @PathVariable(value = "table") String tableName,
-                             HttpSession session) {
+                            @PathVariable(value = "table") String tableName,
+                            HttpSession session) {
         DatabaseManager manager = getManager(session);
 
         manager.dropTable(tableName);
