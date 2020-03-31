@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>mysql | ${report} | result</title>
+        <title>mysql | report</title>
     </head>
     <body>
         ${report}<br>

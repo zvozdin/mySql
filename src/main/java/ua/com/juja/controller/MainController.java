@@ -4,16 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-
 import ua.com.juja.model.ActionMessages;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.service.Service;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class MainController {
@@ -48,7 +45,7 @@ public class MainController {
 
     @RequestMapping(value = "/connect", method = RequestMethod.POST)
     public String connecting(@ModelAttribute("connection") Connection connection,
-                             ModelMap model, HttpSession session) {
+                             Model model, HttpSession session) {
         try {
             DatabaseManager manager = getDatabaseManager();
             manager.connect(connection.getDatabase(), connection.getUser(), connection.getPassword());
@@ -125,26 +122,40 @@ public class MainController {
         return "table";
     }
 
-    @RequestMapping(value = "/clear", method = RequestMethod.GET)
-    public String clear(Model model, HttpSession session) {
+    @RequestMapping(value = "/newTable", method = RequestMethod.GET)
+    public String newTable(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);
 
-        if (managerNull("/clear", manager, session)) return "redirect:/connect";
-
-        setAttributes("Tables", getFormattedData(manager.getTables()), "clear", model);
-        return "tables";
+        if (managerNull("/newTable", manager, session)) return "redirect:/connect";
+        model.addAttribute("command", "newTable");
+        return "setName";
     }
 
-    @RequestMapping(value = "/clear/{name}", method = RequestMethod.GET)
-    public String clear(Model model,
-                        @PathVariable(value = "name") String tableName,
-                        HttpSession session) {
-        DatabaseManager manager = getManager(session);
-        manager.clear(tableName);
+    @RequestMapping(value = "/newTable", params = {"name", "count"}, method = RequestMethod.GET)
+    public String newTable(Model model,
+                           @RequestParam(value = "name") String tableName,
+                           @RequestParam(value = "count") String count) {
+        model.addAttribute("name", tableName);
+        model.addAttribute("count", count);
+        return "createTable";
+    }
 
-        model.addAttribute("report", String.format(ActionMessages.CLEAR.toString(), tableName));
-        model.addAttribute("rows", getRows(manager, tableName));
-        return "table";
+    @RequestMapping(value = "/newTable", method = RequestMethod.POST)
+    public String newTable(Model model, @RequestParam Map<String, String> queryMap,
+                           HttpSession session) {
+        try {
+            String tableName = queryMap.get("name");
+            queryMap.remove("name");
+
+            getManager(session).createTable(tableName, new LinkedHashSet(new LinkedList(queryMap.values())));
+
+            model.addAttribute("report", String.format(ActionMessages.CREATE.toString(), tableName));
+            return "report";
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("message", e.getMessage());
+            return "error";
+        }
     }
 
     @RequestMapping(value = "/dropTable", method = RequestMethod.GET)
@@ -165,6 +176,28 @@ public class MainController {
 
         model.addAttribute("report", String.format(ActionMessages.DROP.toString(), tableName));
         return "report";
+    }
+
+    @RequestMapping(value = "/clear", method = RequestMethod.GET)
+    public String clear(Model model, HttpSession session) {
+        DatabaseManager manager = getManager(session);
+
+        if (managerNull("/clear", manager, session)) return "redirect:/connect";
+
+        setAttributes("Tables", getFormattedData(manager.getTables()), "clear", model);
+        return "tables";
+    }
+
+    @RequestMapping(value = "/clear/{name}", method = RequestMethod.GET)
+    public String clear(Model model,
+                        @PathVariable(value = "name") String tableName,
+                        HttpSession session) {
+        DatabaseManager manager = getManager(session);
+        manager.clear(tableName);
+
+        model.addAttribute("report", String.format(ActionMessages.CLEAR.toString(), tableName));
+        model.addAttribute("rows", getRows(manager, tableName));
+        return "table";
     }
 
     @Lookup

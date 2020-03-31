@@ -16,7 +16,7 @@ public class ServiceImpl implements Service {
                 "newDatabase",
                 "dropDatabase",
                 "tables",
-//                "newTable",
+                "newTable",
                 "dropTable",
 //                "insert",
 //                "update",
