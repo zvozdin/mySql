@@ -214,6 +214,46 @@ public class MainController {
         return "table";
     }
 
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
+    public String update(Model model, HttpSession session) {
+        DatabaseManager manager = getManager(session);
+
+        if (managerNull("/update", manager, session)) return "redirect:/connect";
+
+        setAttributes("Tables", getFormattedData(manager.getTables()), "update", model);
+        return "tables";
+    }
+
+    @RequestMapping(value = "/update/{name}", method = RequestMethod.GET)
+    public String update(Model model,
+                         @PathVariable(value = "name") String tableName,
+                         HttpSession session) {
+
+        setAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
+                "update", model);
+        return "update";
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public String update(Model model,
+                         @RequestParam Map<String, String> queryMap,
+                         HttpSession session) {
+        String tableName = queryMap.get("name");
+        queryMap.remove("name");
+
+        Map<String, String> set = new LinkedHashMap<>();
+        set.put(queryMap.get("setColumn"), queryMap.get("setValue"));
+
+        Map<String, String> where = new LinkedHashMap<>();
+        where.put(queryMap.get("whereColumn"), queryMap.get("whereValue"));
+
+        DatabaseManager manager = getManager(session);
+        manager.update(tableName, set, where);
+        model.addAttribute("report", String.format(ActionMessages.UPDATE.toString(), where));
+        model.addAttribute("rows", getRows(manager, tableName));
+        return "table";
+    }
+
     @RequestMapping(value = "/clear", method = RequestMethod.GET)
     public String clear(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);

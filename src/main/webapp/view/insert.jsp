@@ -16,15 +16,13 @@
                 </tr>
                 <tr>
                     <c:forEach items="${tables}" var="name" >
-                        <td><input type="text" name="${name}" /><br></td>
+                        <td><input type="text" name="${name}" /></td>
                     </c:forEach>
                 </tr>
             </table>
             <br>
             <input type="submit" value="${command}" />
         </form>
-        <br>
-        <br>
         <a href="/mySql/menu" >menu</a> <a href="/mySql/help" >help</a>
     </body>
 </html>
