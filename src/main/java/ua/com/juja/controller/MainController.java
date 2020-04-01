@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import ua.com.juja.model.ActionMessages;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.service.Service;
@@ -250,6 +251,44 @@ public class MainController {
         DatabaseManager manager = getManager(session);
         manager.update(tableName, set, where);
         model.addAttribute("report", String.format(ActionMessages.UPDATE.toString(), where));
+        model.addAttribute("rows", getRows(manager, tableName));
+        return "table";
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public String delete(Model model, HttpSession session) {
+        DatabaseManager manager = getManager(session);
+
+        if (managerNull("/delete", manager, session)) return "redirect:/connect";
+
+        setAttributes("Tables", getFormattedData(manager.getTables()), "delete", model);
+        return "tables";
+    }
+
+    @RequestMapping(value = "/delete/{name}", method = RequestMethod.GET)
+    public String delete(Model model,
+                         @PathVariable(value = "name") String tableName,
+                         HttpSession session) {
+
+        setAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
+                "delete", model);
+        return "delete";
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public String delete(Model model,
+                         @RequestParam Map<String, String> queryMap,
+                         HttpSession session) {
+        String tableName = queryMap.get("name");
+        queryMap.remove("name");
+
+        Map<String, String> delete = new LinkedHashMap<>();
+        delete.put(queryMap.get("deleteColumn"), queryMap.get("deleteValue"));
+
+        DatabaseManager manager = getManager(session);
+        manager.deleteRow(tableName, delete);
+
+        model.addAttribute("report", String.format(ActionMessages.DELETE.toString(), delete));
         model.addAttribute("rows", getRows(manager, tableName));
         return "table";
     }
