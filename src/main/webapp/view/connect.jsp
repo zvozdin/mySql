@@ -17,6 +17,6 @@
 
             <input type="submit" value="connect" />
         </form:form>
-        <a href="menu">menu</a> <a href="help">help</a>
+        <a href="menu" >menu</a> <a href="help" >help</a>
     </body>
 </html>

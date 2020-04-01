@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <html>
     <head>
         <title>mysql | ${head}</title>
@@ -12,7 +13,7 @@
             </tr>
             <c:forEach items="${tables}" var="name" varStatus="loop">
                 <tr>
-                    <td>${loop.count}</td><td><a href="${command}/${fn:trim(name)}">${name}</a></td>
+                    <td>${loop.count}</td> <td><a href="${command}/${fn:trim(name)}" >${name}</a></td>
                 </tr>
             </c:forEach>
         </table>

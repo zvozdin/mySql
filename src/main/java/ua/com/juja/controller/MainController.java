@@ -119,6 +119,8 @@ public class MainController {
                         @PathVariable(value = "name") String tableName,
                         HttpSession session) {
         model.addAttribute("rows", getRows(getManager(session), tableName));
+
+        // TODO add Table Name, which are watched, in table.jsp
         return "table";
     }
 
@@ -127,7 +129,6 @@ public class MainController {
         DatabaseManager manager = getManager(session);
 
         if (managerNull("/newTable", manager, session)) return "redirect:/connect";
-        model.addAttribute("command", "newTable");
         return "setName";
     }
 
@@ -141,14 +142,14 @@ public class MainController {
     }
 
     @RequestMapping(value = "/newTable", method = RequestMethod.POST)
-    public String newTable(Model model, @RequestParam Map<String, String> queryMap,
+    public String newTable(Model model,
+                           @RequestParam Map<String, String> queryMap,
                            HttpSession session) {
         try {
             String tableName = queryMap.get("name");
             queryMap.remove("name");
 
             getManager(session).createTable(tableName, new LinkedHashSet(new LinkedList(queryMap.values())));
-
             model.addAttribute("report", String.format(ActionMessages.CREATE.toString(), tableName));
             return "report";
         } catch (Exception e) {
@@ -176,6 +177,41 @@ public class MainController {
 
         model.addAttribute("report", String.format(ActionMessages.DROP.toString(), tableName));
         return "report";
+    }
+
+    @RequestMapping(value = "/insert", method = RequestMethod.GET)
+    public String insert(Model model, HttpSession session) {
+        DatabaseManager manager = getManager(session);
+
+        if (managerNull("/insert", manager, session)) return "redirect:/connect";
+
+        setAttributes("Tables", getFormattedData(manager.getTables()), "insert", model);
+        return "tables";
+    }
+
+    @RequestMapping(value = "/insert/{name}", method = RequestMethod.GET)
+    public String insert(Model model,
+                         @PathVariable(value = "name") String tableName,
+                         HttpSession session) {
+
+        setAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
+                "insert", model);
+        return "insert";
+    }
+
+    @RequestMapping(value = "/insert", method = RequestMethod.POST)
+    public String insert(Model model,
+                         @RequestParam Map<String, String> queryMap,
+                         HttpSession session) {
+        String tableName = queryMap.get("name");
+        queryMap.remove("name");
+
+        DatabaseManager manager = getManager(session);
+        manager.insert(tableName, queryMap);
+
+        model.addAttribute("report", String.format(ActionMessages.INSERT.toString(), queryMap));
+        model.addAttribute("rows", getRows(manager, tableName));
+        return "table";
     }
 
     @RequestMapping(value = "/clear", method = RequestMethod.GET)
@@ -206,7 +242,8 @@ public class MainController {
     }
 
     private String getFormattedData(List<String> data) {
-        return data.toString().substring(1, data.toString().length() - 1);
+        return data.toString()
+                .substring(1, data.toString().length() - 1);
     }
 
     private List<List<String>> getRows(DatabaseManager manager, String tableName) {
@@ -222,7 +259,10 @@ public class MainController {
 
     private void setAttributes(String head, String tableData, String command, Model model) {
         model.addAttribute("head", head);
+
+        // TODO rename attribute as like 'resources' cause this use also for columns and rename in suitable .jsp
         model.addAttribute("tables", tableData);
+
         model.addAttribute("command", command);
     }
 
