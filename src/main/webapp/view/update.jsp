@@ -12,7 +12,7 @@
             <input type="hidden" name="name" value="${head}">
             Set column:
             <select name="setColumn">
-                <c:forEach items="${tables}" var="setColumn">
+                <c:forEach items="${tableData}" var="setColumn">
                     <option value="${fn:trim(setColumn)}">${setColumn}</option>
                 </c:forEach>
             </select>
@@ -20,7 +20,7 @@
             <br><br>
             Where column:
             <select name="whereColumn">
-                <c:forEach items="${tables}" var="whereColumn">
+                <c:forEach items="${tableData}" var="whereColumn">
                     <option value="${fn:trim(whereColumn)}">${whereColumn}</option>
                 </c:forEach>
             </select>

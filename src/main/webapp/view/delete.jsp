@@ -12,7 +12,7 @@
             <input type="hidden" name="name" value="${head}">
             Delete record where column:
             <select name="deleteColumn">
-                <c:forEach items="${tables}" var="column">
+                <c:forEach items="${tableData}" var="column">
                     <option value="${fn:trim(column)}">${column}</option>
                 </c:forEach>
             </select>

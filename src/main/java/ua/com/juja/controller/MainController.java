@@ -91,7 +91,7 @@ public class MainController {
 
         if (managerNull("/dropDatabase", manager, session)) return "redirect:/connect";
 
-        setAttributes("Databases", getFormattedData(manager.getDatabases()), "dropDatabase", model);
+        setFormAttributes("Databases", getFormattedData(manager.getDatabases()), "dropDatabase", model);
         return "tables";
     }
 
@@ -111,7 +111,7 @@ public class MainController {
 
         if (managerNull("/tables", manager, session)) return "redirect:/connect";
 
-        setAttributes("Tables", getFormattedData(manager.getTables()), "tables", model);
+        setFormAttributes("Tables", getFormattedData(manager.getTables()), "tables", model);
         return "tables";
     }
 
@@ -120,8 +120,6 @@ public class MainController {
                         @PathVariable(value = "name") String tableName,
                         HttpSession session) {
         model.addAttribute("rows", getRows(getManager(session), tableName));
-
-        // TODO add Table Name, which are watched, in table.jsp
         return "table";
     }
 
@@ -166,7 +164,7 @@ public class MainController {
 
         if (managerNull("/dropTable", manager, session)) return "redirect:/connect";
 
-        setAttributes("Tables", getFormattedData(manager.getTables()), "dropTable", model);
+        setFormAttributes("Tables", getFormattedData(manager.getTables()), "dropTable", model);
         return "tables";
     }
 
@@ -186,7 +184,7 @@ public class MainController {
 
         if (managerNull("/insert", manager, session)) return "redirect:/connect";
 
-        setAttributes("Tables", getFormattedData(manager.getTables()), "insert", model);
+        setFormAttributes("Tables", getFormattedData(manager.getTables()), "insert", model);
         return "tables";
     }
 
@@ -195,7 +193,7 @@ public class MainController {
                          @PathVariable(value = "name") String tableName,
                          HttpSession session) {
 
-        setAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
+        setFormAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
                 "insert", model);
         return "insert";
     }
@@ -210,8 +208,7 @@ public class MainController {
         DatabaseManager manager = getManager(session);
         manager.insert(tableName, queryMap);
 
-        model.addAttribute("report", String.format(ActionMessages.INSERT.toString(), queryMap));
-        model.addAttribute("rows", getRows(manager, tableName));
+        setTableAttributes(ActionMessages.INSERT, queryMap.toString(), tableName, manager, model);
         return "table";
     }
 
@@ -221,7 +218,7 @@ public class MainController {
 
         if (managerNull("/update", manager, session)) return "redirect:/connect";
 
-        setAttributes("Tables", getFormattedData(manager.getTables()), "update", model);
+        setFormAttributes("Tables", getFormattedData(manager.getTables()), "update", model);
         return "tables";
     }
 
@@ -230,7 +227,7 @@ public class MainController {
                          @PathVariable(value = "name") String tableName,
                          HttpSession session) {
 
-        setAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
+        setFormAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
                 "update", model);
         return "update";
     }
@@ -250,8 +247,8 @@ public class MainController {
 
         DatabaseManager manager = getManager(session);
         manager.update(tableName, set, where);
-        model.addAttribute("report", String.format(ActionMessages.UPDATE.toString(), where));
-        model.addAttribute("rows", getRows(manager, tableName));
+
+        setTableAttributes(ActionMessages.UPDATE, where.toString(), tableName, manager, model);
         return "table";
     }
 
@@ -261,7 +258,7 @@ public class MainController {
 
         if (managerNull("/delete", manager, session)) return "redirect:/connect";
 
-        setAttributes("Tables", getFormattedData(manager.getTables()), "delete", model);
+        setFormAttributes("Tables", getFormattedData(manager.getTables()), "delete", model);
         return "tables";
     }
 
@@ -270,7 +267,7 @@ public class MainController {
                          @PathVariable(value = "name") String tableName,
                          HttpSession session) {
 
-        setAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
+        setFormAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
                 "delete", model);
         return "delete";
     }
@@ -288,8 +285,7 @@ public class MainController {
         DatabaseManager manager = getManager(session);
         manager.deleteRow(tableName, delete);
 
-        model.addAttribute("report", String.format(ActionMessages.DELETE.toString(), delete));
-        model.addAttribute("rows", getRows(manager, tableName));
+        setTableAttributes(ActionMessages.DELETE, delete.toString(), tableName, manager, model);
         return "table";
     }
 
@@ -299,7 +295,7 @@ public class MainController {
 
         if (managerNull("/clear", manager, session)) return "redirect:/connect";
 
-        setAttributes("Tables", getFormattedData(manager.getTables()), "clear", model);
+        setFormAttributes("Tables", getFormattedData(manager.getTables()), "clear", model);
         return "tables";
     }
 
@@ -310,8 +306,7 @@ public class MainController {
         DatabaseManager manager = getManager(session);
         manager.clear(tableName);
 
-        model.addAttribute("report", String.format(ActionMessages.CLEAR.toString(), tableName));
-        model.addAttribute("rows", getRows(manager, tableName));
+        setTableAttributes(ActionMessages.CLEAR, tableName, tableName, manager, model);
         return "table";
     }
 
@@ -336,13 +331,15 @@ public class MainController {
         return (DatabaseManager) session.getAttribute("manager");
     }
 
-    private void setAttributes(String head, String tableData, String command, Model model) {
+    private void setFormAttributes(String head, String tableData, String command, Model model) {
         model.addAttribute("head", head);
-
-        // TODO rename attribute as like 'resources' cause this use also for columns and rename in suitable .jsp
-        model.addAttribute("tables", tableData);
-
+        model.addAttribute("tableData", tableData);
         model.addAttribute("command", command);
+    }
+
+    private void setTableAttributes(ActionMessages insert, String s, String tableName, DatabaseManager manager, Model model) {
+        model.addAttribute("report", String.format(insert.toString(), s));
+        model.addAttribute("rows", getRows(manager, tableName));
     }
 
     private boolean managerNull(String fromPage, DatabaseManager manager, HttpSession session) {

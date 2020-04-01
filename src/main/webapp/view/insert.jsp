@@ -10,12 +10,12 @@
             <input type="hidden" name="name" value="${head}">
             <table border="1" >
                 <tr>
-                    <c:forEach items="${tables}" var="name" >
+                    <c:forEach items="${tableData}" var="name" >
                         <td>${name}</td>
                     </c:forEach>
                 </tr>
                 <tr>
-                    <c:forEach items="${tables}" var="name" >
+                    <c:forEach items="${tableData}" var="name" >
                         <td><input type="text" name="${name}" /></td>
                     </c:forEach>
                 </tr>

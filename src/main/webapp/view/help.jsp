@@ -26,7 +26,7 @@
         	<a href="update">update</a><br>
         		to update the content in the 'tableName'<br>
         			set column1 = value1 where column2 = value2<br>
-        	<a href="delete">delete</a>delete<br>
+        	<a href="delete">delete</a><br>
         		to delete content where column = value<br>
         	<a href="clear">clear</a><br>
         		to delete content from the 'tableName'<br><br>

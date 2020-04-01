@@ -11,7 +11,7 @@
             <tr>
                 <td></td> <td>${head}</td>
             </tr>
-            <c:forEach items="${tables}" var="name" varStatus="loop">
+            <c:forEach items="${tableData}" var="name" varStatus="loop">
                 <tr>
                     <td>${loop.count}</td> <td><a href="${command}/${fn:trim(name)}" >${name}</a></td>
                 </tr>
