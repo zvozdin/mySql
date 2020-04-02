@@ -124,7 +124,7 @@ public class MainController {
     }
 
     @RequestMapping(value = "/newTable", method = RequestMethod.GET)
-    public String newTable(Model model, HttpSession session) {
+    public String newTable(HttpSession session) {
         DatabaseManager manager = getManager(session);
 
         if (managerNull("/newTable", manager, session)) return "redirect:/connect";
