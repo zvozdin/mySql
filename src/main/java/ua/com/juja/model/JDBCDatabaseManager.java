@@ -1,6 +1,11 @@
 package ua.com.juja.model;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
@@ -11,6 +16,7 @@ import java.util.*;
 public class JDBCDatabaseManager implements DatabaseManager {
 
     private Connection connection;
+    private JdbcTemplate template;
 
     @Override
     public void connect(String database, String user, String password) {
@@ -26,6 +32,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
             }
             connection = DriverManager.getConnection(
                     ConnectParameters.url + database + ConnectParameters.ssl, user, password);
+            template = new JdbcTemplate(new SingleConnectionDataSource(connection, false));
         } catch (SQLException e) {
             connection = null;
             throw new RuntimeException(String.format(
@@ -124,46 +131,37 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public Set<String> getColumns(String tableName) {
         notExistingTableValidation(tableName);
 
-        Set<String> result = new LinkedHashSet<>();
-        DatabaseMetaData data = null;
-        try {
-            data = connection.getMetaData();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        Set<String> set = new LinkedHashSet<>();
 
-        try (ResultSet columnsNames = data.getColumns(
-                null, null, /*"%"*/tableName, null)) {
-            while (columnsNames.next()) {
-                result.add(columnsNames.getString(4));
-            }
-            return result;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return result;
-        }
+        return (Set<String>) template.query("select * from " + tableName,
+                new ResultSetExtractor() {
+                    @Override
+                    public Set<String> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                        ResultSetMetaData metaData = resultSet.getMetaData();
+                        for (int i = 0; i < metaData.getColumnCount(); i++) {
+                            String columnName = metaData.getColumnName(i + 1);
+                            set.add(columnName);
+                        }
+                        return set;
+                    }
+                });
     }
 
     @Override
     public List<List<String>> getRows(String tableName) {
         notExistingTableValidation(tableName);
 
-        List<List<String>> rows = new ArrayList<>();
-
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("select * from " + tableName)) {
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            while (resultSet.next()) {
-                List<String> row = new ArrayList<>();
-                for (int i = 0; i < metaData.getColumnCount(); i++) {
-                    row.add(resultSet.getString(i + 1));
-                }
-                rows.add(row);
-            }
-            return rows;
-        } catch (SQLException e) {
-            return null;
-        }
+        return template.query("select * from " + tableName,
+                new RowMapper() {
+                    @Override
+                    public List<String> mapRow(ResultSet resultSet, int j) throws SQLException {
+                        List<String> row = new ArrayList<>();
+                        for (int i = 0; i < resultSet.getMetaData().getColumnCount(); i++) {
+                            row.add(resultSet.getString(i + 1));
+                        }
+                        return row;
+                    }
+                });
     }
 
     @Override
