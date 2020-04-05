@@ -72,12 +72,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void dropDatabase(String databaseName) {
-        try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate("drop database " + databaseName);
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(String.format(
-                    ActionMessages.NOT_EXISTING_DATABASE.toString(), databaseName), e);
-        }
+        template.update("drop database " + databaseName);
     }
 
     @Override
