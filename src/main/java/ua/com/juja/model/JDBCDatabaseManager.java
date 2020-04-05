@@ -104,11 +104,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void dropTable(String tableName) {
         notExistingTableValidation(tableName);
 
-        try (Statement statement = connection.createStatement()) {
-            statement.execute("drop table " + tableName);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        template.execute("drop table " + tableName);
     }
 
     @Override
