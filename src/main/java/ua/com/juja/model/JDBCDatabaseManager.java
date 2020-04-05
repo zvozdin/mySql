@@ -199,7 +199,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         values.addAll(set.values());
         values.addAll(where.values());
 
-        template.update(String.format("UPDATE %s SET %s WHERE %s", tableName, setColumns, whereColumns),
+        template.update(String.format("update %s set %s where %s", tableName, setColumns, whereColumns),
                 values.toArray());
     }
 
@@ -210,17 +210,11 @@ public class JDBCDatabaseManager implements DatabaseManager {
         String columns = StringUtils
                 .collectionToDelimitedString(delete.keySet(), ",", "", " = ?");
 
-        String sql = "delete from " + tableName + " where " + columns;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            Collection<String> values = delete.values();
-            int index = 1;
-            for (String value : values) {
-                statement.setString(index++, value);
-            }
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        List<String> values = new LinkedList<>();
+        values.addAll(delete.values());
+
+        template.update(String.format("delete from %s where %s", tableName, columns),
+                values.toArray());
     }
 
     @Override
