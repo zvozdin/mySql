@@ -44,12 +44,9 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void createDatabase(String databaseName) {
-        try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate("create database " + databaseName);
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(String.format(
-                    ActionMessages.DATABASE_EXISTS.toString(), databaseName), e);
-        }
+//        existingDatabaseValidation(databaseName);
+
+        template.execute("create database " + databaseName);
     }
 
     @Override
@@ -72,27 +69,22 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void dropDatabase(String databaseName) {
+//        notExistingDatabaseValidation(databaseName);
+
         template.update("drop database " + databaseName);
     }
 
+
     @Override
     public void createTable(String tableName, Set<String> columns) {
-        if (getTables().contains(tableName)) {
-            throw new IllegalArgumentException(String.format(
-                    ActionMessages.CREATE_EXISTING_TABLE.toString(), tableName));
-        }
-        String sql = "create table " + tableName + " (";
+        existingTableValidation(tableName);
 
-        for (String column : columns) {
-            sql += column + " VARCHAR(45) NOT NULL,";
-        }
-        sql += " PRIMARY KEY (`" + columns.iterator().next() + "`))";
+        String names = StringUtils
+                .collectionToDelimitedString(columns, ",", "", " VARCHAR(45) NOT NULL");
 
-        try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        template.execute(String
+                .format("create table %s ( %s, PRIMARY KEY (`%s`))",
+                        tableName, names, columns.iterator().next()));
     }
 
     @Override
@@ -213,22 +205,24 @@ public class JDBCDatabaseManager implements DatabaseManager {
         return connection != null;
     }
 
-    @Override
-    public boolean isDatabaseExist(String databaseName) {
-        for (String database : getDatabases()) {
-            if (databaseName.equals(database)) {
-                return true;
-            }
+    private void existingDatabaseValidation(String databaseName) {
+        if (getDatabases().contains(databaseName)) {
+            throw new IllegalArgumentException(String.format(
+                    ActionMessages.DATABASE_EXISTS.toString(), databaseName));
         }
-        return false;
     }
 
-    @Override
-    public void closeConnection() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private void notExistingDatabaseValidation(String databaseName) {
+        if (!getDatabases().contains(databaseName)) {
+            throw new IllegalArgumentException(String.format(
+                    ActionMessages.NOT_EXISTING_DATABASE.toString(), databaseName));
+        }
+    }
+
+    private void existingTableValidation(String tableName) {
+        if (getTables().contains(tableName)) {
+            throw new IllegalArgumentException(String.format(
+                    ActionMessages.CREATE_EXISTING_TABLE.toString(), tableName));
         }
     }
 

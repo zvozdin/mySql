@@ -6,8 +6,6 @@ import java.util.Set;
 
 public interface DatabaseManager {
 
-    DatabaseManager NULL = new NullDatabaseManager();
-
     void connect(String database, String user, String password);
 
     List<String> getDatabases();
@@ -35,8 +33,4 @@ public interface DatabaseManager {
     void deleteRow(String string, Map<String, String> delete);
 
     boolean isConnected();
-
-    boolean isDatabaseExist(String databaseName);
-
-    void closeConnection();
 }
