@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.sql.*;
 import java.util.*;
@@ -177,8 +178,9 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void insert(String tableName, Map<String, String> input) {
         notExistingTableValidation(tableName);
 
-        String columns = getFormattedColumnNames(input, "%s, ");
-        String values = getFormattedValues(input, "'%s', ");
+        String columns = String.join(",", input.keySet());
+        String values = StringUtils
+                .collectionToDelimitedString(input.values(), ",", "'", "'");
 
         template.update(String.format("insert into %s (%s) values (%s)",
                 tableName, columns, values));
@@ -188,8 +190,11 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void update(String tableName, Map<String, String> set, Map<String, String> where) {
         notExistingTableValidation(tableName);
 
-        String setColumns = getFormattedColumnNames(set, "%s = ?, ");
-        String whereColumns = getFormattedColumnNames(where, "%s = ?, ");
+        String setColumns = StringUtils
+                .collectionToDelimitedString(set.keySet(), ",", "", " = ?");
+        String whereColumns = StringUtils
+                .collectionToDelimitedString(where.keySet(), ",", "", " = ?");
+
         String sql = "UPDATE " + tableName + " SET " + setColumns + " WHERE " + whereColumns;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int index = 1;
@@ -212,7 +217,9 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void deleteRow(String tableName, Map<String, String> delete) {
         notExistingTableValidation(tableName);
 
-        String columns = getFormattedColumnNames(delete, "%s = ?, ");
+        String columns = StringUtils
+                .collectionToDelimitedString(delete.keySet(), ",", "", " = ?");
+
         String sql = "delete from " + tableName + " where " + columns;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             Collection<String> values = delete.values();
@@ -255,23 +262,5 @@ public class JDBCDatabaseManager implements DatabaseManager {
             throw new IllegalArgumentException(String.format(
                     ActionMessages.NOT_EXISTING_TABLE.toString(), tableName));
         }
-    }
-
-    private String getFormattedColumnNames(Map<String, String> input, String format) {
-        StringBuilder result = new StringBuilder();
-        Set<String> columns = input.keySet();
-        for (String column : columns) {
-            result.append(String.format(format, column));
-        }
-        return result.substring(0, result.length() - 2);
-    }
-
-    private String getFormattedValues(Map<String, String> input, String format) {
-        StringBuilder result = new StringBuilder();
-        Collection<String> values = input.values();
-        for (String value : values) {
-            result.append(String.format(format, value));
-        }
-        return result.substring(0, result.length() - 2);
     }
 }
