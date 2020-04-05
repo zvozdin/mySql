@@ -195,22 +195,12 @@ public class JDBCDatabaseManager implements DatabaseManager {
         String whereColumns = StringUtils
                 .collectionToDelimitedString(where.keySet(), ",", "", " = ?");
 
-        String sql = "UPDATE " + tableName + " SET " + setColumns + " WHERE " + whereColumns;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            int index = 1;
-            Collection<String> setValues = set.values();
-            for (String value : setValues) {
-                statement.setString(index++, value);
-            }
+        List<String> values = new LinkedList<>();
+        values.addAll(set.values());
+        values.addAll(where.values());
 
-            Collection<String> whereValues = where.values();
-            for (String value : whereValues) {
-                statement.setString(index, value);
-            }
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        template.update(String.format("UPDATE %s SET %s WHERE %s", tableName, setColumns, whereColumns),
+                values.toArray());
     }
 
     @Override
