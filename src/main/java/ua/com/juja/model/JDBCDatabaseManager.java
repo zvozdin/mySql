@@ -258,19 +258,19 @@ public class JDBCDatabaseManager implements DatabaseManager {
     }
 
     private String getFormattedColumnNames(Map<String, String> input, String format) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         Set<String> columns = input.keySet();
         for (String column : columns) {
-            result += String.format(format, column);
+            result.append(String.format(format, column));
         }
         return result.substring(0, result.length() - 2);
     }
 
     private String getFormattedValues(Map<String, String> input, String format) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         Collection<String> values = input.values();
         for (String value : values) {
-            result += String.format(format, value);
+            result.append(String.format(format, value));
         }
         return result.substring(0, result.length() - 2);
     }
