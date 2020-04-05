@@ -127,6 +127,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Set<String> getColumns(String tableName) {
         notExistingTableValidation(tableName);
@@ -147,6 +148,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
                 });
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<List<String>> getRows(String tableName) {
         notExistingTableValidation(tableName);
@@ -168,11 +170,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void clear(String tableName) {
         notExistingTableValidation(tableName);
 
-        try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate("delete from " + tableName);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        template.update("delete from " + tableName);
     }
 
     @Override
@@ -180,8 +178,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
         notExistingTableValidation(tableName);
 
         try (Statement statement = connection.createStatement()) {
-            String columns = getColumnNamesFormated(input, "%s, ");
-            String values = getValuesFormated(input, "'%s', ");
+            String columns = getColumnNamesFormatted(input, "%s, ");
+            String values = getValuesFormatted(input, "'%s', ");
             statement.executeUpdate(
                     "insert into " + tableName + " (" + columns + ") values (" + values + ")");
         } catch (SQLException e) {
@@ -193,8 +191,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void update(String tableName, Map<String, String> set, Map<String, String> where) {
         notExistingTableValidation(tableName);
 
-        String setColumns = getColumnNamesFormated(set, "%s = ?, ");
-        String whereColumns = getColumnNamesFormated(where, "%s = ?, ");
+        String setColumns = getColumnNamesFormatted(set, "%s = ?, ");
+        String whereColumns = getColumnNamesFormatted(where, "%s = ?, ");
         String sql = "UPDATE " + tableName + " SET " + setColumns + " WHERE " + whereColumns;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int index = 1;
@@ -217,15 +215,15 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void deleteRow(String tableName, Map<String, String> delete) {
         notExistingTableValidation(tableName);
 
-        String columns = getColumnNamesFormated(delete, "%s = ?, ");
+        String columns = getColumnNamesFormatted(delete, "%s = ?, ");
         String sql = "delete from " + tableName + " where " + columns;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             Collection<String> values = delete.values();
             int index = 1;
             for (String value : values) {
-                preparedStatement.setString(index++, value);
+                statement.setString(index++, value);
             }
-            preparedStatement.executeUpdate();
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -262,7 +260,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
     }
 
-    private String getColumnNamesFormated(Map<String, String> input, String format) {
+    private String getColumnNamesFormatted(Map<String, String> input, String format) {
         String result = "";
         Set<String> columns = input.keySet();
         for (String column : columns) {
@@ -271,7 +269,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         return result.substring(0, result.length() - 2);
     }
 
-    private String getValuesFormated(Map<String, String> input, String format) {
+    private String getValuesFormatted(Map<String, String> input, String format) {
         String result = "";
         Collection<String> values = input.values();
         for (String value : values) {
