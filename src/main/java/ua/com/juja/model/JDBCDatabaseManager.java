@@ -177,22 +177,19 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void insert(String tableName, Map<String, String> input) {
         notExistingTableValidation(tableName);
 
-        try (Statement statement = connection.createStatement()) {
-            String columns = getColumnNamesFormatted(input, "%s, ");
-            String values = getValuesFormatted(input, "'%s', ");
-            statement.executeUpdate(
-                    "insert into " + tableName + " (" + columns + ") values (" + values + ")");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String columns = getFormattedColumnNames(input, "%s, ");
+        String values = getFormattedValues(input, "'%s', ");
+
+        template.update(String.format("insert into %s (%s) values (%s)",
+                tableName, columns, values));
     }
 
     @Override
     public void update(String tableName, Map<String, String> set, Map<String, String> where) {
         notExistingTableValidation(tableName);
 
-        String setColumns = getColumnNamesFormatted(set, "%s = ?, ");
-        String whereColumns = getColumnNamesFormatted(where, "%s = ?, ");
+        String setColumns = getFormattedColumnNames(set, "%s = ?, ");
+        String whereColumns = getFormattedColumnNames(where, "%s = ?, ");
         String sql = "UPDATE " + tableName + " SET " + setColumns + " WHERE " + whereColumns;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int index = 1;
@@ -215,7 +212,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
     public void deleteRow(String tableName, Map<String, String> delete) {
         notExistingTableValidation(tableName);
 
-        String columns = getColumnNamesFormatted(delete, "%s = ?, ");
+        String columns = getFormattedColumnNames(delete, "%s = ?, ");
         String sql = "delete from " + tableName + " where " + columns;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             Collection<String> values = delete.values();
@@ -260,7 +257,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         }
     }
 
-    private String getColumnNamesFormatted(Map<String, String> input, String format) {
+    private String getFormattedColumnNames(Map<String, String> input, String format) {
         String result = "";
         Set<String> columns = input.keySet();
         for (String column : columns) {
@@ -269,7 +266,7 @@ public class JDBCDatabaseManager implements DatabaseManager {
         return result.substring(0, result.length() - 2);
     }
 
-    private String getValuesFormatted(Map<String, String> input, String format) {
+    private String getFormattedValues(Map<String, String> input, String format) {
         String result = "";
         Collection<String> values = input.values();
         for (String value : values) {
