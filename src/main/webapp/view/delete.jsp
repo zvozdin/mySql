@@ -9,7 +9,7 @@
         Table: <a href="/mySql/tables/${head}" >${head}</a>
         <br><br>
         <form action="/mySql/${command}" method="post">
-            <input type="hidden" name="name" value="${head}">
+            <input type="hidden" name="tableName" value="${head}">
             Delete record where column:
             <select name="deleteColumn">
                 <c:forEach items="${tableData}" var="column">

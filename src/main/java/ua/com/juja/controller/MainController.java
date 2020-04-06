@@ -38,7 +38,7 @@ public class MainController {
 
     @RequestMapping(value = "/menu", method = RequestMethod.GET)
     public String menu(Model model) {
-        model.addAttribute("commands", getFormattedData(service.getCommands()));
+        model.addAttribute("commands", service.getCommands());
         return "menu";
     }
 
@@ -105,7 +105,7 @@ public class MainController {
 
         if (managerNull("/dropDatabase", manager, session)) return "redirect:/connect";
 
-        setFormAttributes("Databases", getFormattedData(manager.getDatabases()), "dropDatabase", model);
+        setFormAttributes("Databases", manager.getDatabases(), "dropDatabase", model);
         return "tables";
     }
 
@@ -128,7 +128,7 @@ public class MainController {
 
         userActionsDao.log(user, database, "Tables");
 
-        setFormAttributes("Tables", getFormattedData(manager.getTables()), "tables", model);
+        setFormAttributes("Tables", manager.getTables(), "tables", model);
         return "tables";
     }
 
@@ -186,7 +186,7 @@ public class MainController {
 
         if (managerNull("/dropTable", manager, session)) return "redirect:/connect";
 
-        setFormAttributes("Tables", getFormattedData(manager.getTables()), "dropTable", model);
+        setFormAttributes("Tables", manager.getTables(), "dropTable", model);
         return "tables";
     }
 
@@ -207,16 +207,16 @@ public class MainController {
 
         if (managerNull("/insert", manager, session)) return "redirect:/connect";
 
-        setFormAttributes("Tables", getFormattedData(manager.getTables()), "insert", model);
+        setFormAttributes("Tables", manager.getTables(), "insert", model);
         return "tables";
     }
 
-    @RequestMapping(value = "/insert/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/insert/{tableName}", method = RequestMethod.GET)
     public String insert(Model model,
-                         @PathVariable(value = "name") String tableName,
+                         @PathVariable(value = "tableName") String tableName,
                          HttpSession session) {
 
-        setFormAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
+        setFormAttributes(tableName, new ArrayList<>(getManager(session).getColumns(tableName)),
                 "insert", model);
         return "insert";
     }
@@ -225,8 +225,8 @@ public class MainController {
     public String insert(Model model,
                          @RequestParam Map<String, String> queryMap,
                          HttpSession session) {
-        String tableName = queryMap.get("name");
-        queryMap.remove("name");
+        String tableName = queryMap.get("tableName");
+        queryMap.remove("tableName");
 
         DatabaseManager manager = getManager(session);
         manager.insert(tableName, queryMap);
@@ -242,16 +242,16 @@ public class MainController {
 
         if (managerNull("/update", manager, session)) return "redirect:/connect";
 
-        setFormAttributes("Tables", getFormattedData(manager.getTables()), "update", model);
+        setFormAttributes("Tables", manager.getTables(), "update", model);
         return "tables";
     }
 
-    @RequestMapping(value = "/update/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/update/{tableName}", method = RequestMethod.GET)
     public String update(Model model,
-                         @PathVariable(value = "name") String tableName,
+                         @PathVariable(value = "tableName") String tableName,
                          HttpSession session) {
 
-        setFormAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
+        setFormAttributes(tableName, new LinkedList<>(getManager(session).getColumns(tableName)),
                 "update", model);
         return "update";
     }
@@ -260,8 +260,8 @@ public class MainController {
     public String update(Model model,
                          @RequestParam Map<String, String> queryMap,
                          HttpSession session) {
-        String tableName = queryMap.get("name");
-        queryMap.remove("name");
+        String tableName = queryMap.get("tableName");
+        queryMap.remove("tableName");
 
         Map<String, String> set = new LinkedHashMap<>();
         set.put(queryMap.get("setColumn"), queryMap.get("setValue"));
@@ -283,16 +283,16 @@ public class MainController {
 
         if (managerNull("/delete", manager, session)) return "redirect:/connect";
 
-        setFormAttributes("Tables", getFormattedData(manager.getTables()), "delete", model);
+        setFormAttributes("Tables", manager.getTables(), "delete", model);
         return "tables";
     }
 
-    @RequestMapping(value = "/delete/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete/{tableName}", method = RequestMethod.GET)
     public String delete(Model model,
-                         @PathVariable(value = "name") String tableName,
+                         @PathVariable(value = "tableName") String tableName,
                          HttpSession session) {
 
-        setFormAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
+        setFormAttributes(tableName, new LinkedList<>(getManager(session).getColumns(tableName)),
                 "delete", model);
         return "delete";
     }
@@ -301,8 +301,8 @@ public class MainController {
     public String delete(Model model,
                          @RequestParam Map<String, String> queryMap,
                          HttpSession session) {
-        String tableName = queryMap.get("name");
-        queryMap.remove("name");
+        String tableName = queryMap.get("tableName");
+        queryMap.remove("tableName");
 
         Map<String, String> delete = new LinkedHashMap<>();
         delete.put(queryMap.get("deleteColumn"), queryMap.get("deleteValue"));
@@ -321,7 +321,7 @@ public class MainController {
 
         if (managerNull("/clear", manager, session)) return "redirect:/connect";
 
-        setFormAttributes("Tables", getFormattedData(manager.getTables()), "clear", model);
+        setFormAttributes("Tables", manager.getTables(), "clear", model);
         return "tables";
     }
 
@@ -350,11 +350,6 @@ public class MainController {
         return null;
     }
 
-    private String getFormattedData(List<String> data) {
-        return data.toString()
-                .substring(1, data.toString().length() - 1);
-    }
-
     private List<List<String>> getRows(DatabaseManager manager, String tableName) {
         List<List<String>> rows = new ArrayList<>();
         rows.add(new ArrayList<>(manager.getColumns(tableName)));
@@ -366,7 +361,7 @@ public class MainController {
         return (DatabaseManager) session.getAttribute("manager");
     }
 
-    private void setFormAttributes(String head, String tableData, String command, Model model) {
+    private void setFormAttributes(String head, List<String> tableData, String command, Model model) {
         model.addAttribute("head", head);
         model.addAttribute("tableData", tableData);
         model.addAttribute("command", command);

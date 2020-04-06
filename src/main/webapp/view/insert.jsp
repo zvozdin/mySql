@@ -7,7 +7,7 @@
     <body>
         Table: <a href="/mySql/tables/${head}" >${head}</a>
         <form action="/mySql/${command}" method="post" >
-            <input type="hidden" name="name" value="${head}">
+            <input type="hidden" name="tableName" value="${head}">
             <table border="1" >
                 <tr>
                     <c:forEach items="${tableData}" var="name" >
