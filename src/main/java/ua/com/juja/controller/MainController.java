@@ -169,6 +169,8 @@ public class MainController {
             queryMap.remove("name");
 
             getManager(session).createTable(tableName, new LinkedHashSet(new LinkedList(queryMap.values())));
+            userActionsDao.log(user, database, String.format("NewTable(%s)", tableName));
+
             model.addAttribute("report", String.format(ActionMessages.CREATE.toString(), tableName));
             return "report";
         } catch (Exception e) {
@@ -193,6 +195,7 @@ public class MainController {
                             @PathVariable(value = "name") String tableName,
                             HttpSession session) {
         getManager(session).dropTable(tableName);
+        userActionsDao.log(user, database, String.format("DropTable(%s)", tableName));
 
         model.addAttribute("report", String.format(ActionMessages.DROP.toString(), tableName));
         return "report";
@@ -227,6 +230,7 @@ public class MainController {
 
         DatabaseManager manager = getManager(session);
         manager.insert(tableName, queryMap);
+        userActionsDao.log(user, database, String.format("Insert into %s", tableName));
 
         setTableAttributes(ActionMessages.INSERT, queryMap.toString(), tableName, manager, model);
         return "table";
@@ -267,6 +271,7 @@ public class MainController {
 
         DatabaseManager manager = getManager(session);
         manager.update(tableName, set, where);
+        userActionsDao.log(user, database, String.format("Update in %s", tableName));
 
         setTableAttributes(ActionMessages.UPDATE, where.toString(), tableName, manager, model);
         return "table";
@@ -304,6 +309,7 @@ public class MainController {
 
         DatabaseManager manager = getManager(session);
         manager.deleteRow(tableName, delete);
+        userActionsDao.log(user, database, String.format("DeleteRow in %s", tableName));
 
         setTableAttributes(ActionMessages.DELETE, delete.toString(), tableName, manager, model);
         return "table";
@@ -325,6 +331,7 @@ public class MainController {
                         HttpSession session) {
         DatabaseManager manager = getManager(session);
         manager.clear(tableName);
+        userActionsDao.log(user, database, String.format("Clear(%s)", tableName));
 
         setTableAttributes(ActionMessages.CLEAR, tableName, tableName, manager, model);
         return "table";
