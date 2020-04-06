@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import ua.com.juja.model.ActionMessages;
 import ua.com.juja.model.DatabaseManager;
+import ua.com.juja.model.UserActionsDao;
 import ua.com.juja.service.Service;
 
 import javax.servlet.http.HttpSession;
@@ -18,6 +19,12 @@ public class MainController {
 
     @Autowired
     private Service service;
+    @Autowired
+    private UserActionsDao userActionsDao;
+
+    private Connection connection;
+    private String user;
+    private String database;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main() {
@@ -47,9 +54,14 @@ public class MainController {
     @RequestMapping(value = "/connect", method = RequestMethod.POST)
     public String connecting(@ModelAttribute("connection") Connection connection,
                              Model model, HttpSession session) {
+        this.connection = connection;
+        this.user = connection.getUser();
+        this.database = connection.getDatabase();
+
         try {
             DatabaseManager manager = getDatabaseManager();
-            manager.connect(connection.getDatabase(), connection.getUser(), connection.getPassword());
+            manager.connect(database, user, connection.getPassword());
+            userActionsDao.log(user, database, "CONNECT");
 
             session.setAttribute("manager", manager);
             return "redirect:" + connection.getPage();
@@ -76,6 +88,8 @@ public class MainController {
                               HttpSession session) {
         try {
             getManager(session).createDatabase(databaseName);
+            userActionsDao.log(user, database, String.format("NewDatabase(%s)", databaseName));
+
             model.addAttribute("report", String.format(ActionMessages.DATABASE_NEW.toString(), databaseName));
             return "report";
         } catch (Exception e) {
@@ -100,6 +114,7 @@ public class MainController {
                                @PathVariable(value = "name") String databaseName,
                                HttpSession session) {
         getManager(session).dropDatabase(databaseName);
+        userActionsDao.log(user, database, String.format("DropDatabase(%s)", databaseName));
 
         model.addAttribute("report", String.format(ActionMessages.DROP_DB.toString(), databaseName));
         return "report";
@@ -111,6 +126,8 @@ public class MainController {
 
         if (managerNull("/tables", manager, session)) return "redirect:/connect";
 
+        userActionsDao.log(user, database, "Tables");
+
         setFormAttributes("Tables", getFormattedData(manager.getTables()), "tables", model);
         return "tables";
     }
@@ -119,6 +136,8 @@ public class MainController {
     public String table(Model model,
                         @PathVariable(value = "name") String tableName,
                         HttpSession session) {
+        userActionsDao.log(user, database, String.format("Table(%s)", tableName));
+
         model.addAttribute("rows", getRows(getManager(session), tableName));
         return "table";
     }
@@ -140,6 +159,7 @@ public class MainController {
         return "createTable";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "/newTable", method = RequestMethod.POST)
     public String newTable(Model model,
                            @RequestParam Map<String, String> queryMap,
@@ -308,6 +328,14 @@ public class MainController {
 
         setTableAttributes(ActionMessages.CLEAR, tableName, tableName, manager, model);
         return "table";
+    }
+
+    @RequestMapping(value = "/actions/{userName}", method = RequestMethod.GET)
+    public String actions(Model model,
+                        @PathVariable(value = "userName") String userName,
+                        HttpSession session) {
+        model.addAttribute("actions", userActionsDao.getAllFor(userName));
+        return "actions";
     }
 
     @Lookup
