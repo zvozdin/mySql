@@ -372,8 +372,8 @@ public class MainController {
         model.addAttribute("command", command);
     }
 
-    private void setTableAttributes(ActionMessages insert, String s, String tableName, DatabaseManager manager, Model model) {
-        model.addAttribute("report", String.format(insert.toString(), s));
+    private void setTableAttributes(ActionMessages action, String element, String tableName, DatabaseManager manager, Model model) {
+        model.addAttribute("report", String.format(action.toString(), element));
         model.addAttribute("rows", getRows(manager, tableName));
     }
 
