@@ -17,6 +17,8 @@ import org.springframework.web.servlet.view.JstlView;
 
 import javax.sql.DataSource;
 
+import java.util.Properties;
+
 @Configuration
 @EnableWebMvc
 @EnableJpaRepositories("ua.com.juja")
@@ -60,10 +62,12 @@ public class SpringConfig implements WebMvcConfigurer {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setGenerateDdl(false);
+//        vendorAdapter.setGenerateDdl(false);
+//        vendorAdapter.setShowSql(true);
 
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
+        factory.setJpaProperties(additionalProperties());
         factory.setPackagesToScan("ua.com.juja");
         factory.setDataSource(dataSource());
         return factory;
@@ -75,4 +79,12 @@ public class SpringConfig implements WebMvcConfigurer {
 //        txManager.setEntityManagerFactory(entityManagerFactory);
 //        return txManager;
 //    }
+
+    Properties additionalProperties() {
+        Properties properties = new Properties();
+        properties.setProperty("hibernate.hbm2ddl.auto", "validate");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        properties.setProperty("hibernate.show_sql", "true");
+        return properties;
+    }
 }
