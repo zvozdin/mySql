@@ -1,9 +1,10 @@
-package ua.com.juja.model;
+package ua.com.juja.model.entity;
 
 import javax.persistence.*;
 
-@Entity(name = "user_actions")
-public class UserAction {
+@Entity
+@Table(name = "database_connection")
+public class DatabaseConnection {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,16 +16,12 @@ public class UserAction {
     @Column(name = "db_name")
     private String dbName;
 
-    @Column(name = "action")
-    private String action;
-
-    public UserAction() {
+    public DatabaseConnection() {
     }
 
-    public UserAction(String userName, String dbName, String action) {
+    public DatabaseConnection(String userName, String dbName) {
         this.userName = userName;
         this.dbName = dbName;
-        this.action = action;
     }
 
     public String getUserName() {
@@ -41,14 +38,6 @@ public class UserAction {
 
     public void setDbName(String dbName) {
         this.dbName = dbName;
-    }
-
-    public String getAction() {
-        return action;
-    }
-
-    public void setAction(String action) {
-        this.action = action;
     }
 
     public void setId(int id) {

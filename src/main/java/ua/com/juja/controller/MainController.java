@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import ua.com.juja.model.ActionMessages;
+import ua.com.juja.model.DatabaseConnectionsRepository;
 import ua.com.juja.model.DatabaseManager;
-import ua.com.juja.model.UserActionsDao;
+import ua.com.juja.model.UserActionsRepository;
+import ua.com.juja.model.entity.DatabaseConnection;
+import ua.com.juja.model.entity.UserAction;
+import ua.com.juja.model.resources.ActionMessages;
 import ua.com.juja.service.Service;
 
 import javax.servlet.http.HttpSession;
@@ -19,10 +21,13 @@ public class MainController {
 
     @Autowired
     private Service service;
-    @Autowired
-    private UserActionsDao userActionsDao;
 
-    private Connection connection;
+    @Autowired
+    private UserActionsRepository userActions;
+
+    @Autowired
+    private DatabaseConnectionsRepository databaseConnections;
+
     private String user;
     private String database;
 
@@ -54,15 +59,12 @@ public class MainController {
     @RequestMapping(value = "/connect", method = RequestMethod.POST)
     public String connecting(@ModelAttribute("connection") Connection connection,
                              Model model, HttpSession session) {
-        this.connection = connection;
-        this.user = connection.getUser();
-        this.database = connection.getDatabase();
-
+        user = connection.getUser();
+        database = connection.getDatabase();
         try {
             DatabaseManager manager = getDatabaseManager();
             manager.connect(database, user, connection.getPassword());
-            userActionsDao.log(user, database, "CONNECT");
-
+            saveAction("CONNECT");
             session.setAttribute("manager", manager);
             return "redirect:" + connection.getPage();
         } catch (Exception e) {
@@ -75,7 +77,6 @@ public class MainController {
     @RequestMapping(value = "/newDatabase", method = RequestMethod.GET)
     public String newDatabase(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);
-
         if (managerNull("/newDatabase", manager, session)) return "redirect:/connect";
 
         model.addAttribute("command", "newDatabase");
@@ -88,8 +89,7 @@ public class MainController {
                               HttpSession session) {
         try {
             getManager(session).createDatabase(databaseName);
-            userActionsDao.log(user, database, String.format("NewDatabase(%s)", databaseName));
-
+            saveAction(String.format("NewDatabase(%s)", databaseName));
             model.addAttribute("report", String.format(ActionMessages.DATABASE_NEW.toString(), databaseName));
             return "report";
         } catch (Exception e) {
@@ -102,7 +102,6 @@ public class MainController {
     @RequestMapping(value = "/dropDatabase", method = RequestMethod.GET)
     public String dropDatabase(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);
-
         if (managerNull("/dropDatabase", manager, session)) return "redirect:/connect";
 
         setFormAttributes("Databases", getFormattedData(manager.getDatabases()), "dropDatabase", model);
@@ -114,8 +113,7 @@ public class MainController {
                                @PathVariable(value = "name") String databaseName,
                                HttpSession session) {
         getManager(session).dropDatabase(databaseName);
-        userActionsDao.log(user, database, String.format("DropDatabase(%s)", databaseName));
-
+        saveAction(String.format("DropDatabase(%s)", databaseName));
         model.addAttribute("report", String.format(ActionMessages.DROP_DB.toString(), databaseName));
         return "report";
     }
@@ -123,11 +121,9 @@ public class MainController {
     @RequestMapping(value = "/tables", method = RequestMethod.GET)
     public String tables(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);
-
         if (managerNull("/tables", manager, session)) return "redirect:/connect";
 
-        userActionsDao.log(user, database, "Tables");
-
+        saveAction("Tables");
         setFormAttributes("Tables", getFormattedData(manager.getTables()), "tables", model);
         return "tables";
     }
@@ -136,8 +132,7 @@ public class MainController {
     public String table(Model model,
                         @PathVariable(value = "name") String tableName,
                         HttpSession session) {
-        userActionsDao.log(user, database, String.format("Table(%s)", tableName));
-
+        saveAction(String.format("Table(%s)", tableName));
         model.addAttribute("rows", getRows(getManager(session), tableName));
         return "table";
     }
@@ -145,8 +140,8 @@ public class MainController {
     @RequestMapping(value = "/newTable", method = RequestMethod.GET)
     public String newTable(HttpSession session) {
         DatabaseManager manager = getManager(session);
-
         if (managerNull("/newTable", manager, session)) return "redirect:/connect";
+
         return "setName";
     }
 
@@ -169,8 +164,7 @@ public class MainController {
             queryMap.remove("name");
 
             getManager(session).createTable(tableName, new LinkedHashSet(new LinkedList(queryMap.values())));
-            userActionsDao.log(user, database, String.format("NewTable(%s)", tableName));
-
+            saveAction(String.format("NewTable(%s)", tableName));
             model.addAttribute("report", String.format(ActionMessages.CREATE.toString(), tableName));
             return "report";
         } catch (Exception e) {
@@ -183,7 +177,6 @@ public class MainController {
     @RequestMapping(value = "/dropTable", method = RequestMethod.GET)
     public String dropTable(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);
-
         if (managerNull("/dropTable", manager, session)) return "redirect:/connect";
 
         setFormAttributes("Tables", getFormattedData(manager.getTables()), "dropTable", model);
@@ -195,8 +188,7 @@ public class MainController {
                             @PathVariable(value = "name") String tableName,
                             HttpSession session) {
         getManager(session).dropTable(tableName);
-        userActionsDao.log(user, database, String.format("DropTable(%s)", tableName));
-
+        saveAction(String.format("DropTable(%s)", tableName));
         model.addAttribute("report", String.format(ActionMessages.DROP.toString(), tableName));
         return "report";
     }
@@ -204,7 +196,6 @@ public class MainController {
     @RequestMapping(value = "/insert", method = RequestMethod.GET)
     public String insert(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);
-
         if (managerNull("/insert", manager, session)) return "redirect:/connect";
 
         setFormAttributes("Tables", getFormattedData(manager.getTables()), "insert", model);
@@ -215,7 +206,6 @@ public class MainController {
     public String insert(Model model,
                          @PathVariable(value = "name") String tableName,
                          HttpSession session) {
-
         setFormAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
                 "insert", model);
         return "insert";
@@ -230,7 +220,7 @@ public class MainController {
 
         DatabaseManager manager = getManager(session);
         manager.insert(tableName, queryMap);
-        userActionsDao.log(user, database, String.format("Insert into %s", tableName));
+        saveAction(String.format("Insert into %s", tableName));
 
         setTableAttributes(ActionMessages.INSERT, queryMap.toString(), tableName, manager, model);
         return "table";
@@ -239,7 +229,6 @@ public class MainController {
     @RequestMapping(value = "/update", method = RequestMethod.GET)
     public String update(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);
-
         if (managerNull("/update", manager, session)) return "redirect:/connect";
 
         setFormAttributes("Tables", getFormattedData(manager.getTables()), "update", model);
@@ -250,7 +239,6 @@ public class MainController {
     public String update(Model model,
                          @PathVariable(value = "name") String tableName,
                          HttpSession session) {
-
         setFormAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
                 "update", model);
         return "update";
@@ -271,7 +259,7 @@ public class MainController {
 
         DatabaseManager manager = getManager(session);
         manager.update(tableName, set, where);
-        userActionsDao.log(user, database, String.format("Update in %s", tableName));
+        saveAction(String.format("Update in %s", tableName));
 
         setTableAttributes(ActionMessages.UPDATE, where.toString(), tableName, manager, model);
         return "table";
@@ -280,7 +268,6 @@ public class MainController {
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public String delete(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);
-
         if (managerNull("/delete", manager, session)) return "redirect:/connect";
 
         setFormAttributes("Tables", getFormattedData(manager.getTables()), "delete", model);
@@ -291,7 +278,6 @@ public class MainController {
     public String delete(Model model,
                          @PathVariable(value = "name") String tableName,
                          HttpSession session) {
-
         setFormAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
                 "delete", model);
         return "delete";
@@ -309,7 +295,7 @@ public class MainController {
 
         DatabaseManager manager = getManager(session);
         manager.deleteRow(tableName, delete);
-        userActionsDao.log(user, database, String.format("DeleteRow in %s", tableName));
+        saveAction(String.format("DeleteRow in %s", tableName));
 
         setTableAttributes(ActionMessages.DELETE, delete.toString(), tableName, manager, model);
         return "table";
@@ -318,7 +304,6 @@ public class MainController {
     @RequestMapping(value = "/clear", method = RequestMethod.GET)
     public String clear(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);
-
         if (managerNull("/clear", manager, session)) return "redirect:/connect";
 
         setFormAttributes("Tables", getFormattedData(manager.getTables()), "clear", model);
@@ -331,7 +316,7 @@ public class MainController {
                         HttpSession session) {
         DatabaseManager manager = getManager(session);
         manager.clear(tableName);
-        userActionsDao.log(user, database, String.format("Clear(%s)", tableName));
+        saveAction(String.format("Clear(%s)", tableName));
 
         setTableAttributes(ActionMessages.CLEAR, tableName, tableName, manager, model);
         return "table";
@@ -339,10 +324,18 @@ public class MainController {
 
     @RequestMapping(value = "/actions/{userName}", method = RequestMethod.GET)
     public String actions(Model model,
-                        @PathVariable(value = "userName") String userName,
-                        HttpSession session) {
-        model.addAttribute("actions", userActionsDao.getAllFor(userName));
+                          @PathVariable(value = "userName") String userName,
+                          HttpSession session) {
+        model.addAttribute("actions", userActions.findByUserName(userName));
         return "actions";
+    }
+
+    private void saveAction(String action) {
+        DatabaseConnection databaseConnection = databaseConnections.findByUserNameAndDbName(user, database);
+        if (databaseConnection == null) {
+            databaseConnection = databaseConnections.save(new DatabaseConnection(user, database));
+        }
+        userActions.save(new UserAction(action, databaseConnection));
     }
 
     @Lookup
@@ -351,8 +344,7 @@ public class MainController {
     }
 
     private String getFormattedData(List<String> data) {
-        return data.toString()
-                .substring(1, data.toString().length() - 1);
+        return data.toString().replace("[","").replace("]","");
     }
 
     private List<List<String>> getRows(DatabaseManager manager, String tableName) {

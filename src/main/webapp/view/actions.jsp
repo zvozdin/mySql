@@ -8,8 +8,10 @@
             <c:forEach items="${actions}" var="userAction" varStatus="loop">
                 <tr>
                     <td>${loop.count}</td>
-                    <td>${userAction.userName}</td>
-                    <td>${userAction.dbName}</td>
+                <%--
+                    <td>${userAction.databaseConnection}</td>
+                    <td>${userAction.databaseConnection}</td>
+                --%>
                     <td>${userAction.action}</td>
                 </tr>
             </c:forEach>
