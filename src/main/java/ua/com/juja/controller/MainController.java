@@ -5,11 +5,9 @@ import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.com.juja.model.DatabaseConnectionsRepository;
+
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.model.UserActionsRepository;
-import ua.com.juja.model.entity.DatabaseConnection;
-import ua.com.juja.model.entity.UserAction;
 import ua.com.juja.model.resources.ActionMessages;
 import ua.com.juja.service.Service;
 
@@ -24,9 +22,6 @@ public class MainController {
 
     @Autowired
     private UserActionsRepository userActions;
-
-    @Autowired
-    private DatabaseConnectionsRepository databaseConnections;
 
     private String user;
     private String database;
@@ -64,7 +59,7 @@ public class MainController {
         try {
             DatabaseManager manager = getDatabaseManager();
             manager.connect(database, user, connection.getPassword());
-            saveAction("CONNECT");
+            userActions.saveAction("CONNECT", user, database);
             session.setAttribute("manager", manager);
             return "redirect:" + connection.getPage();
         } catch (Exception e) {
@@ -89,7 +84,7 @@ public class MainController {
                               HttpSession session) {
         try {
             getManager(session).createDatabase(databaseName);
-            saveAction(String.format("NewDatabase(%s)", databaseName));
+            userActions.saveAction(String.format("NewDatabase(%s)", databaseName), user, database);
             model.addAttribute("report", String.format(ActionMessages.DATABASE_NEW.toString(), databaseName));
             return "report";
         } catch (Exception e) {
@@ -113,7 +108,7 @@ public class MainController {
                                @PathVariable(value = "name") String databaseName,
                                HttpSession session) {
         getManager(session).dropDatabase(databaseName);
-        saveAction(String.format("DropDatabase(%s)", databaseName));
+        userActions.saveAction(String.format("DropDatabase(%s)", databaseName), user, database);
         model.addAttribute("report", String.format(ActionMessages.DROP_DB.toString(), databaseName));
         return "report";
     }
@@ -123,7 +118,7 @@ public class MainController {
         DatabaseManager manager = getManager(session);
         if (managerNull("/tables", manager, session)) return "redirect:/connect";
 
-        saveAction("Tables");
+        userActions.saveAction("Tables", user, database);
         setFormAttributes("Tables", getFormattedData(manager.getTables()), "tables", model);
         return "tables";
     }
@@ -132,7 +127,7 @@ public class MainController {
     public String table(Model model,
                         @PathVariable(value = "name") String tableName,
                         HttpSession session) {
-        saveAction(String.format("Table(%s)", tableName));
+        userActions.saveAction(String.format("Table(%s)", tableName), user, database);
         model.addAttribute("rows", getRows(getManager(session), tableName));
         return "table";
     }
@@ -164,7 +159,7 @@ public class MainController {
             queryMap.remove("name");
 
             getManager(session).createTable(tableName, new LinkedHashSet(new LinkedList(queryMap.values())));
-            saveAction(String.format("NewTable(%s)", tableName));
+            userActions.saveAction(String.format("NewTable(%s)", tableName), user, database);
             model.addAttribute("report", String.format(ActionMessages.CREATE.toString(), tableName));
             return "report";
         } catch (Exception e) {
@@ -188,7 +183,7 @@ public class MainController {
                             @PathVariable(value = "name") String tableName,
                             HttpSession session) {
         getManager(session).dropTable(tableName);
-        saveAction(String.format("DropTable(%s)", tableName));
+        userActions.saveAction(String.format("DropTable(%s)", tableName), user, database);
         model.addAttribute("report", String.format(ActionMessages.DROP.toString(), tableName));
         return "report";
     }
@@ -220,7 +215,7 @@ public class MainController {
 
         DatabaseManager manager = getManager(session);
         manager.insert(tableName, queryMap);
-        saveAction(String.format("Insert into %s", tableName));
+        userActions.saveAction(String.format("Insert into %s", tableName), user, database);
 
         setTableAttributes(ActionMessages.INSERT, queryMap.toString(), tableName, manager, model);
         return "table";
@@ -259,7 +254,7 @@ public class MainController {
 
         DatabaseManager manager = getManager(session);
         manager.update(tableName, set, where);
-        saveAction(String.format("Update in %s", tableName));
+        userActions.saveAction(String.format("Update in %s", tableName), user, database);
 
         setTableAttributes(ActionMessages.UPDATE, where.toString(), tableName, manager, model);
         return "table";
@@ -295,7 +290,7 @@ public class MainController {
 
         DatabaseManager manager = getManager(session);
         manager.deleteRow(tableName, delete);
-        saveAction(String.format("DeleteRow in %s", tableName));
+        userActions.saveAction(String.format("DeleteRow in %s", tableName), user, database);
 
         setTableAttributes(ActionMessages.DELETE, delete.toString(), tableName, manager, model);
         return "table";
@@ -316,7 +311,7 @@ public class MainController {
                         HttpSession session) {
         DatabaseManager manager = getManager(session);
         manager.clear(tableName);
-        saveAction(String.format("Clear(%s)", tableName));
+        userActions.saveAction(String.format("Clear(%s)", tableName), user, database);
 
         setTableAttributes(ActionMessages.CLEAR, tableName, tableName, manager, model);
         return "table";
@@ -328,14 +323,6 @@ public class MainController {
                           HttpSession session) {
         model.addAttribute("actions", userActions.findByUserName(userName));
         return "actions";
-    }
-
-    private void saveAction(String action) {
-        DatabaseConnection databaseConnection = databaseConnections.findByUserNameAndDbName(user, database);
-        if (databaseConnection == null) {
-            databaseConnection = databaseConnections.save(new DatabaseConnection(user, database));
-        }
-        userActions.save(new UserAction(action, databaseConnection));
     }
 
     @Lookup
