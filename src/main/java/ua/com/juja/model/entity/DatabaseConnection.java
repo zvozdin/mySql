@@ -1,6 +1,7 @@
 package ua.com.juja.model.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "database_connection")
@@ -15,6 +16,10 @@ public class DatabaseConnection {
 
     @Column(name = "db_name")
     private String dbName;
+
+    @JoinColumn(name = "database_connection_id")
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<UserAction> userActions;
 
     public DatabaseConnection() {
     }
@@ -42,5 +47,13 @@ public class DatabaseConnection {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public List<UserAction> getUserActions() {
+        return userActions;
+    }
+
+    public void setUserActions(List<UserAction> userActions) {
+        this.userActions = userActions;
     }
 }
