@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import ua.com.juja.model.resources.ActionMessages;
+import ua.com.juja.model.resources.ConnectParameters;
 
 import java.sql.*;
 import java.util.*;
@@ -18,6 +20,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     private Connection connection;
     private JdbcTemplate template;
+    private String database;
+    private String user;
 
     @Override
     public void connect(String database, String user, String password) {
@@ -34,6 +38,8 @@ public class JDBCDatabaseManager implements DatabaseManager {
             connection = DriverManager.getConnection(
                     ConnectParameters.url + database + ConnectParameters.ssl, user, password);
             template = new JdbcTemplate(new SingleConnectionDataSource(connection, false));
+            this.database = database;
+            this.user = user;
         } catch (SQLException e) {
             connection = null;
             throw new RuntimeException(String.format(
@@ -203,6 +209,16 @@ public class JDBCDatabaseManager implements DatabaseManager {
     @Override
     public boolean isConnected() {
         return connection != null;
+    }
+
+    @Override
+    public String getUserName() {
+        return user;
+    }
+
+    @Override
+    public String getDatabaseName() {
+        return database;
     }
 
     private void existingDatabaseValidation(String databaseName) {

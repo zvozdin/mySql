@@ -3,6 +3,7 @@ package ua.com.juja.model;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import ua.com.juja.model.resources.ConnectParameters;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

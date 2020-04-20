@@ -33,4 +33,8 @@ public interface DatabaseManager {
     void deleteRow(String string, Map<String, String> delete);
 
     boolean isConnected();
+
+    String getUserName();
+
+    String getDatabaseName();
 }
