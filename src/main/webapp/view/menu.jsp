@@ -1,11 +1,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
+    <c:set var="ctx" value="${pageContext.request.contextPath}" />
     <head>
         <title>mysql | menu</title>
+         <script type="text/javascript" src="${ctx}/resources/js/jquery-2.1.4.js" ></script>
+         <script type="text/javascript" src="${ctx}/resources/js/menu.js" ></script>
     </head>
     <body>
-        <c:forEach items="${commands}" var="command">
-            <a href="${command}">${command}</a><br>
-        </c:forEach>
+
+        <div id="menu_container">
+            <div id="loading">Loading...</div>
+        </div>
+
     </body>
 </html>

@@ -36,11 +36,10 @@ public class MainController {
         return "help";
     }
 
-    @RequestMapping(value = "/menu", method = RequestMethod.GET)
-    public String menu(Model model) {
-        model.addAttribute("commands", getFormattedData(service.getCommands()));
-        return "menu";
-    }
+//    @RequestMapping(value = "/menu", method = RequestMethod.GET)
+//    public String menu(Model model) {
+//        return "menu";
+//    }
 
     @RequestMapping(value = "/connect", method = RequestMethod.GET)
     public String connect(HttpSession session, Model model) {
