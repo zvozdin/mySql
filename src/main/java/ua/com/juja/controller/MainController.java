@@ -31,16 +31,6 @@ public class MainController {
         return "redirect:/menu";
     }
 
-    @RequestMapping(value = "/help", method = RequestMethod.GET)
-    public String help() {
-        return "help";
-    }
-
-//    @RequestMapping(value = "/menu", method = RequestMethod.GET)
-//    public String menu(Model model) {
-//        return "menu";
-//    }
-
     @RequestMapping(value = "/connect", method = RequestMethod.GET)
     public String connect(HttpSession session, Model model) {
         String page = (String) session.getAttribute("fromPage");

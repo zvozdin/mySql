@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import ua.com.juja.model.entity.Description;
 import ua.com.juja.service.Service;
 
 import java.util.List;
@@ -18,5 +19,10 @@ public class RestService {
     @RequestMapping(value = "/menu/content", method = RequestMethod.GET)
     public List<String> menuItems(Model model) {
         return service.getCommands();
+    }
+
+    @RequestMapping(value = "/help/content", method = RequestMethod.GET)
+    public List<Description> helpItems(Model model) {
+        return service.getCommandsDescription();
     }
 }

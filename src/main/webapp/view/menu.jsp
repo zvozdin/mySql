@@ -3,8 +3,8 @@
     <c:set var="ctx" value="${pageContext.request.contextPath}" />
     <head>
         <title>mysql | menu</title>
-         <script type="text/javascript" src="${ctx}/resources/js/jquery-2.1.4.js" ></script>
-         <script type="text/javascript" src="${ctx}/resources/js/menu.js" ></script>
+        <script type="text/javascript" src="${ctx}/resources/js/jquery-2.1.4.js" ></script>
+        <script type="text/javascript" src="${ctx}/resources/js/menu.js" ></script>
     </head>
     <body>
 
