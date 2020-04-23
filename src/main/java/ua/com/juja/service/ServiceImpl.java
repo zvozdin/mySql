@@ -35,7 +35,6 @@ public class ServiceImpl implements Service {
                 new Description("tables", "to display a list of tables"),
                 new Description("newTable", "to create a new table"),
                 new Description("dropTable", "to delete the table"),
-                new Description("find", "to display content from the 'tableName'"),
                 new Description("insert", "to record content to the 'tableName'"),
                 new Description("" +
                         "update", "to update the content in the 'tableName' " +
