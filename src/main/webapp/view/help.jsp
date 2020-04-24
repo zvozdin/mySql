@@ -8,15 +8,15 @@
         <script type="text/javascript" src="${ctx}/resources/js/help.js" ></script>
     </head>
     <body>
-        <div id="help_container">
+        <div id="help">
             Existing commands:
             <div>
                 <div id="loading">Loading...</div>
-                <dl id="commands">
-                    <script id="descriptionRow" type="text/x-jquery-tmpl">
-                        <li class="leftnavlink"><a href="${ctx}/{{= command}}">{{= command}}</a></li>
+                <dl class="container">
+                    <row-template style="display:none;" >
+                        <a href="{{= command}}">{{= command}}</a>
                         <dd>{{= description}}</dd>
-                    </script>
+                    </row-template>
                 </dl>
             </div>
         </div>
