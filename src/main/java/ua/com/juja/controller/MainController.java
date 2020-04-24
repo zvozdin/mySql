@@ -103,12 +103,11 @@ public class MainController {
     }
 
     @RequestMapping(value = "/tables", method = RequestMethod.GET)
-    public String tables(Model model, HttpSession session) {
+    public String tables(HttpSession session) {
         DatabaseManager manager = getManager(session);
         if (managerNull("/tables", manager, session)) return "redirect:/connect";
 
         userActions.saveAction("Tables", user, database);
-        setFormAttributes("Tables", getFormattedData(manager.getTables()), "tables", model);
         return "tables";
     }
 
