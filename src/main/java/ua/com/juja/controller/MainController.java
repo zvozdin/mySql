@@ -111,12 +111,11 @@ public class MainController {
         return "tables";
     }
 
-    @RequestMapping(value = "/tables/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/tables/{table}", method = RequestMethod.GET)
     public String table(Model model,
-                        @PathVariable(value = "name") String tableName,
+                        @PathVariable(value = "table") String tableName,
                         HttpSession session) {
         userActions.saveAction(String.format("Table(%s)", tableName), user, database);
-        model.addAttribute("rows", getRows(getManager(session), tableName));
         return "table";
     }
 
