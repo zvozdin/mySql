@@ -5,7 +5,7 @@ function initTable(ctx) {
 
     $.get(ctx + '/tables/' + tableName + '/content', function( elements ) {
         $('#loading').hide(300, function(){
-            $('#table #temp').tmpl(elements).appendTo('#table .container');
+            $('#table script[template="row"]').tmpl(elements).appendTo('#table .container');
         });
     });
 }

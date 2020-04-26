@@ -17,7 +17,7 @@
                     <tr>
                         <td>Tables</td>
                     </tr>
-                    <script id="temp">
+                    <script template="row" type="text/x-jquery-tmpl">
                         <tr>
                             <td><a href="tables/{{= $data}}" >{{= $data}}</a></td>
                         </tr>

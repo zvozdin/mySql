@@ -13,10 +13,10 @@
             <div>
                 <div id="loading">Loading...</div>
                 <dl class="container">
-                    <row-template style="display:none;" >
+                    <script template="row" type="text/x-jquery-tmpl">
                         <a href="{{= command}}">{{= command}}</a>
                         <dd>{{= description}}</dd>
-                    </row-template>
+                    </script>
                 </dl>
             </div>
         </div>

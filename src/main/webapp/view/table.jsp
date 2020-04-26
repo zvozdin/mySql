@@ -17,7 +17,7 @@
         <div id="table">
             <div id="loading">Loading...</div>
             <table border="1" class="container">
-                <script id="temp">
+                <script template="row" type="text/x-jquery-tmpl">
                     <tr>
                         {{each $data}}
                             <td>

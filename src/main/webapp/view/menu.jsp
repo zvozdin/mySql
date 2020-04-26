@@ -11,9 +11,9 @@
         <div id="menu">
             <div id="loading">Loading...</div>
                 <dl class="container">
-                    <row-template style="display:none;" >
+                    <script template="row" type="text/x-jquery-tmpl">
                         <a href="{{= $data}}">{{= $data}}</a><br>
-                    </row-template>
+                    </script>
                 </dl>
             </div>
         </div>

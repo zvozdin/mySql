@@ -1,7 +1,7 @@
 $(window).load(function(){
     $.get( "tables/content", function( elements ) {
         $("#loading").hide(300, function(){
-            $('#tables #temp').tmpl(elements).appendTo('#tables .containers');
+            $('#tables script[template="row"]').tmpl(elements).appendTo('#tables .containers');
         });
     });
 });
