@@ -15,8 +15,6 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
-import org.springframework.web.servlet.mvc.UrlFilenameViewController;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -46,22 +44,6 @@ public class SpringConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-    }
-
-    @Bean/*(name = "urlViewController")*/
-    public UrlFilenameViewController getUrlViewController() {
-        UrlFilenameViewController urlViewController = new UrlFilenameViewController();
-        return urlViewController;
-    }
-
-    @Bean
-    public SimpleUrlHandlerMapping getUrlHandlerMapping() {
-        SimpleUrlHandlerMapping handlerMapping = new SimpleUrlHandlerMapping();
-        Properties mappings = new Properties();
-        mappings.put("/**", getUrlViewController());
-
-        handlerMapping.setMappings(mappings);
-        return handlerMapping;
     }
 
     @Bean

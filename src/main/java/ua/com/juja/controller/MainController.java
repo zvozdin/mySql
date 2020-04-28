@@ -26,9 +26,9 @@ public class MainController {
     private String user;
     private String database;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = {"/", "/main"}, method = RequestMethod.GET)
     public String main() {
-        return "redirect:/main";
+        return "main";
     }
 
     @RequestMapping(value = "/connect", method = RequestMethod.GET)
@@ -102,23 +102,6 @@ public class MainController {
         userActions.saveAction(String.format("DropDatabase(%s)", databaseName), user, database);
         model.addAttribute("report", String.format(ActionMessages.DROP_DB.toString(), databaseName));
         return "report";
-    }
-
-    @RequestMapping(value = "/tables", method = RequestMethod.GET)
-    public String tables(HttpSession session) {
-        DatabaseManager manager = getManager(session);
-        if (managerNull("/tables", manager, session)) return "redirect:/connect";
-
-        userActions.saveAction("Tables", user, database);
-        return "tables";
-    }
-
-    @RequestMapping(value = "/tables/{table}", method = RequestMethod.GET)
-    public String table(Model model,
-                        @PathVariable(value = "table") String tableName,
-                        HttpSession session) {
-        userActions.saveAction(String.format("Table(%s)", tableName), user, database);
-        return "table";
     }
 
     @RequestMapping(value = "/newTable", method = RequestMethod.GET)
