@@ -48,6 +48,11 @@ public class RestService {
         return getRows(manager, tableName);
     }
 
+    @RequestMapping(value = "/connected", method = RequestMethod.GET)
+    public boolean isConnected(HttpSession session) {
+        return getManager(session) != null;
+    }
+
     private DatabaseManager getManager(HttpSession session) {
         return (DatabaseManager) session.getAttribute("manager");
     }

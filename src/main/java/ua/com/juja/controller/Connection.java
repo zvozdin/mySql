@@ -5,13 +5,13 @@ public class Connection {
     private String database;
     private String user;
     private String password;
-    private String page;
+    private String fromPage;
 
     public Connection() {
     }
 
-    public Connection(String page) {
-        this.page = page;
+    public Connection(String fromPage) {
+        this.fromPage = fromPage;
     }
 
     public String getDatabase() {
@@ -38,11 +38,11 @@ public class Connection {
         this.password = password;
     }
 
-    public String getPage() {
-        return page;
+    public String getFromPage() {
+        return fromPage;
     }
 
-    public void setPage(String page) {
-        this.page = page;
+    public void setFromPage(String fromPage) {
+        this.fromPage = fromPage;
     }
 }

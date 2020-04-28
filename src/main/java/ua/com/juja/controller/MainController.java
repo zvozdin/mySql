@@ -28,15 +28,17 @@ public class MainController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main() {
-        return "redirect:/menu";
+        return "redirect:/main";
     }
 
     @RequestMapping(value = "/connect", method = RequestMethod.GET)
-    public String connect(HttpSession session, Model model) {
-        String page = (String) session.getAttribute("fromPage");
-        session.removeAttribute("fromPage");
-
-        model.addAttribute("connection", new Connection(page));
+    public String connect(HttpSession session, Model model,
+                          @RequestParam(required = false, value = "fromPage") String fromPage) {
+        Connection connection = new Connection();
+        if (fromPage != null) {
+            connection.setFromPage(fromPage);
+        }
+        model.addAttribute("connection", connection);
         return "connect";
     }
 
@@ -50,7 +52,7 @@ public class MainController {
             manager.connect(database, user, connection.getPassword());
             userActions.saveAction("CONNECT", user, database);
             session.setAttribute("manager", manager);
-            return "redirect:" + connection.getPage();
+            return "redirect:" + connection.getFromPage();
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("message", e.getMessage());
@@ -318,7 +320,7 @@ public class MainController {
     }
 
     private String getFormattedData(List<String> data) {
-        return data.toString().replace("[","").replace("]","");
+        return data.toString().replace("[", "").replace("]", "");
     }
 
     private List<List<String>> getRows(DatabaseManager manager, String tableName) {
