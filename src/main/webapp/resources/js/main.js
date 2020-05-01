@@ -48,6 +48,8 @@ function init(ctx) {
         $('#database').val("");
         $('#user').val("");
         $('#password').val("");
+        $('#error').hide();
+        $('#error').html("");
         $('#loading').hide(300, function(){
             $('#connecting-form').show();
         });
@@ -129,7 +131,8 @@ function init(ctx) {
                 if (message == "" || message == null) {
                     showFromPage();
                 } else {
-                    alert(message);
+                    $('#error').html(message);
+                    $('#error').show();
                 }
             }
         });

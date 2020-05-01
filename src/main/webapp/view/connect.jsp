@@ -9,4 +9,6 @@
     <input type="password" name="password" id="password" /><br><br>
 
     <input type="submit" value="connect" id="connect" />
+
+    <span id="error" ></span>
 </div>
