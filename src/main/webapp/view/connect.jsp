@@ -1,22 +1,12 @@
-<%@ taglib prefix="form" uri = "http://www.springframework.org/tags/form" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<html>
-    <head>
-        <title>mysql | connect</title>
-    </head>
-    <body>
-        <form:form method ="POST" action="connect" modelAttribute="connection" >
-            <form:hidden path="fromPage" id="fromPage" />
+<div id="connecting-form" >
+    Database Name:<br>
+    <input type="text" name="database" id="database" /><br>
+    User Name:<br>
+    <input type="text" name="user" id="user" /><br>
+    Password:<br>
+    <input type="password" name="password" id="password" /><br><br>
 
-            Database Name:<br>
-            <form:input path="database" /><br>
-            User Name:<br>
-            <form:input path="user" /><br>
-            Password:<br>
-            <form:password path="password" /><br><br>
-
-            <input type="submit" value="connect" />
-        </form:form>
-        <a href="menu" >menu</a> <a href="help" >help</a>
-    </body>
-</html>
+    <input type="submit" value="connect" id="connect" />
+</div>

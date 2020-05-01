@@ -17,9 +17,10 @@
         <div id="loading" style="display:none;" >Loading...</div>
         <%@ include file="help.jsp" %>
         <%@ include file="menu.jsp" %>
+        <%@ include file="connect.jsp" %>
         <%@ include file="tables.jsp" %>
         <%@ include file="table.jsp" %>
 
-        <a href="#/menu">menu</a>
+        <a href="main#/menu">menu</a>
     </body>
 </html>

@@ -31,35 +31,6 @@ public class MainController {
         return "main";
     }
 
-    @RequestMapping(value = "/connect", method = RequestMethod.GET)
-    public String connect(HttpSession session, Model model,
-                          @RequestParam(required = false, value = "fromPage") String fromPage) {
-        Connection connection = new Connection();
-        if (fromPage != null) {
-            connection.setFromPage(fromPage);
-        }
-        model.addAttribute("connection", connection);
-        return "connect";
-    }
-
-    @RequestMapping(value = "/connect", method = RequestMethod.POST)
-    public String connecting(@ModelAttribute("connection") Connection connection,
-                             Model model, HttpSession session) {
-        user = connection.getUser();
-        database = connection.getDatabase();
-        try {
-            DatabaseManager manager = getDatabaseManager();
-            manager.connect(database, user, connection.getPassword());
-            userActions.saveAction("CONNECT", user, database);
-            session.setAttribute("manager", manager);
-            return "redirect:" + connection.getFromPage();
-        } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("message", e.getMessage());
-            return "error";
-        }
-    }
-
     @RequestMapping(value = "/newDatabase", method = RequestMethod.GET)
     public String newDatabase(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);

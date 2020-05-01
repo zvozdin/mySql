@@ -1,19 +1,23 @@
 function init(ctx) {
 
-    var isConnected = function(fromPage, onConnected) {
+    var fromPage = null;
+
+    var showFromPage = function() {
+        window.location.hash = fromPage;
+        fromPage = null;
+    };
+
+    var isConnected = function(url, onConnected) {
         $.get(ctx + "/connected", function(isConnected) {
             if (isConnected) {
                 if (!!onConnected) {
                     onConnected();
                 }
             } else {
-                gotoConnectPage(fromPage);
+                fromPage = url
+                window.location.hash = '/connect';
             }
         });
-    };
-
-    var gotoConnectPage = function(fromPage) {
-        window.location = ctx + '/connect' + '?fromPage=' + escape('/main#/' + fromPage);
     };
 
     var show = function(selector) {
@@ -25,7 +29,7 @@ function init(ctx) {
     var initHelp = function() {
         show('#help');
         $.get(ctx + "/help/content", function(elements) {
-            $("#loading").hide(300, function(){
+            $('#loading').hide(300, function(){
                 $('#help script[template="row"]').tmpl(elements).appendTo('#help .container');
             });
         });
@@ -33,10 +37,19 @@ function init(ctx) {
 
     var initMenu = function() {
         show('#menu');
-        $.get(ctx + "/menu/content", function( elements ) {
-            $("#loading").hide(300, function(){
+        $.get(ctx + '/menu/content', function( elements ) {
+            $('#loading').hide(300, function(){
                 $('#menu script[template="row"]').tmpl(elements).appendTo('#menu .container');
             });
+        });
+    };
+
+    var initConnect = function() {
+        $('#database').val("");
+        $('#user').val("");
+        $('#password').val("");
+        $('#loading').hide(300, function(){
+            $('#connecting-form').show();
         });
     };
 
@@ -44,7 +57,7 @@ function init(ctx) {
         isConnected('tables', function() {
             show('#tables');
             $.get(ctx + '/tables/content', function( elements ) {
-                $("#loading").hide(300, function(){
+                $('#loading').hide(300, function(){
                     $('#tables script[template="row"]').tmpl(elements).appendTo('#tables .container');
                 });
             });
@@ -67,6 +80,7 @@ function init(ctx) {
         $('#menu').hide();
         $('#tables').hide();
         $('#table').hide();
+        $('#connecting-form').hide();
     };
 
     var loadPage = function(data) {
@@ -82,6 +96,8 @@ function init(ctx) {
             initTables();
         } else if (page == 'table') {
             initTable(data[1]);
+        }else if (page == 'connect') {
+            initConnect();
         } else {
             window.location.hash = '/menu';
         }
@@ -98,6 +114,25 @@ function init(ctx) {
 
     $(window).bind('hashchange', function(event) {
         load();
+    });
+
+    $('#connect').click(function() {
+        var connection = {};
+        connection.database = $('#database').val();
+        connection.user = $('#user').val();
+        connection.password = $('#password').val();
+        $.ajax({
+            url: ctx + '/connect',
+            data: connection,
+            type: 'POST',
+            success: function(message) {
+                if (message == "" || message == null) {
+                    showFromPage();
+                } else {
+                    alert(message);
+                }
+            }
+        });
     });
 
     load();

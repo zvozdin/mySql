@@ -1,10 +1,8 @@
 package ua.com.juja.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Lookup;
+import org.springframework.web.bind.annotation.*;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.model.entity.Description;
 import ua.com.juja.service.Service;
@@ -30,6 +28,24 @@ public class RestService {
         return service.getCommandsDescription();
     }
 
+    @RequestMapping(value = "/connect", method = RequestMethod.POST)
+    public String connecting(HttpSession session,
+                             @ModelAttribute Connection connection) {
+        try {
+            DatabaseManager manager = getDatabaseManager();
+            manager.connect(connection.getDatabase(), connection.getUser(), connection.getPassword());
+            session.setAttribute("manager", manager);
+            return null;
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public void connecting(HttpSession session) {
+            session.removeAttribute("manager");
+    }
+
     @RequestMapping(value = "/tables/content", method = RequestMethod.GET)
     public List<String> tables(HttpSession session) {
         DatabaseManager manager = getManager(session);
@@ -51,6 +67,11 @@ public class RestService {
     @RequestMapping(value = "/connected", method = RequestMethod.GET)
     public boolean isConnected(HttpSession session) {
         return getManager(session) != null;
+    }
+
+    @Lookup
+    public DatabaseManager getDatabaseManager() {
+        return null;
     }
 
     private DatabaseManager getManager(HttpSession session) {
