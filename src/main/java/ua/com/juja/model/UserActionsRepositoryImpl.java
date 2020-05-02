@@ -20,7 +20,7 @@ public class UserActionsRepositoryImpl implements UserActionsRepositoryCustom {
     @Override
     @Transactional(propagation = Propagation.REQUIRED )
     public void saveAction(String action, String user, String database) {
-        DatabaseConnection databaseConnection = databaseConnections.findByUserNameAndDbName(user, database);
+        DatabaseConnection databaseConnection = databaseConnections.findByUserNameAndDatabase(user, database);
         if (databaseConnection == null) {
             databaseConnection = databaseConnections.save(new DatabaseConnection(user, database));
         }

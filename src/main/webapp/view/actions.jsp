@@ -1,22 +1,17 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<html>
-    <head>
-        <title>mysql | table | result</title>
-    </head>
-    <body>
-        <table border="1">
-            <c:forEach items="${actions}" var="userAction" varStatus="loop">
-                <tr>
-                    <td>${loop.count}</td>
-                <%--
-                    <td>${userAction.databaseConnection}</td>
-                    <td>${userAction.databaseConnection}</td>
-                --%>
-                    <td>${userAction.action}</td>
-                </tr>
-            </c:forEach>
-        </table>
-        <br>
-        <a href="/mySql/menu">menu</a> <a href="/mySql/help">help</a>
-    </body>
-</html>
+<div id="actions">
+    <table border="1" class="container">
+        <script template="row" type="text/x-jquery-tmpl">
+            <tr>
+                <td>
+                    {{= userName}}
+                </td>
+                <td>
+                    {{= database}}
+                </td>
+                <td>
+                    {{= action}}
+                </td>
+            </tr>
+        </script>
+    </table>
+</div>

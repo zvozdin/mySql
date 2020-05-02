@@ -7,5 +7,5 @@ import ua.com.juja.model.entity.DatabaseConnection;
 @Repository
 public interface DatabaseConnectionsRepository extends CrudRepository<DatabaseConnection, Integer> {
 
-    DatabaseConnection findByUserNameAndDbName(String userName, String dbName);
+    DatabaseConnection findByUserNameAndDatabase(String userName, String database);
 }

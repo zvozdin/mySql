@@ -8,14 +8,14 @@ function init(ctx) {
     };
 
     var isConnected = function(url, onConnected) {
-        $.get(ctx + "/connected", function(isConnected) {
-            if (isConnected) {
-                if (!!onConnected) {
-                    onConnected();
-                }
-            } else {
+        $.get(ctx + "/connected", function(userName) {
+            if (userName == "") {
                 fromPage = url
                 window.location.hash = '/connect';
+            } else {
+                if (!!onConnected) {
+                    onConnected(userName);
+                }
             }
         });
     };
@@ -77,12 +77,24 @@ function init(ctx) {
         });
     };
 
+    var initActions = function() {
+        isConnected('actions/', function(userName) {
+            show('#actions');
+            $.get(ctx + '/actions/' + userName + '/content', function( elements ) {
+                $('#loading').hide(300, function(){
+                    $('#actions script[template="row"]').tmpl(elements).appendTo('#actions .container');
+                });
+            });
+        });
+    };
+
     var hideAllScreens = function() {
+        $('#actions').hide();
+        $('#connecting-form').hide();
         $('#help').hide();
         $('#menu').hide();
-        $('#tables').hide();
         $('#table').hide();
-        $('#connecting-form').hide();
+        $('#tables').hide();
     };
 
     var loadPage = function(data) {
@@ -98,8 +110,10 @@ function init(ctx) {
             initTables();
         } else if (page == 'table') {
             initTable(data[1]);
-        }else if (page == 'connect') {
+        } else if (page == 'connect') {
             initConnect();
+        } else if (page == 'actions') {
+            initActions(data[1]);
         } else {
             window.location.hash = '/menu';
         }

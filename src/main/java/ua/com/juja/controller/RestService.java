@@ -29,8 +29,7 @@ public class RestService {
     }
 
     @RequestMapping(value = "/connect", method = RequestMethod.POST)
-    public String connecting(HttpSession session,
-                             @ModelAttribute Connection connection) {
+    public String connecting(HttpSession session, @ModelAttribute Connection connection) {
         try {
             DatabaseManager manager = getDatabaseManager();
             manager.connect(connection.getDatabase(), connection.getUser(), connection.getPassword());
@@ -43,7 +42,7 @@ public class RestService {
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public void connecting(HttpSession session) {
-            session.removeAttribute("manager");
+        session.removeAttribute("manager");
     }
 
     @RequestMapping(value = "/tables/content", method = RequestMethod.GET)
@@ -65,8 +64,14 @@ public class RestService {
     }
 
     @RequestMapping(value = "/connected", method = RequestMethod.GET)
-    public boolean isConnected(HttpSession session) {
-        return getManager(session) != null;
+    public String isConnected(HttpSession session) {
+        DatabaseManager manager = getManager(session);
+        return (manager != null) ? manager.getUserName() : null;
+    }
+
+    @RequestMapping(value = "/actions/{userName}/content", method = RequestMethod.GET)
+    public List<UserActionLog> actions(@PathVariable(value = "userName") String userName) {
+        return service.getAllFor(userName);
     }
 
     @Lookup

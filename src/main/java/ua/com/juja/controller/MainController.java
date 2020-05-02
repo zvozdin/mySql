@@ -260,14 +260,6 @@ public class MainController {
         return "table";
     }
 
-    @RequestMapping(value = "/actions/{userName}", method = RequestMethod.GET)
-    public String actions(Model model,
-                          @PathVariable(value = "userName") String userName,
-                          HttpSession session) {
-        model.addAttribute("actions", userActions.findByUserName(userName));
-        return "actions";
-    }
-
     @Lookup
     public DatabaseManager getDatabaseManager() {
         return null;
