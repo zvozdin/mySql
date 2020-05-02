@@ -75,8 +75,8 @@ public class RestService {
         return service.getAllFor(userName);
     }
 
-    @RequestMapping(value = "/newDatabase", method = RequestMethod.POST)
-    public String newDatabase(@RequestParam(value = "name") String databaseName,
+    @RequestMapping(value = "/newDatabase/{name}", method = RequestMethod.PUT)
+    public String newDatabase(@PathVariable(value = "name") String databaseName,
                               HttpSession session) {
         try {
             getManager(session).createDatabase(databaseName);
@@ -86,6 +86,23 @@ public class RestService {
             e.printStackTrace();
             return String.format(ActionMessages.DATABASE_EXISTS.toString(), databaseName);
         }
+    }
+
+    @RequestMapping(value = "/dropDatabase/content", method = RequestMethod.GET)
+    public List<String> databases(HttpSession session) {
+        DatabaseManager manager = getManager(session);
+        if (manager == null) {
+            return new LinkedList<>();
+        }
+        return manager.getDatabases();
+    }
+
+    @RequestMapping(value = "/dropDatabase/{name}", method = RequestMethod.DELETE)
+    public String dropDatabase(@PathVariable(value = "name") String databaseName,
+                               HttpSession session) {
+        getManager(session).dropDatabase(databaseName);
+//        userActions.saveAction(String.format("DropDatabase(%s)", databaseName), user, database);
+        return String.format(ActionMessages.DROP_DB.toString(), databaseName);
     }
 
     @Lookup

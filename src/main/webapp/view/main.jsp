@@ -15,9 +15,11 @@
     </head>
     <body>
         <div id="loading" style="display:none;" >Loading...</div>
+        <span id="report" style="display:none;" ></span>
         <%@ include file="actions.jsp" %>
         <%@ include file="connect.jsp" %>
         <%@ include file="createDatabase.jsp" %>
+        <%@ include file="databases.jsp" %>
         <%@ include file="help.jsp" %>
         <%@ include file="menu.jsp" %>
         <%@ include file="table.jsp" %>

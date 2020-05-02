@@ -99,14 +99,39 @@ function init(ctx) {
         });
     };
 
+    var initDatabases = function() {
+        isConnected('dropDatabase', function() {
+            show('#databases');
+            $.get(ctx + '/dropDatabase/content', function( elements ) {
+                $('#loading').hide(300, function(){
+                    $('#databases script[template="row"]').tmpl(elements).appendTo('#databases .container');
+                });
+            });
+        });
+    };
+
+    var initDropDatabase = function(databaseName) {
+        $.ajax({
+            url: ctx + '/dropDatabase/' + databaseName,
+            type: 'DELETE',
+            success: function(message) {
+                $('#report').html(message);
+                $('#loading').hide();
+                $('#report').show();
+            }
+        });
+    };
+
     var hideAllScreens = function() {
         $('#actions').hide();
         $('#connecting-form').hide();
         $('#createDatabaseForm').hide();
+        $('#databases').hide();
         $('#help').hide();
         $('#menu').hide();
         $('#table').hide();
         $('#tables').hide();
+        $('#report').hide();
     };
 
     var loadPage = function(data) {
@@ -128,6 +153,10 @@ function init(ctx) {
             initActions();
         } else if (page == 'newDatabase') {
             initCreateDatabase();
+        } else if (page == 'dropDatabase') {
+            initDatabases();
+        } else if (page == 'database') {
+            initDropDatabase(data[1]);
         } else {
             window.location.hash = '/menu';
         }
@@ -167,14 +196,13 @@ function init(ctx) {
     });
 
     $('#createDatabase').click(function() {
-        var databaseName = {name: $('#createDatabaseName').val()};
         $.ajax({
-            url: ctx + '/newDatabase',
-            data: databaseName,
-            type: 'POST',
+            url: ctx + '/newDatabase/' + $('#createDatabaseName').val(),
+            type: 'PUT',
             success: function(message) {
-                $('#reportCreateDatabase').html(message);
-                $('#reportCreateDatabase').show();
+                $('#createDatabaseForm').hide();
+                $('#report').html(message);
+                $('#report').show();
             }
         });
     });

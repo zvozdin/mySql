@@ -31,25 +31,6 @@ public class MainController {
         return "main";
     }
 
-    @RequestMapping(value = "/dropDatabase", method = RequestMethod.GET)
-    public String dropDatabase(Model model, HttpSession session) {
-        DatabaseManager manager = getManager(session);
-        if (managerNull("/dropDatabase", manager, session)) return "redirect:/connect";
-
-        setFormAttributes("Databases", getFormattedData(manager.getDatabases()), "dropDatabase", model);
-        return "tables";
-    }
-
-    @RequestMapping(value = "/dropDatabase/{name}", method = RequestMethod.GET)
-    public String dropDatabase(Model model,
-                               @PathVariable(value = "name") String databaseName,
-                               HttpSession session) {
-        getManager(session).dropDatabase(databaseName);
-        userActions.saveAction(String.format("DropDatabase(%s)", databaseName), user, database);
-        model.addAttribute("report", String.format(ActionMessages.DROP_DB.toString(), databaseName));
-        return "report";
-    }
-
     @RequestMapping(value = "/newTable", method = RequestMethod.GET)
     public String newTable(HttpSession session) {
         DatabaseManager manager = getManager(session);
