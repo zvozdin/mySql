@@ -17,6 +17,7 @@
         <div id="loading" style="display:none;" >Loading...</div>
         <%@ include file="actions.jsp" %>
         <%@ include file="connect.jsp" %>
+        <%@ include file="createDatabase.jsp" %>
         <%@ include file="help.jsp" %>
         <%@ include file="menu.jsp" %>
         <%@ include file="table.jsp" %>

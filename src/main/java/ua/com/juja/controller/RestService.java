@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.web.bind.annotation.*;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.model.entity.Description;
+import ua.com.juja.model.resources.ActionMessages;
 import ua.com.juja.service.Service;
 
 import javax.servlet.http.HttpSession;
@@ -72,6 +73,19 @@ public class RestService {
     @RequestMapping(value = "/actions/{userName}/content", method = RequestMethod.GET)
     public List<UserActionLog> actions(@PathVariable(value = "userName") String userName) {
         return service.getAllFor(userName);
+    }
+
+    @RequestMapping(value = "/newDatabase", method = RequestMethod.POST)
+    public String newDatabase(@RequestParam(value = "name") String databaseName,
+                              HttpSession session) {
+        try {
+            getManager(session).createDatabase(databaseName);
+//            userActions.saveAction(String.format("NewDatabase(%s)", databaseName), user, database);
+            return String.format(ActionMessages.DATABASE_NEW.toString(), databaseName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return String.format(ActionMessages.DATABASE_EXISTS.toString(), databaseName);
+        }
     }
 
     @Lookup

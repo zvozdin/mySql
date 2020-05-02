@@ -4,9 +4,9 @@ public enum ActionMessages {
 
     CLEAR("Table '%s' is cleared!"),
     CREATE("Table '%s' is created."),
-    CREATE_EXISTING_TABLE("Table '%s' already exists"),
+    CREATE_EXISTING_TABLE("Error! Table '%s' already exists"),
     DELETE("Record '%s' is deleted."),
-    DATABASE_EXISTS("Database '%s' already exists"),
+    DATABASE_EXISTS("Error! Database '%s' already exists"),
     DATABASE_NEW("Database '%s' is created."),
     DROP("Table '%s' is deleted."),
     DROP_DB("Database '%s' is deleted."),

@@ -88,9 +88,21 @@ function init(ctx) {
         });
     };
 
+    var initCreateDatabase = function() {
+        isConnected('newDatabase', function() {
+            $('#createDatabaseName').val("");
+            $('#reportCreateDatabase').hide();
+            $('#reportCreateDatabase').html("");
+            $('#loading').hide(300, function(){
+                $('#createDatabaseForm').show();
+            });
+        });
+    };
+
     var hideAllScreens = function() {
         $('#actions').hide();
         $('#connecting-form').hide();
+        $('#createDatabaseForm').hide();
         $('#help').hide();
         $('#menu').hide();
         $('#table').hide();
@@ -113,7 +125,9 @@ function init(ctx) {
         } else if (page == 'connect') {
             initConnect();
         } else if (page == 'actions') {
-            initActions(data[1]);
+            initActions();
+        } else if (page == 'newDatabase') {
+            initCreateDatabase();
         } else {
             window.location.hash = '/menu';
         }
@@ -148,6 +162,19 @@ function init(ctx) {
                     $('#error').html(message);
                     $('#error').show();
                 }
+            }
+        });
+    });
+
+    $('#createDatabase').click(function() {
+        var databaseName = {name: $('#createDatabaseName').val()};
+        $.ajax({
+            url: ctx + '/newDatabase',
+            data: databaseName,
+            type: 'POST',
+            success: function(message) {
+                $('#reportCreateDatabase').html(message);
+                $('#reportCreateDatabase').show();
             }
         });
     });

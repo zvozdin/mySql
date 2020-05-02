@@ -31,31 +31,6 @@ public class MainController {
         return "main";
     }
 
-    @RequestMapping(value = "/newDatabase", method = RequestMethod.GET)
-    public String newDatabase(Model model, HttpSession session) {
-        DatabaseManager manager = getManager(session);
-        if (managerNull("/newDatabase", manager, session)) return "redirect:/connect";
-
-        model.addAttribute("command", "newDatabase");
-        return "setName";
-    }
-
-    @RequestMapping(value = "/newDatabase", params = {"name"}, method = RequestMethod.GET)
-    public String newDatabase(Model model,
-                              @RequestParam(value = "name") String databaseName,
-                              HttpSession session) {
-        try {
-            getManager(session).createDatabase(databaseName);
-            userActions.saveAction(String.format("NewDatabase(%s)", databaseName), user, database);
-            model.addAttribute("report", String.format(ActionMessages.DATABASE_NEW.toString(), databaseName));
-            return "report";
-        } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("message", e.getMessage());
-            return "error";
-        }
-    }
-
     @RequestMapping(value = "/dropDatabase", method = RequestMethod.GET)
     public String dropDatabase(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);

@@ -53,6 +53,8 @@ public class ServiceImpl implements Service {
         );
     }
 
+    // TODO add userActions.saveAction(String.format("DeleteRow in %s", tableName), user, database);
+
     @Override
     public List<UserActionLog> getAllFor(String userName) {
         if (userName == null) {
