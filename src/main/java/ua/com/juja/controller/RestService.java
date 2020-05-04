@@ -29,6 +29,12 @@ public class RestService {
         return service.getCommandsDescription();
     }
 
+    @RequestMapping(value = "/connected", method = RequestMethod.GET)
+    public String isConnected(HttpSession session) {
+        DatabaseManager manager = getManager(session);
+        return (manager != null) ? manager.getUserName() : null;
+    }
+
     @RequestMapping(value = "/connect", method = RequestMethod.POST)
     public String connecting(HttpSession session, @ModelAttribute Connection connection) {
         try {
@@ -39,11 +45,6 @@ public class RestService {
         } catch (Exception e) {
             return e.getMessage();
         }
-    }
-
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public void connecting(HttpSession session) {
-        session.removeAttribute("manager");
     }
 
     @RequestMapping(value = "/tables/content", method = RequestMethod.GET)
@@ -62,17 +63,6 @@ public class RestService {
             return new LinkedList<>();
         }
         return getRows(manager, tableName);
-    }
-
-    @RequestMapping(value = "/connected", method = RequestMethod.GET)
-    public String isConnected(HttpSession session) {
-        DatabaseManager manager = getManager(session);
-        return (manager != null) ? manager.getUserName() : null;
-    }
-
-    @RequestMapping(value = "/actions/{userName}/content", method = RequestMethod.GET)
-    public List<UserActionLog> actions(@PathVariable(value = "userName") String userName) {
-        return service.getAllFor(userName);
     }
 
     @RequestMapping(value = "/newDatabase/{name}", method = RequestMethod.PUT)
@@ -109,6 +99,25 @@ public class RestService {
         manager.dropTable(tableName);
 //        userActions.saveAction(String.format("DropTable(%s)", tableName), manager.getUserName(), manager.getDatabaseName());
         return String.format(ActionMessages.DROP.toString(), tableName);
+    }
+
+    @RequestMapping(value = "/clear/{name}", method = RequestMethod.DELETE)
+    public String clear(@PathVariable(value = "name") String tableName, HttpSession session) {
+        DatabaseManager manager = getManager(session);
+        manager.clear(tableName);
+//        userActions.saveAction(String.format("Clear(%s)", tableName), manager.getUserName(), manager.getDatabaseName());
+
+        return String.format(ActionMessages.CLEAR.toString(), tableName);
+    }
+
+    @RequestMapping(value = "/actions/{userName}/content", method = RequestMethod.GET)
+    public List<UserActionLog> actions(@PathVariable(value = "userName") String userName) {
+        return service.getAllFor(userName);
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public void connecting(HttpSession session) {
+        session.removeAttribute("manager");
     }
 
     @Lookup

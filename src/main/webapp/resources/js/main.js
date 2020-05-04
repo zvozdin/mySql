@@ -145,6 +145,29 @@ function init(ctx) {
         });
     };
 
+    var initTablesForClear = function() {
+        isConnected('clear', function() {
+            show('#tablesForClear');
+            $.get(ctx + '/tables/content', function( elements ) {
+                $('#loading').hide(300, function(){
+                    $('#tablesForClear script[template="row"]').tmpl(elements).appendTo('#tablesForClear .container');
+                });
+            });
+        });
+    };
+
+    var initClearTable = function(tableName) {
+        $.ajax({
+            url: ctx + '/clear/' + tableName,
+            type: 'DELETE',
+            success: function(message) {
+                $('#report').html(message);
+                $('#loading').hide();
+                $('#report').show();
+            }
+        });
+    };
+
     var hideAllScreens = function() {
         $('#actions').hide();
         $('#connecting-form').hide();
@@ -155,6 +178,7 @@ function init(ctx) {
         $('#report').hide();
         $('#table').hide();
         $('#tables').hide();
+        $('#tablesForClear').hide();
         $('#tablesForDrop').hide();
     };
 
@@ -185,6 +209,10 @@ function init(ctx) {
             initTablesForDrop();
         } else if (page == 'droppingTheTable') {
             initDropTable(data[1]);
+        } else if (page == 'clear') {
+            initTablesForClear();
+        } else if (page == 'clearingTheTable') {
+            initClearTable(data[1]);
         } else {
             window.location.hash = '/menu';
         }

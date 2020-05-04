@@ -175,27 +175,6 @@ public class MainController {
         return "table";
     }
 
-    @RequestMapping(value = "/clear", method = RequestMethod.GET)
-    public String clear(Model model, HttpSession session) {
-        DatabaseManager manager = getManager(session);
-        if (managerNull("/clear", manager, session)) return "redirect:/connect";
-
-        setFormAttributes("Tables", getFormattedData(manager.getTables()), "clear", model);
-        return "tables";
-    }
-
-    @RequestMapping(value = "/clear/{name}", method = RequestMethod.GET)
-    public String clear(Model model,
-                        @PathVariable(value = "name") String tableName,
-                        HttpSession session) {
-        DatabaseManager manager = getManager(session);
-        manager.clear(tableName);
-        userActions.saveAction(String.format("Clear(%s)", tableName), manager.getUserName(), manager.getDatabaseName());
-
-        setTableAttributes(ActionMessages.CLEAR, tableName, tableName, manager, model);
-        return "table";
-    }
-
     private String getFormattedData(List<String> data) {
         return data.toString().replace("[", "").replace("]", "");
     }
