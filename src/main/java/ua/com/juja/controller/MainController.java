@@ -23,9 +23,6 @@ public class MainController {
     @Autowired
     private UserActionsRepository userActions;
 
-    private String user;
-    private String database;
-
     @RequestMapping(value = {"/", "/main"}, method = RequestMethod.GET)
     public String main() {
         return "main";
@@ -57,8 +54,9 @@ public class MainController {
             String tableName = queryMap.get("name");
             queryMap.remove("name");
 
-            getManager(session).createTable(tableName, new LinkedHashSet(new LinkedList(queryMap.values())));
-            userActions.saveAction(String.format("NewTable(%s)", tableName), user, database);
+            DatabaseManager manager = getManager(session);
+            manager.createTable(tableName, new LinkedHashSet(new LinkedList(queryMap.values())));
+            userActions.saveAction(String.format("NewTable(%s)", tableName), manager.getUserName(), manager.getDatabaseName());
             model.addAttribute("report", String.format(ActionMessages.CREATE.toString(), tableName));
             return "report";
         } catch (Exception e) {
@@ -81,8 +79,9 @@ public class MainController {
     public String dropTable(Model model,
                             @PathVariable(value = "name") String tableName,
                             HttpSession session) {
-        getManager(session).dropTable(tableName);
-        userActions.saveAction(String.format("DropTable(%s)", tableName), user, database);
+        DatabaseManager manager = getManager(session);
+        manager.dropTable(tableName);
+        userActions.saveAction(String.format("DropTable(%s)", tableName), manager.getUserName(), manager.getDatabaseName());
         model.addAttribute("report", String.format(ActionMessages.DROP.toString(), tableName));
         return "report";
     }
@@ -114,7 +113,7 @@ public class MainController {
 
         DatabaseManager manager = getManager(session);
         manager.insert(tableName, queryMap);
-        userActions.saveAction(String.format("Insert into %s", tableName), user, database);
+        userActions.saveAction(String.format("Insert into %s", tableName), manager.getUserName(), manager.getDatabaseName());
 
         setTableAttributes(ActionMessages.INSERT, queryMap.toString(), tableName, manager, model);
         return "table";
@@ -153,7 +152,7 @@ public class MainController {
 
         DatabaseManager manager = getManager(session);
         manager.update(tableName, set, where);
-        userActions.saveAction(String.format("Update in %s", tableName), user, database);
+        userActions.saveAction(String.format("Update in %s", tableName), manager.getUserName(), manager.getDatabaseName());
 
         setTableAttributes(ActionMessages.UPDATE, where.toString(), tableName, manager, model);
         return "table";
@@ -189,7 +188,7 @@ public class MainController {
 
         DatabaseManager manager = getManager(session);
         manager.deleteRow(tableName, delete);
-        userActions.saveAction(String.format("DeleteRow in %s", tableName), user, database);
+        userActions.saveAction(String.format("DeleteRow in %s", tableName), manager.getUserName(), manager.getDatabaseName());
 
         setTableAttributes(ActionMessages.DELETE, delete.toString(), tableName, manager, model);
         return "table";
@@ -210,7 +209,7 @@ public class MainController {
                         HttpSession session) {
         DatabaseManager manager = getManager(session);
         manager.clear(tableName);
-        userActions.saveAction(String.format("Clear(%s)", tableName), user, database);
+        userActions.saveAction(String.format("Clear(%s)", tableName), manager.getUserName(), manager.getDatabaseName());
 
         setTableAttributes(ActionMessages.CLEAR, tableName, tableName, manager, model);
         return "table";

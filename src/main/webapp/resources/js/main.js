@@ -99,12 +99,12 @@ function init(ctx) {
         });
     };
 
-    var initDatabases = function() {
+    var initDatabasesForDrop = function() {
         isConnected('dropDatabase', function() {
-            show('#databases');
+            show('#databasesForDrop');
             $.get(ctx + '/dropDatabase/content', function( elements ) {
                 $('#loading').hide(300, function(){
-                    $('#databases script[template="row"]').tmpl(elements).appendTo('#databases .container');
+                    $('#databasesForDrop script[template="row"]').tmpl(elements).appendTo('#databasesForDrop .container');
                 });
             });
         });
@@ -126,7 +126,7 @@ function init(ctx) {
         $('#actions').hide();
         $('#connecting-form').hide();
         $('#createDatabaseForm').hide();
-        $('#databases').hide();
+        $('#databasesForDrop').hide();
         $('#help').hide();
         $('#menu').hide();
         $('#table').hide();
@@ -154,8 +154,8 @@ function init(ctx) {
         } else if (page == 'newDatabase') {
             initCreateDatabase();
         } else if (page == 'dropDatabase') {
-            initDatabases();
-        } else if (page == 'database') {
+            initDatabasesForDrop();
+        } else if (page == 'droppingTheDatabase') {
             initDropDatabase(data[1]);
         } else {
             window.location.hash = '/menu';

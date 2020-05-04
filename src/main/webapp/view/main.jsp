@@ -19,7 +19,7 @@
         <%@ include file="actions.jsp" %>
         <%@ include file="connect.jsp" %>
         <%@ include file="createDatabase.jsp" %>
-        <%@ include file="databases.jsp" %>
+        <%@ include file="databasesForDrop.jsp" %>
         <%@ include file="help.jsp" %>
         <%@ include file="menu.jsp" %>
         <%@ include file="table.jsp" %>
