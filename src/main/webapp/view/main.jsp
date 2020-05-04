@@ -24,6 +24,7 @@
         <%@ include file="menu.jsp" %>
         <%@ include file="table.jsp" %>
         <%@ include file="tables.jsp" %>
+        <%@ include file="tablesForDrop.jsp" %>
 
         <a href="main#/menu">menu</a>
     </body>

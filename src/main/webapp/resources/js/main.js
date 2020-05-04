@@ -122,6 +122,29 @@ function init(ctx) {
         });
     };
 
+    var initTablesForDrop = function() {
+        isConnected('dropTable', function() {
+            show('#tablesForDrop');
+            $.get(ctx + '/tables/content', function( elements ) {
+                $('#loading').hide(300, function(){
+                    $('#tablesForDrop script[template="row"]').tmpl(elements).appendTo('#tablesForDrop .container');
+                });
+            });
+        });
+    };
+
+    var initDropTable = function(tableName) {
+        $.ajax({
+            url: ctx + '/dropTable/' + tableName,
+            type: 'DELETE',
+            success: function(message) {
+                $('#report').html(message);
+                $('#loading').hide();
+                $('#report').show();
+            }
+        });
+    };
+
     var hideAllScreens = function() {
         $('#actions').hide();
         $('#connecting-form').hide();
@@ -129,9 +152,10 @@ function init(ctx) {
         $('#databasesForDrop').hide();
         $('#help').hide();
         $('#menu').hide();
+        $('#report').hide();
         $('#table').hide();
         $('#tables').hide();
-        $('#report').hide();
+        $('#tablesForDrop').hide();
     };
 
     var loadPage = function(data) {
@@ -157,6 +181,10 @@ function init(ctx) {
             initDatabasesForDrop();
         } else if (page == 'droppingTheDatabase') {
             initDropDatabase(data[1]);
+        } else if (page == 'dropTable') {
+            initTablesForDrop();
+        } else if (page == 'droppingTheTable') {
+            initDropTable(data[1]);
         } else {
             window.location.hash = '/menu';
         }

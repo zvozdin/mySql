@@ -1,11 +1,12 @@
 package ua.com.juja.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.model.UserActionsRepository;
 import ua.com.juja.model.resources.ActionMessages;
@@ -64,26 +65,6 @@ public class MainController {
             model.addAttribute("message", e.getMessage());
             return "error";
         }
-    }
-
-    @RequestMapping(value = "/dropTable", method = RequestMethod.GET)
-    public String dropTable(Model model, HttpSession session) {
-        DatabaseManager manager = getManager(session);
-        if (managerNull("/dropTable", manager, session)) return "redirect:/connect";
-
-        setFormAttributes("Tables", getFormattedData(manager.getTables()), "dropTable", model);
-        return "tables";
-    }
-
-    @RequestMapping(value = "/dropTable/{name}", method = RequestMethod.GET)
-    public String dropTable(Model model,
-                            @PathVariable(value = "name") String tableName,
-                            HttpSession session) {
-        DatabaseManager manager = getManager(session);
-        manager.dropTable(tableName);
-        userActions.saveAction(String.format("DropTable(%s)", tableName), manager.getUserName(), manager.getDatabaseName());
-        model.addAttribute("report", String.format(ActionMessages.DROP.toString(), tableName));
-        return "report";
     }
 
     @RequestMapping(value = "/insert", method = RequestMethod.GET)
@@ -213,11 +194,6 @@ public class MainController {
 
         setTableAttributes(ActionMessages.CLEAR, tableName, tableName, manager, model);
         return "table";
-    }
-
-    @Lookup
-    public DatabaseManager getDatabaseManager() {
-        return null;
     }
 
     private String getFormattedData(List<String> data) {

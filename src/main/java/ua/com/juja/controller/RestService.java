@@ -76,8 +76,7 @@ public class RestService {
     }
 
     @RequestMapping(value = "/newDatabase/{name}", method = RequestMethod.PUT)
-    public String newDatabase(@PathVariable(value = "name") String databaseName,
-                              HttpSession session) {
+    public String newDatabase(@PathVariable(value = "name") String databaseName, HttpSession session) {
         try {
             getManager(session).createDatabase(databaseName);
 //            userActions.saveAction(String.format("NewDatabase(%s)", databaseName), user, database);
@@ -98,11 +97,18 @@ public class RestService {
     }
 
     @RequestMapping(value = "/dropDatabase/{name}", method = RequestMethod.DELETE)
-    public String dropDatabase(@PathVariable(value = "name") String databaseName,
-                               HttpSession session) {
+    public String dropDatabase(@PathVariable(value = "name") String databaseName, HttpSession session) {
         getManager(session).dropDatabase(databaseName);
 //        userActions.saveAction(String.format("DropDatabase(%s)", databaseName), user, database);
         return String.format(ActionMessages.DROP_DB.toString(), databaseName);
+    }
+
+    @RequestMapping(value = "/dropTable/{name}", method = RequestMethod.DELETE)
+    public String dropTable(@PathVariable(value = "name") String tableName, HttpSession session) {
+        DatabaseManager manager = getManager(session);
+        manager.dropTable(tableName);
+//        userActions.saveAction(String.format("DropTable(%s)", tableName), manager.getUserName(), manager.getDatabaseName());
+        return String.format(ActionMessages.DROP.toString(), tableName);
     }
 
     @Lookup
