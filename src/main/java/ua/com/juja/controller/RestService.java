@@ -9,9 +9,7 @@ import ua.com.juja.model.resources.ActionMessages;
 import ua.com.juja.service.Service;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class RestService {
@@ -91,6 +89,22 @@ public class RestService {
         getManager(session).dropDatabase(databaseName);
 //        userActions.saveAction(String.format("DropDatabase(%s)", databaseName), user, database);
         return String.format(ActionMessages.DROP_DB.toString(), databaseName);
+    }
+
+    @RequestMapping(value = "/newTable", method = RequestMethod.POST)
+    public String newTable(@RequestParam Map<String, String> queryMap, HttpSession session) {
+        String tableName = queryMap.get("tableName");
+        queryMap.remove("tableName");
+
+        DatabaseManager manager = getManager(session);
+        try {
+            manager.createTable(tableName, new LinkedHashSet(new LinkedList(queryMap.values())));
+//            userActions.saveAction(String.format("NewTable(%s)", tableName), manager.getUserName(), manager.getDatabaseName());
+            return String.format(ActionMessages.CREATE.toString(), tableName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return String.format(ActionMessages.CREATE_EXISTING_TABLE.toString(), tableName);
+        }
     }
 
     @RequestMapping(value = "/dropTable/{name}", method = RequestMethod.DELETE)

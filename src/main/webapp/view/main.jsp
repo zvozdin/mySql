@@ -15,10 +15,11 @@
     </head>
     <body>
         <div id="loading" style="display:none;" >Loading...</div>
-        <span id="report" style="display:none;" ></span>
         <%@ include file="actions.jsp" %>
         <%@ include file="connect.jsp" %>
         <%@ include file="createDatabase.jsp" %>
+        <%@ include file="createTableSetColumns.jsp" %>
+        <%@ include file="createTableSetName.jsp" %>
         <%@ include file="databasesForDrop.jsp" %>
         <%@ include file="help.jsp" %>
         <%@ include file="menu.jsp" %>
@@ -26,6 +27,8 @@
         <%@ include file="tables.jsp" %>
         <%@ include file="tablesForClear.jsp" %>
         <%@ include file="tablesForDrop.jsp" %>
+
+        <span id="report" style="display:none;" ></span><br>
 
         <a href="main#/menu">menu</a>
     </body>

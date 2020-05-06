@@ -168,10 +168,21 @@ function init(ctx) {
         });
     };
 
+    var initCreateTableSetName = function() {
+        isConnected('newTable', function() {
+           $('#loading').hide();
+           $('#createTableName').val("");
+           $('#columnsCount').val("");
+           $('#createTableSetNameForm').show();
+        });
+    };
+
     var hideAllScreens = function() {
         $('#actions').hide();
         $('#connecting-form').hide();
         $('#createDatabaseForm').hide();
+        $('#createTableSetColumnsForm').hide();
+        $('#createTableSetNameForm').hide();
         $('#databasesForDrop').hide();
         $('#help').hide();
         $('#menu').hide();
@@ -213,6 +224,8 @@ function init(ctx) {
             initTablesForClear();
         } else if (page == 'clearingTheTable') {
             initClearTable(data[1]);
+        } else if (page == 'newTable') {
+            initCreateTableSetName();
         } else {
             window.location.hash = '/menu';
         }
@@ -244,8 +257,8 @@ function init(ctx) {
                 if (message == "" || message == null) {
                     showFromPage();
                 } else {
-                    $('#error').html(message);
-                    $('#error').show();
+                    $('#report').html(message);
+                    $('#report').show();
                 }
             }
         });
@@ -259,6 +272,46 @@ function init(ctx) {
                 $('#createDatabaseForm').hide();
                 $('#report').html(message);
                 $('#report').show();
+            }
+        });
+    });
+
+    $('#setColumns').click(function() {
+        var tableName = $('#createTableName').val();
+        var columnsCount = $('#columnsCount').val();
+
+        $('#createTableSetColumnsForm .container').empty();
+
+        for(var j = 1; j <= columnsCount; j++){
+            $('#createTableSetColumnsForm .container').append('Column#' + j + '<br>');
+            $('#createTableSetColumnsForm .container')
+                .append('<input type="text" name="column' + j +'" id="column' + j +'" /><br>');
+        }
+        $('#createTableSetColumnsForm').append('<input type="hidden" name="tableName" value="' + tableName + '"/>');
+
+        $('#createTableSetNameForm').hide();
+        $('#createTableSetColumnsForm').show();
+    });
+
+    $('#createTable').click(function() {
+        var divData = $("#createTableSetColumnsForm :input").serializeArray();
+        var data = {};
+        $(divData).each(function(index, obj){
+            data[obj.name] = obj.value;
+        });
+
+        $.ajax({
+            url: ctx + '/newTable',
+            data: divData,
+            type: 'POST',
+            success: function(message) {
+                if (message == "" || message == null) {
+                    showFromPage();
+                } else {
+                    $('#createTableSetColumnsForm').hide();
+                    $('#report').html(message);
+                    $('#report').show();
+                }
             }
         });
     });

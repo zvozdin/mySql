@@ -29,44 +29,6 @@ public class MainController {
         return "main";
     }
 
-    @RequestMapping(value = "/newTable", method = RequestMethod.GET)
-    public String newTable(HttpSession session) {
-        DatabaseManager manager = getManager(session);
-        if (managerNull("/newTable", manager, session)) return "redirect:/connect";
-
-        return "setName";
-    }
-
-    @RequestMapping(value = "/newTable", params = {"name", "count"}, method = RequestMethod.GET)
-    public String newTable(Model model,
-                           @RequestParam(value = "name") String tableName,
-                           @RequestParam(value = "count") String count) {
-        model.addAttribute("name", tableName);
-        model.addAttribute("count", count);
-        return "createTable";
-    }
-
-    @SuppressWarnings("unchecked")
-    @RequestMapping(value = "/newTable", method = RequestMethod.POST)
-    public String newTable(Model model,
-                           @RequestParam Map<String, String> queryMap,
-                           HttpSession session) {
-        try {
-            String tableName = queryMap.get("name");
-            queryMap.remove("name");
-
-            DatabaseManager manager = getManager(session);
-            manager.createTable(tableName, new LinkedHashSet(new LinkedList(queryMap.values())));
-            userActions.saveAction(String.format("NewTable(%s)", tableName), manager.getUserName(), manager.getDatabaseName());
-            model.addAttribute("report", String.format(ActionMessages.CREATE.toString(), tableName));
-            return "report";
-        } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("message", e.getMessage());
-            return "error";
-        }
-    }
-
     @RequestMapping(value = "/insert", method = RequestMethod.GET)
     public String insert(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);
