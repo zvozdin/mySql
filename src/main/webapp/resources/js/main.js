@@ -294,6 +294,8 @@ function init(ctx) {
     });
 
     $('#createTable').click(function() {
+        $('#createTableSetColumnsForm').hide();
+        $('#loading').show();
         var divData = $("#createTableSetColumnsForm :input").serializeArray();
         var data = {};
         $(divData).each(function(index, obj){
@@ -308,7 +310,7 @@ function init(ctx) {
                 if (message == "" || message == null) {
                     showFromPage();
                 } else {
-                    $('#createTableSetColumnsForm').hide();
+                    $('#loading').hide();
                     $('#report').html(message);
                     $('#report').show();
                 }
