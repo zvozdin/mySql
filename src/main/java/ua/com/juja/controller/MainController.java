@@ -29,39 +29,6 @@ public class MainController {
         return "main";
     }
 
-    @RequestMapping(value = "/insert", method = RequestMethod.GET)
-    public String insert(Model model, HttpSession session) {
-        DatabaseManager manager = getManager(session);
-        if (managerNull("/insert", manager, session)) return "redirect:/connect";
-
-        setFormAttributes("Tables", getFormattedData(manager.getTables()), "insert", model);
-        return "tables";
-    }
-
-    @RequestMapping(value = "/insert/{name}", method = RequestMethod.GET)
-    public String insert(Model model,
-                         @PathVariable(value = "name") String tableName,
-                         HttpSession session) {
-        setFormAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
-                "insert", model);
-        return "insert";
-    }
-
-    @RequestMapping(value = "/insert", method = RequestMethod.POST)
-    public String insert(Model model,
-                         @RequestParam Map<String, String> queryMap,
-                         HttpSession session) {
-        String tableName = queryMap.get("name");
-        queryMap.remove("name");
-
-        DatabaseManager manager = getManager(session);
-        manager.insert(tableName, queryMap);
-        userActions.saveAction(String.format("Insert into %s", tableName), manager.getUserName(), manager.getDatabaseName());
-
-        setTableAttributes(ActionMessages.INSERT, queryMap.toString(), tableName, manager, model);
-        return "table";
-    }
-
     @RequestMapping(value = "/update", method = RequestMethod.GET)
     public String update(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);

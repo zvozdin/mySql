@@ -168,6 +168,28 @@ function init(ctx) {
         });
     };
 
+    var initTablesForInsert = function() {
+        isConnected('insert', function() {
+            show('#tablesForInsert');
+            $.get(ctx + '/tables/content', function( elements ) {
+                $('#loading').hide(300, function(){
+                    $('#tablesForInsert script[template="row"]').tmpl(elements).appendTo('#tablesForInsert .container');
+                });
+            });
+        });
+    };
+
+    var initInsertTable = function(tableName) {
+        $('#insertForm').append('<input type="hidden" name="tableName" value="' + tableName + '"/>');
+        $.get(ctx + '/insert/' + tableName + '/content', function( elements ) {
+            $('#loading').hide(300, function(){
+                $('#insertForm script[template="row"]').tmpl(elements).appendTo('#namesRow');
+                $('#insertForm script[template="row-input"]').tmpl(elements).appendTo('#inputRow');
+                $('#insertForm').show();
+            });
+        });
+    };
+
     var initCreateTableSetName = function() {
         isConnected('newTable', function() {
            $('#loading').hide();
@@ -185,12 +207,14 @@ function init(ctx) {
         $('#createTableSetNameForm').hide();
         $('#databasesForDrop').hide();
         $('#help').hide();
+        $('#insertForm').hide();
         $('#menu').hide();
         $('#report').hide();
         $('#table').hide();
         $('#tables').hide();
         $('#tablesForClear').hide();
         $('#tablesForDrop').hide();
+        $('#tablesForInsert').hide();
     };
 
     var loadPage = function(data) {
@@ -226,6 +250,10 @@ function init(ctx) {
             initClearTable(data[1]);
         } else if (page == 'newTable') {
             initCreateTableSetName();
+        } else if (page == 'insert') {
+            initTablesForInsert();
+        } else if (page == 'insertingTheTable') {
+            initInsertTable(data[1]);
         } else {
             window.location.hash = '/menu';
         }
@@ -243,6 +271,8 @@ function init(ctx) {
     $(window).bind('hashchange', function(event) {
         load();
     });
+
+    load();
 
     $('#connect').click(function() {
         var connection = {};
@@ -318,5 +348,28 @@ function init(ctx) {
         });
     });
 
-    load();
+    $('#insert').click(function() {
+        $('#insertForm').hide();
+        $('#loading').show();
+        var divData = $("#insertForm :input").serializeArray();
+        var data = {};
+        $(divData).each(function(index, obj){
+            data[obj.name] = obj.value;
+        });
+
+        $.ajax({
+            url: ctx + '/insert',
+            data: divData,
+            type: 'POST',
+            success: function(message) {
+                if (message == "" || message == null) {
+                    showFromPage();
+                } else {
+                    $('#loading').hide();
+                    $('#report').html(message);
+                    $('#report').show();
+                }
+            }
+        });
+    });
 }

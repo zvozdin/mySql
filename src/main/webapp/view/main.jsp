@@ -22,11 +22,13 @@
         <%@ include file="createTableSetName.jsp" %>
         <%@ include file="databasesForDrop.jsp" %>
         <%@ include file="help.jsp" %>
+        <%@ include file="insert.jsp" %>
         <%@ include file="menu.jsp" %>
         <%@ include file="table.jsp" %>
         <%@ include file="tables.jsp" %>
         <%@ include file="tablesForClear.jsp" %>
         <%@ include file="tablesForDrop.jsp" %>
+        <%@ include file="tablesForInsert.jsp" %>
 
         <span id="report" style="display:none;" ></span><br>
 

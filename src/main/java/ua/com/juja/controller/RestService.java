@@ -107,12 +107,29 @@ public class RestService {
         }
     }
 
-    @RequestMapping(value = "/dropTable/{name}", method = RequestMethod.DELETE)
-    public String dropTable(@PathVariable(value = "name") String tableName, HttpSession session) {
+    @RequestMapping(value = "/dropTable/{tableName}", method = RequestMethod.DELETE)
+    public String dropTable(@PathVariable(value = "tableName") String tableName, HttpSession session) {
         DatabaseManager manager = getManager(session);
         manager.dropTable(tableName);
 //        userActions.saveAction(String.format("DropTable(%s)", tableName), manager.getUserName(), manager.getDatabaseName());
         return String.format(ActionMessages.DROP.toString(), tableName);
+    }
+
+    @RequestMapping(value = "/insert/{tableName}/content", method = RequestMethod.GET)
+    public Set<String> insert(@PathVariable(value = "tableName") String tableName, HttpSession session) {
+        return getManager(session).getColumns(tableName);
+    }
+
+    @RequestMapping(value = "/insert", method = RequestMethod.POST)
+    public String insert(@RequestParam Map<String, String> queryMap, HttpSession session) {
+        String tableName = queryMap.get("tableName");
+        queryMap.remove("tableName");
+
+        DatabaseManager manager = getManager(session);
+        manager.insert(tableName, queryMap);
+//        userActions.saveAction(String.format("Insert into %s", tableName), manager.getUserName(), manager.getDatabaseName());
+
+        return String.format(ActionMessages.INSERT.toString(), queryMap.toString());
     }
 
     @RequestMapping(value = "/clear/{name}", method = RequestMethod.DELETE)
@@ -148,5 +165,9 @@ public class RestService {
         rows.add(new ArrayList<>(manager.getColumns(tableName)));
         rows.addAll(manager.getRows(tableName));
         return rows;
+    }
+
+    private String getFormattedData(List<String> data) {
+        return data.toString().replace("[", "").replace("]", "");
     }
 }
