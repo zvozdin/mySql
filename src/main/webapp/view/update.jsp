@@ -1,33 +1,21 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<div id="updateForm" >
+    <script template="row" type="text/x-jquery-tmpl">
+        <option value="{{= $data}}">{{= $data}}</option>
+    </script>
 
-<html>
-    <head>
-        <title>mysql | ${head}</title>
-    </head>
-    <body>
-        Table: <a href="/mySql/tables/${head}" >${head}</a>
-        <br><br>
-        <form action="/mySql/${command}" method="post">
-            <input type="hidden" name="name" value="${head}">
-            Set column:
-            <select name="setColumn">
-                <c:forEach items="${tableData}" var="setColumn">
-                    <option value="${fn:trim(setColumn)}">${setColumn}</option>
-                </c:forEach>
-            </select>
-            = <input type="text" name="setValue" />
-            <br><br>
-            Where column:
-            <select name="whereColumn">
-                <c:forEach items="${tableData}" var="whereColumn">
-                    <option value="${fn:trim(whereColumn)}">${whereColumn}</option>
-                </c:forEach>
-            </select>
-            = <input type="text" name="whereValue" />
-            <br><br>
-            <input type="submit" value="${command}" />
-        </form>
-        <a href="/mySql/menu" >menu</a> <a href="/mySql/help" >help</a>
-    </body>
-</html>
+    Set column:
+    <div id="set">
+        <select name="setColumn" class="setColumn" >
+        </select>
+        = <input type="text" name="setValue" id="setValue"/><br><br>
+    </div>
+
+    Where column:
+    <div id="where">
+        <select name="whereColumn" class="whereColumn" >
+        </select>
+        = <input type="text" name="whereValue" id="whereValue" /><br><br>
+    </div>
+
+    <input type="submit" value="update" id="update"/><br>
+</div>

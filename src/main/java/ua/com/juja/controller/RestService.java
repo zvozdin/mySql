@@ -132,6 +132,30 @@ public class RestService {
         return String.format(ActionMessages.INSERT.toString(), queryMap.toString());
     }
 
+    //TODO make one method to get columns names content for insert, update, delete commands
+    @RequestMapping(value = "/update/{tableName}/content", method = RequestMethod.GET)
+    public Set<String> update(@PathVariable(value = "tableName") String tableName, HttpSession session) {
+        return getManager(session).getColumns(tableName);
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public String update(@RequestParam Map<String, String> queryMap, HttpSession session) {
+        String tableName = queryMap.get("tableName");
+        queryMap.remove("tableName");
+
+        Map<String, String> set = new LinkedHashMap<>();
+        set.put(queryMap.get("setColumn"), queryMap.get("setValue"));
+
+        Map<String, String> where = new LinkedHashMap<>();
+        where.put(queryMap.get("whereColumn"), queryMap.get("whereValue"));
+
+        DatabaseManager manager = getManager(session);
+        manager.update(tableName, set, where);
+//        userActions.saveAction(String.format("Update in %s", tableName), manager.getUserName(), manager.getDatabaseName());
+
+        return String.format(ActionMessages.UPDATE.toString(), where.toString());
+    }
+
     @RequestMapping(value = "/clear/{name}", method = RequestMethod.DELETE)
     public String clear(@PathVariable(value = "name") String tableName, HttpSession session) {
         DatabaseManager manager = getManager(session);

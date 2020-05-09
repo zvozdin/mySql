@@ -190,6 +190,28 @@ function init(ctx) {
         });
     };
 
+    var initTablesForUpdate = function() {
+        isConnected('update', function() {
+            show('#tablesForUpdate');
+            $.get(ctx + '/tables/content', function( elements ) {
+                $('#loading').hide(300, function(){
+                    $('#tablesForUpdate script[template="row"]').tmpl(elements).appendTo('#tablesForUpdate .container');
+                });
+            });
+        });
+    };
+
+    var initUpdateTable = function(tableName) {
+        $('#updateForm').append('<input type="hidden" name="tableName" value="' + tableName + '"/>');
+        $.get(ctx + '/update/' + tableName + '/content', function( elements ) {
+            $('#loading').hide(300, function(){
+                $('#updateForm script[template="row"]').tmpl(elements).appendTo('#set .setColumn');
+                $('#updateForm script[template="row"]').tmpl(elements).appendTo('#where .whereColumn');
+                $('#updateForm').show();
+            });
+        });
+    };
+
     var initCreateTableSetName = function() {
         isConnected('newTable', function() {
            $('#loading').hide();
@@ -215,6 +237,8 @@ function init(ctx) {
         $('#tablesForClear').hide();
         $('#tablesForDrop').hide();
         $('#tablesForInsert').hide();
+        $('#tablesForUpdate').hide();
+        $('#updateForm').hide();
     };
 
     var loadPage = function(data) {
@@ -254,6 +278,10 @@ function init(ctx) {
             initTablesForInsert();
         } else if (page == 'insertingTheTable') {
             initInsertTable(data[1]);
+        } else if (page == 'update') {
+            initTablesForUpdate();
+        } else if (page == 'updatingTheTable') {
+            initUpdateTable(data[1]);
         } else {
             window.location.hash = '/menu';
         }
@@ -359,6 +387,31 @@ function init(ctx) {
 
         $.ajax({
             url: ctx + '/insert',
+            data: divData,
+            type: 'POST',
+            success: function(message) {
+                if (message == "" || message == null) {
+                    showFromPage();
+                } else {
+                    $('#loading').hide();
+                    $('#report').html(message);
+                    $('#report').show();
+                }
+            }
+        });
+    });
+
+    $('#update').click(function() {
+        $('#updateForm').hide();
+        $('#loading').show();
+        var divData = $("#updateForm :input").serializeArray();
+        var data = {};
+        $(divData).each(function(index, obj){
+            data[obj.name] = obj.value;
+        });
+
+        $.ajax({
+            url: ctx + '/update',
             data: divData,
             type: 'POST',
             success: function(message) {

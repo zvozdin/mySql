@@ -29,6 +29,8 @@
         <%@ include file="tablesForClear.jsp" %>
         <%@ include file="tablesForDrop.jsp" %>
         <%@ include file="tablesForInsert.jsp" %>
+        <%@ include file="tablesForUpdate.jsp" %>
+        <%@ include file="update.jsp" %>
 
         <span id="report" style="display:none;" ></span><br>
 

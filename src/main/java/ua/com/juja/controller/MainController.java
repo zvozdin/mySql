@@ -29,45 +29,6 @@ public class MainController {
         return "main";
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.GET)
-    public String update(Model model, HttpSession session) {
-        DatabaseManager manager = getManager(session);
-        if (managerNull("/update", manager, session)) return "redirect:/connect";
-
-        setFormAttributes("Tables", getFormattedData(manager.getTables()), "update", model);
-        return "tables";
-    }
-
-    @RequestMapping(value = "/update/{name}", method = RequestMethod.GET)
-    public String update(Model model,
-                         @PathVariable(value = "name") String tableName,
-                         HttpSession session) {
-        setFormAttributes(tableName, getFormattedData(new LinkedList<>(getManager(session).getColumns(tableName))),
-                "update", model);
-        return "update";
-    }
-
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String update(Model model,
-                         @RequestParam Map<String, String> queryMap,
-                         HttpSession session) {
-        String tableName = queryMap.get("name");
-        queryMap.remove("name");
-
-        Map<String, String> set = new LinkedHashMap<>();
-        set.put(queryMap.get("setColumn"), queryMap.get("setValue"));
-
-        Map<String, String> where = new LinkedHashMap<>();
-        where.put(queryMap.get("whereColumn"), queryMap.get("whereValue"));
-
-        DatabaseManager manager = getManager(session);
-        manager.update(tableName, set, where);
-        userActions.saveAction(String.format("Update in %s", tableName), manager.getUserName(), manager.getDatabaseName());
-
-        setTableAttributes(ActionMessages.UPDATE, where.toString(), tableName, manager, model);
-        return "table";
-    }
-
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public String delete(Model model, HttpSession session) {
         DatabaseManager manager = getManager(session);
