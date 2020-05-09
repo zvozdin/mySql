@@ -21,12 +21,14 @@
         <%@ include file="createTableSetColumns.jsp" %>
         <%@ include file="createTableSetName.jsp" %>
         <%@ include file="databasesForDrop.jsp" %>
+        <%@ include file="delete.jsp" %>
         <%@ include file="help.jsp" %>
         <%@ include file="insert.jsp" %>
         <%@ include file="menu.jsp" %>
         <%@ include file="table.jsp" %>
         <%@ include file="tables.jsp" %>
         <%@ include file="tablesForClear.jsp" %>
+        <%@ include file="tablesForDelete.jsp" %>
         <%@ include file="tablesForDrop.jsp" %>
         <%@ include file="tablesForInsert.jsp" %>
         <%@ include file="tablesForUpdate.jsp" %>

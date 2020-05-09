@@ -14,6 +14,8 @@ import java.util.*;
 @RestController
 public class RestService {
 
+    // TODO in tablesFor.....jsp for different commands add href as parameter (to script template) to stay single jsp
+// as way add two scripts in one add data, in second add command as href
     @Autowired
     private Service service;
 
@@ -34,7 +36,7 @@ public class RestService {
     }
 
     @RequestMapping(value = "/connect", method = RequestMethod.POST)
-    public String connecting(HttpSession session, @ModelAttribute Connection connection) {
+    public String connecting(@ModelAttribute Connection connection, HttpSession session) {
         try {
             DatabaseManager manager = getDatabaseManager();
             manager.connect(connection.getDatabase(), connection.getUser(), connection.getPassword());
@@ -115,8 +117,11 @@ public class RestService {
         return String.format(ActionMessages.DROP.toString(), tableName);
     }
 
-    @RequestMapping(value = "/insert/{tableName}/content", method = RequestMethod.GET)
-    public Set<String> insert(@PathVariable(value = "tableName") String tableName, HttpSession session) {
+    @RequestMapping(value = {"" +
+            "/insert/{tableName}/content",
+            "/update/{tableName}/content",
+            "/delete/{tableName}/content"}, method = RequestMethod.GET)
+    public Set<String> getContent(@PathVariable(value = "tableName") String tableName, HttpSession session) {
         return getManager(session).getColumns(tableName);
     }
 
@@ -130,12 +135,6 @@ public class RestService {
 //        userActions.saveAction(String.format("Insert into %s", tableName), manager.getUserName(), manager.getDatabaseName());
 
         return String.format(ActionMessages.INSERT.toString(), queryMap.toString());
-    }
-
-    //TODO make one method to get columns names content for insert, update, delete commands
-    @RequestMapping(value = "/update/{tableName}/content", method = RequestMethod.GET)
-    public Set<String> update(@PathVariable(value = "tableName") String tableName, HttpSession session) {
-        return getManager(session).getColumns(tableName);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -154,6 +153,21 @@ public class RestService {
 //        userActions.saveAction(String.format("Update in %s", tableName), manager.getUserName(), manager.getDatabaseName());
 
         return String.format(ActionMessages.UPDATE.toString(), where.toString());
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public String delete(@RequestParam Map<String, String> queryMap, HttpSession session) {
+        String tableName = queryMap.get("tableName");
+        queryMap.remove("tableName");
+
+        Map<String, String> delete = new LinkedHashMap<>();
+        delete.put(queryMap.get("deleteColumn"), queryMap.get("deleteValue"));
+
+        DatabaseManager manager = getManager(session);
+        manager.deleteRow(tableName, delete);
+//        userActions.saveAction(String.format("DeleteRow in %s", tableName), manager.getUserName(), manager.getDatabaseName());
+
+        return String.format(ActionMessages.DELETE.toString(), delete.toString());
     }
 
     @RequestMapping(value = "/clear/{name}", method = RequestMethod.DELETE)
@@ -189,9 +203,5 @@ public class RestService {
         rows.add(new ArrayList<>(manager.getColumns(tableName)));
         rows.addAll(manager.getRows(tableName));
         return rows;
-    }
-
-    private String getFormattedData(List<String> data) {
-        return data.toString().replace("[", "").replace("]", "");
     }
 }

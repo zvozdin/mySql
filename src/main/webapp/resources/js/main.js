@@ -205,9 +205,30 @@ function init(ctx) {
         $('#updateForm').append('<input type="hidden" name="tableName" value="' + tableName + '"/>');
         $.get(ctx + '/update/' + tableName + '/content', function( elements ) {
             $('#loading').hide(300, function(){
-                $('#updateForm script[template="row"]').tmpl(elements).appendTo('#set .setColumn');
-                $('#updateForm script[template="row"]').tmpl(elements).appendTo('#where .whereColumn');
+                $('#updateForm script[template="row"]').tmpl(elements).appendTo('#updateForm .setColumn');
+                $('#updateForm script[template="row"]').tmpl(elements).appendTo('#updateForm .whereColumn');
                 $('#updateForm').show();
+            });
+        });
+    };
+
+    var initTablesForDelete = function() {
+        isConnected('delete', function() {
+            show('#tablesForDelete');
+            $.get(ctx + '/tables/content', function( elements ) {
+                $('#loading').hide(300, function(){
+                    $('#tablesForDelete script[template="row"]').tmpl(elements).appendTo('#tablesForDelete .container');
+                });
+            });
+        });
+    };
+
+    var initDeleteTable = function(tableName) {
+        $('#deleteForm').append('<input type="hidden" name="tableName" value="' + tableName + '"/>');
+        $.get(ctx + '/delete/' + tableName + '/content', function( elements ) {
+            $('#loading').hide(300, function(){
+                $('#deleteForm script[template="row"]').tmpl(elements).appendTo('#deleteForm .deleteColumn');
+                $('#deleteForm').show();
             });
         });
     };
@@ -228,6 +249,7 @@ function init(ctx) {
         $('#createTableSetColumnsForm').hide();
         $('#createTableSetNameForm').hide();
         $('#databasesForDrop').hide();
+        $('#deleteForm').hide();
         $('#help').hide();
         $('#insertForm').hide();
         $('#menu').hide();
@@ -235,6 +257,7 @@ function init(ctx) {
         $('#table').hide();
         $('#tables').hide();
         $('#tablesForClear').hide();
+        $('#tablesForDelete').hide();
         $('#tablesForDrop').hide();
         $('#tablesForInsert').hide();
         $('#tablesForUpdate').hide();
@@ -282,6 +305,10 @@ function init(ctx) {
             initTablesForUpdate();
         } else if (page == 'updatingTheTable') {
             initUpdateTable(data[1]);
+        } else if (page == 'delete') {
+            initTablesForDelete();
+        } else if (page == 'deletingTheTable') {
+            initDeleteTable(data[1]);
         } else {
             window.location.hash = '/menu';
         }
@@ -412,6 +439,31 @@ function init(ctx) {
 
         $.ajax({
             url: ctx + '/update',
+            data: divData,
+            type: 'POST',
+            success: function(message) {
+                if (message == "" || message == null) {
+                    showFromPage();
+                } else {
+                    $('#loading').hide();
+                    $('#report').html(message);
+                    $('#report').show();
+                }
+            }
+        });
+    });
+
+    $('#delete').click(function() {
+        $('#deleteForm').hide();
+        $('#loading').show();
+        var divData = $("#deleteForm :input").serializeArray();
+        var data = {};
+        $(divData).each(function(index, obj){
+            data[obj.name] = obj.value;
+        });
+
+        $.ajax({
+            url: ctx + '/delete',
             data: divData,
             type: 'POST',
             success: function(message) {
