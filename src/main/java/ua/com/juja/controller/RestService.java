@@ -14,8 +14,6 @@ import java.util.*;
 @RestController
 public class RestService {
 
-    // TODO in tablesFor.....jsp for different commands add href as parameter (to script template) to stay single jsp
-// as way add two scripts in one add data, in second add command as href
     @Autowired
     private Service service;
 

@@ -99,12 +99,19 @@ function init(ctx) {
         });
     };
 
+    function Action(action, data) {
+        this.action=action;
+        this.data=data;
+    }
+
     var initDatabasesForDrop = function() {
         isConnected('dropDatabase', function() {
-            show('#databasesForDrop');
+            show('#tablesForAction');
             $.get(ctx + '/dropDatabase/content', function( elements ) {
                 $('#loading').hide(300, function(){
-                    $('#databasesForDrop script[template="row"]').tmpl(elements).appendTo('#databasesForDrop .container');
+                    $('#tablesForAction script[template="row"]')
+                        .tmpl(new Action('droppingTheDatabase', elements))
+                        .appendTo('#tablesForAction .container');
                 });
             });
         });
@@ -124,10 +131,12 @@ function init(ctx) {
 
     var initTablesForDrop = function() {
         isConnected('dropTable', function() {
-            show('#tablesForDrop');
+            show('#tablesForAction');
             $.get(ctx + '/tables/content', function( elements ) {
                 $('#loading').hide(300, function(){
-                    $('#tablesForDrop script[template="row"]').tmpl(elements).appendTo('#tablesForDrop .container');
+                    $('#tablesForAction script[template="row"]')
+                        .tmpl(new Action('droppingTheTable', elements))
+                        .appendTo('#tablesForAction .container');
                 });
             });
         });
@@ -147,10 +156,12 @@ function init(ctx) {
 
     var initTablesForClear = function() {
         isConnected('clear', function() {
-            show('#tablesForClear');
+            show('#tablesForAction');
             $.get(ctx + '/tables/content', function( elements ) {
                 $('#loading').hide(300, function(){
-                    $('#tablesForClear script[template="row"]').tmpl(elements).appendTo('#tablesForClear .container');
+                    $('#tablesForAction script[template="row"]')
+                        .tmpl(new Action('clearingTheTable', elements))
+                        .appendTo('#tablesForAction .container');
                 });
             });
         });
@@ -170,10 +181,12 @@ function init(ctx) {
 
     var initTablesForInsert = function() {
         isConnected('insert', function() {
-            show('#tablesForInsert');
+            show('#tablesForAction');
             $.get(ctx + '/tables/content', function( elements ) {
                 $('#loading').hide(300, function(){
-                    $('#tablesForInsert script[template="row"]').tmpl(elements).appendTo('#tablesForInsert .container');
+                    $('#tablesForAction script[template="row"]')
+                        .tmpl(new Action('insertingTheTable', elements))
+                        .appendTo('#tablesForAction .container');
                 });
             });
         });
@@ -194,10 +207,12 @@ function init(ctx) {
 
     var initTablesForUpdate = function() {
         isConnected('update', function() {
-            show('#tablesForUpdate');
+            show('#tablesForAction');
             $.get(ctx + '/tables/content', function( elements ) {
                 $('#loading').hide(300, function(){
-                    $('#tablesForUpdate script[template="row"]').tmpl(elements).appendTo('#tablesForUpdate .container');
+                    $('#tablesForAction script[template="row"]')
+                        .tmpl(new Action('updatingTheTable', elements))
+                        .appendTo('#tablesForAction .container');
                 });
             });
         });
@@ -218,10 +233,12 @@ function init(ctx) {
 
     var initTablesForDelete = function() {
         isConnected('delete', function() {
-            show('#tablesForDelete');
+            show('#tablesForAction');
             $.get(ctx + '/tables/content', function( elements ) {
                 $('#loading').hide(300, function(){
-                    $('#tablesForDelete script[template="row"]').tmpl(elements).appendTo('#tablesForDelete .container');
+                    $('#tablesForAction script[template="row"]')
+                        .tmpl(new Action('deletingTheTable', elements))
+                        .appendTo('#tablesForAction .container');
                 });
             });
         });
@@ -253,7 +270,6 @@ function init(ctx) {
         $('#createDatabaseForm').hide();
         $('#createTableSetColumnsForm').hide();
         $('#createTableSetNameForm').hide();
-        $('#databasesForDrop').hide();
         $('#deleteForm').hide();
         $('#help').hide();
         $('#insertForm').hide();
@@ -261,11 +277,7 @@ function init(ctx) {
         $('#report').hide();
         $('#table').hide();
         $('#tables').hide();
-        $('#tablesForClear').hide();
-        $('#tablesForDelete').hide();
-        $('#tablesForDrop').hide();
-        $('#tablesForInsert').hide();
-        $('#tablesForUpdate').hide();
+        $('#tablesForAction').hide();
         $('#updateForm').hide();
     };
 
