@@ -180,6 +180,8 @@ function init(ctx) {
     };
 
     var initInsertTable = function(tableName) {
+        $('#namesRow').children().remove();
+        $('#inputRow').children().remove();
         $('#insertForm').append('<input type="hidden" name="tableName" value="' + tableName + '"/>');
         $.get(ctx + '/insert/' + tableName + '/content', function( elements ) {
             $('#loading').hide(300, function(){
@@ -202,6 +204,8 @@ function init(ctx) {
     };
 
     var initUpdateTable = function(tableName) {
+        $('#setValue').val("");
+        $('#whereValue').val("");
         $('#updateForm').append('<input type="hidden" name="tableName" value="' + tableName + '"/>');
         $.get(ctx + '/update/' + tableName + '/content', function( elements ) {
             $('#loading').hide(300, function(){
@@ -224,6 +228,7 @@ function init(ctx) {
     };
 
     var initDeleteTable = function(tableName) {
+        $('#deleteValue').val("");
         $('#deleteForm').append('<input type="hidden" name="tableName" value="' + tableName + '"/>');
         $.get(ctx + '/delete/' + tableName + '/content', function( elements ) {
             $('#loading').hide(300, function(){
