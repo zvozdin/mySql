@@ -19,6 +19,9 @@ public class RestService {
     @Autowired
     private Service service;
 
+    private String database;
+    private String user;
+
     @RequestMapping(value = "/menu/content", method = RequestMethod.GET)
     public List<String> menuItems() {
         return service.getCommands();
@@ -39,7 +42,9 @@ public class RestService {
     public String connecting(@ModelAttribute Connection connection, HttpSession session) {
         try {
             DatabaseManager manager = getDatabaseManager();
-            manager.connect(connection.getDatabase(), connection.getUser(), connection.getPassword());
+            database = connection.getDatabase();
+            user = connection.getUser();
+            manager.connect(database, user, connection.getPassword());
             session.setAttribute("manager", manager);
             return null;
         } catch (Exception e) {
@@ -53,6 +58,7 @@ public class RestService {
         if (manager == null) {
             return new LinkedList<>();
         }
+        service.saveUserAction("Tables", user, database);
         return manager.getTables();
     }
 
@@ -62,6 +68,7 @@ public class RestService {
         if (manager == null) {
             return new LinkedList<>();
         }
+        service.saveUserAction(String.format("View Table(%s)", tableName), user, database);
         return getRows(manager, tableName);
     }
 
@@ -69,7 +76,7 @@ public class RestService {
     public String newDatabase(@PathVariable(value = "name") String databaseName, HttpSession session) {
         try {
             getManager(session).createDatabase(databaseName);
-//            userActions.saveAction(String.format("NewDatabase(%s)", databaseName), user, database);
+            service.saveUserAction(String.format("NewDatabase(%s)", databaseName), user, database);
             return String.format(ActionMessages.DATABASE_NEW.toString(), databaseName);
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,7 +96,7 @@ public class RestService {
     @RequestMapping(value = "/dropDatabase/{name}", method = RequestMethod.DELETE)
     public String dropDatabase(@PathVariable(value = "name") String databaseName, HttpSession session) {
         getManager(session).dropDatabase(databaseName);
-//        userActions.saveAction(String.format("DropDatabase(%s)", databaseName), user, database);
+        service.saveUserAction(String.format("DropDatabase(%s)", databaseName), user, database);
         return String.format(ActionMessages.DROP_DB.toString(), databaseName);
     }
 
@@ -98,10 +105,9 @@ public class RestService {
         String tableName = queryMap.get("tableName");
         queryMap.remove("tableName");
 
-        DatabaseManager manager = getManager(session);
         try {
-            manager.createTable(tableName, new LinkedHashSet(new LinkedList(queryMap.values())));
-//            userActions.saveAction(String.format("NewTable(%s)", tableName), manager.getUserName(), manager.getDatabaseName());
+            getManager(session).createTable(tableName, new LinkedHashSet(new LinkedList(queryMap.values())));
+            service.saveUserAction(String.format("NewTable(%s)", tableName), user, database);
             return String.format(ActionMessages.CREATE.toString(), tableName);
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,9 +117,8 @@ public class RestService {
 
     @RequestMapping(value = "/dropTable/{tableName}", method = RequestMethod.DELETE)
     public String dropTable(@PathVariable(value = "tableName") String tableName, HttpSession session) {
-        DatabaseManager manager = getManager(session);
-        manager.dropTable(tableName);
-//        userActions.saveAction(String.format("DropTable(%s)", tableName), manager.getUserName(), manager.getDatabaseName());
+        getManager(session).dropTable(tableName);
+        service.saveUserAction(String.format("DropTable(%s)", tableName), user, database);
         return String.format(ActionMessages.DROP.toString(), tableName);
     }
 
@@ -130,10 +135,8 @@ public class RestService {
         String tableName = queryMap.get("tableName");
         queryMap.remove("tableName");
 
-        DatabaseManager manager = getManager(session);
-        manager.insert(tableName, queryMap);
-//        userActions.saveAction(String.format("Insert into %s", tableName), manager.getUserName(), manager.getDatabaseName());
-
+        getManager(session).insert(tableName, queryMap);
+        service.saveUserAction(String.format("Insert into %s", tableName), user, database);
         return String.format(ActionMessages.INSERT.toString(), queryMap.toString());
     }
 
@@ -148,10 +151,8 @@ public class RestService {
         Map<String, String> where = new LinkedHashMap<>();
         where.put(queryMap.get("whereColumn"), queryMap.get("whereValue"));
 
-        DatabaseManager manager = getManager(session);
-        manager.update(tableName, set, where);
-//        userActions.saveAction(String.format("Update in %s", tableName), manager.getUserName(), manager.getDatabaseName());
-
+        getManager(session).update(tableName, set, where);
+        service.saveUserAction(String.format("Update in %s", tableName), user, database);
         return String.format(ActionMessages.UPDATE.toString(), where.toString());
     }
 
@@ -163,19 +164,15 @@ public class RestService {
         Map<String, String> delete = new LinkedHashMap<>();
         delete.put(queryMap.get("deleteColumn"), queryMap.get("deleteValue"));
 
-        DatabaseManager manager = getManager(session);
-        manager.deleteRow(tableName, delete);
-//        userActions.saveAction(String.format("DeleteRow in %s", tableName), manager.getUserName(), manager.getDatabaseName());
-
+        getManager(session).deleteRow(tableName, delete);
+        service.saveUserAction(String.format("DeleteRow in %s", tableName), user, database);
         return String.format(ActionMessages.DELETE.toString(), delete.toString());
     }
 
     @RequestMapping(value = "/clear/{name}", method = RequestMethod.DELETE)
     public String clear(@PathVariable(value = "name") String tableName, HttpSession session) {
-        DatabaseManager manager = getManager(session);
-        manager.clear(tableName);
-//        userActions.saveAction(String.format("Clear(%s)", tableName), manager.getUserName(), manager.getDatabaseName());
-
+        getManager(session).clear(tableName);
+        service.saveUserAction(String.format("Clear(%s)", tableName), user, database);
         return String.format(ActionMessages.CLEAR.toString(), tableName);
     }
 

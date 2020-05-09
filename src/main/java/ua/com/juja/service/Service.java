@@ -12,4 +12,6 @@ public interface Service {
     List<Description> getCommandsDescription();
 
     List<UserActionLog> getAllFor(String userName);
+
+    void saveUserAction(String action, String user, String database);
 }

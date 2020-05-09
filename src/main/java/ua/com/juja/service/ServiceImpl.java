@@ -53,7 +53,14 @@ public class ServiceImpl implements Service {
         );
     }
 
-    // TODO add userActions.saveAction(String.format("DeleteRow in %s", tableName), user, database);
+    @Override
+    public void saveUserAction(String action, String userName, String database) {
+        if (userName == null) {
+            throw new IllegalArgumentException("User Name can't be null!");
+        }
+
+        userActions.saveAction(action, userName, database);
+    }
 
     @Override
     public List<UserActionLog> getAllFor(String userName) {
