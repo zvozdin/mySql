@@ -1,28 +1,14 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<html>
-    <head>
-        <title>mysql | ${head}</title>
-    </head>
-    <body>
-        Table: <a href="/mySql/tables/${head}" >${head}</a>
-        <form action="/mySql/${command}" method="post" >
-            <input type="hidden" name="tableName" value="${head}">
-            <table border="1" >
-                <tr>
-                    <c:forEach items="${tableData}" var="name" >
-                        <td>${name}</td>
-                    </c:forEach>
-                </tr>
-                <tr>
-                    <c:forEach items="${tableData}" var="name" >
-                        <td><input type="text" name="${name}" /></td>
-                    </c:forEach>
-                </tr>
-            </table>
-            <br>
-            <input type="submit" value="${command}" />
-        </form>
-        <a href="/mySql/menu" >menu</a> <a href="/mySql/help" >help</a>
-    </body>
-</html>
+<div id="insertForm" >
+    <script template="row" type="text/x-jquery-tmpl">
+        <td>{{= $data}}</td>
+    </script>
+    <script template="row-input" type="text/x-jquery-tmpl">
+        <td><input type="text" name="{{= $data}}" id="{{= $data}}" /></td>
+    </script>
+    <table border="1" class="container" >
+        <tr id="namesRow"></tr>
+        <tr id="inputRow"></tr>
+    </table>
+    <br>
+    <input type="submit" value="insert" id="insert"/><br>
+</div>

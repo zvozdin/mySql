@@ -15,7 +15,7 @@ public class DatabaseConnection {
     private String userName;
 
     @Column(name = "db_name")
-    private String dbName;
+    private String database;
 
     @JoinColumn(name = "database_connection_id")
     @OneToMany(fetch = FetchType.LAZY)
@@ -24,9 +24,9 @@ public class DatabaseConnection {
     public DatabaseConnection() {
     }
 
-    public DatabaseConnection(String userName, String dbName) {
+    public DatabaseConnection(String userName, String database) {
         this.userName = userName;
-        this.dbName = dbName;
+        this.database = database;
     }
 
     public String getUserName() {
@@ -37,12 +37,12 @@ public class DatabaseConnection {
         this.userName = userName;
     }
 
-    public String getDbName() {
-        return dbName;
+    public String getDatabase() {
+        return database;
     }
 
-    public void setDbName(String dbName) {
-        this.dbName = dbName;
+    public void setDatabase(String database) {
+        this.database = database;
     }
 
     public void setId(int id) {

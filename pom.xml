@@ -17,6 +17,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <org.springframework.version>5.1.5.RELEASE</org.springframework.version>
+        <jackson.version>2.9.8</jackson.version>
     </properties>
 
     <dependencies>
@@ -50,6 +51,18 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
             <version>1.6.0.RELEASE</version>
+        </dependency>
+
+        <!-- JACKSON Serializator -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <!-- HIBERNATE -->

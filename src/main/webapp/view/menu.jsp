@@ -1,11 +1,7 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<html>
-    <head>
-        <title>mysql | menu</title>
-    </head>
-    <body>
-        <c:forEach items="${commands}" var="command">
-            <a href="${command}">${command}</a><br>
-        </c:forEach>
-    </body>
-</html>
+<div id="menu">
+    <dl class="container">
+        <script template="row" type="text/x-jquery-tmpl">
+            <a href="main#/{{= $data}}">{{= $data}}</a><br>
+        </script>
+    </dl>
+</div>
