@@ -4,7 +4,7 @@
     </script>
 
     Delete record where column:<br>
-    <select name="deleteColumn" class="deleteColumn" >
+    <select name="deleteColumn" id="deleteColumn" >
     </select>
     = <input type="text" name="deleteValue" id="deleteValue"/><br><br>
 

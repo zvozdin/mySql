@@ -219,13 +219,15 @@ function init(ctx) {
     };
 
     var initUpdateTable = function(tableName) {
+        $('#setColumn').children().remove();
+        $('#whereColumn').children().remove();
         $('#setValue').val("");
         $('#whereValue').val("");
         $('#updateForm').append('<input type="hidden" name="tableName" value="' + tableName + '"/>');
         $.get(ctx + '/update/' + tableName + '/content', function( elements ) {
             $('#loading').hide(300, function(){
-                $('#updateForm script[template="row"]').tmpl(elements).appendTo('#updateForm .setColumn');
-                $('#updateForm script[template="row"]').tmpl(elements).appendTo('#updateForm .whereColumn');
+                $('#updateForm script[template="row"]').tmpl(elements).appendTo('#setColumn');
+                $('#updateForm script[template="row"]').tmpl(elements).appendTo('#whereColumn');
                 $('#updateForm').show();
             });
         });
@@ -245,11 +247,12 @@ function init(ctx) {
     };
 
     var initDeleteTable = function(tableName) {
+        $('#deleteColumn').children().remove();
         $('#deleteValue').val("");
         $('#deleteForm').append('<input type="hidden" name="tableName" value="' + tableName + '"/>');
         $.get(ctx + '/delete/' + tableName + '/content', function( elements ) {
             $('#loading').hide(300, function(){
-                $('#deleteForm script[template="row"]').tmpl(elements).appendTo('#deleteForm .deleteColumn');
+                $('#deleteForm script[template="row"]').tmpl(elements).appendTo('#deleteColumn');
                 $('#deleteForm').show();
             });
         });
