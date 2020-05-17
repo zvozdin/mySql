@@ -1,11 +1,13 @@
 package ua.com.juja.model;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import ua.com.juja.model.entity.DatabaseConnection;
 
-@Repository
-public interface DatabaseConnectionsRepository extends CrudRepository<DatabaseConnection, Integer> {
+import java.util.List;
+
+public interface DatabaseConnectionsRepository extends MongoRepository<DatabaseConnection, Integer> {
 
     DatabaseConnection findByUserNameAndDatabase(String userName, String database);
+
+    List<DatabaseConnection> findByUserName(String userName);
 }

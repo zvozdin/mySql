@@ -1,29 +1,21 @@
 package ua.com.juja.model.entity;
 
-import javax.persistence.*;
-import java.util.List;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "database_connection")
+@Document(collection = "databaseConnection")
 public class DatabaseConnection {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-
-    @Column(name = "user_name")
+    private String id;
     private String userName;
-
-    @Column(name = "db_name")
     private String database;
-
-    @JoinColumn(name = "database_connection_id")
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<UserAction> userActions;
 
     public DatabaseConnection() {
     }
 
+    @PersistenceConstructor
     public DatabaseConnection(String userName, String database) {
         this.userName = userName;
         this.database = database;
@@ -45,15 +37,11 @@ public class DatabaseConnection {
         this.database = database;
     }
 
-    public void setId(int id) {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public List<UserAction> getUserActions() {
-        return userActions;
-    }
-
-    public void setUserActions(List<UserAction> userActions) {
-        this.userActions = userActions;
     }
 }

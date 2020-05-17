@@ -14,7 +14,7 @@ import org.springframework.web.servlet.view.JstlView;
 @Configuration
 @EnableWebMvc
 @ComponentScan("ua.com.juja")
-@Import(HibernateConfig.class)
+@Import(MongoDBConfig.class)
 public class SpringConfig implements WebMvcConfigurer {
 
     @Override

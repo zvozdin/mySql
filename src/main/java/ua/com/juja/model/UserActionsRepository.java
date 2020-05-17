@@ -1,17 +1,16 @@
 package ua.com.juja.model;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import ua.com.juja.model.entity.UserAction;
 
 import java.util.List;
 
 @Repository
-public interface UserActionsRepository extends CrudRepository<UserAction, Integer>, UserActionsRepositoryCustom {
+public interface UserActionsRepository extends MongoRepository<UserAction, Integer>, UserActionsRepositoryCustom {
 
-    @Query(value = "SELECT ua FROM UserAction ua WHERE ua.databaseConnection.userName = :userName")
-    List<UserAction> findByUserName(@Param("userName") String userName);
+    @Query("{'databaseConnection.$id': ?0}")
+    List<UserAction> findByDatabaseConnectionId(ObjectId id);
 }

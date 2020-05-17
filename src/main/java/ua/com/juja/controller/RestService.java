@@ -43,6 +43,7 @@ public class RestService {
             database = connection.getDatabase();
             user = connection.getUser();
             manager.connect(database, user, connection.getPassword());
+            service.saveUserAction("CONNECT", user, database);
             session.setAttribute("manager", manager);
             return null;
         } catch (Exception e) {
