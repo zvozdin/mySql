@@ -1,9 +1,12 @@
 package ua.com.juja.service;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.com.juja.controller.UserActionLog;
+import ua.com.juja.model.DatabaseConnectionsRepository;
 import ua.com.juja.model.UserActionsRepository;
+import ua.com.juja.model.entity.DatabaseConnection;
 import ua.com.juja.model.entity.Description;
 import ua.com.juja.model.entity.UserAction;
 
@@ -16,6 +19,9 @@ public class ServiceImpl implements Service {
 
     @Autowired
     private UserActionsRepository userActions;
+
+    @Autowired
+    private DatabaseConnectionsRepository databaseConnections;
 
     @Override
     public List<String> getCommands() {
@@ -58,7 +64,6 @@ public class ServiceImpl implements Service {
         if (userName == null) {
             throw new IllegalArgumentException("User Name can't be null!");
         }
-
         userActions.saveAction(action, userName, database);
     }
 
@@ -68,8 +73,17 @@ public class ServiceImpl implements Service {
             throw new IllegalArgumentException("User Name can't be null!");
         }
 
+        List<UserAction> actions = new LinkedList<>();
+        for (DatabaseConnection connection : databaseConnections.findByUserName(userName)) {
+            List<UserAction> userActionList = userActions.findByDatabaseConnectionId(new ObjectId(connection.getId()));
+            for (UserAction userAction : userActionList) {
+                userAction.setDatabaseConnection(connection);
+            }
+            actions.addAll(userActionList);
+        }
+
         List<UserActionLog> result = new LinkedList<>();
-        for (UserAction action : userActions.findByUserName(userName)) {
+        for (UserAction action : actions) {
             result.add(new UserActionLog(action));
         }
         return result;

@@ -16,7 +16,8 @@
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <org.springframework.version>5.1.5.RELEASE</org.springframework.version>
+        <org.springframework.version>5.2.6.RELEASE</org.springframework.version>
+        <org.spring-data.version>2.1.3.RELEASE</org.spring-data.version>
         <jackson.version>2.9.8</jackson.version>
     </properties>
 
@@ -50,7 +51,26 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>1.6.0.RELEASE</version>
+            <version>${org.spring-data.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+            <version>${org.spring-data.version}</version>
+        </dependency>
+
+        <!-- SPRING & MONGODB -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>${org.spring-data.version}</version>
+        </dependency>
+
+        <!-- MONGODB -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.12.2</version>
         </dependency>
 
         <!-- JACKSON Serializator -->
@@ -63,13 +83,6 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
-        </dependency>
-
-        <!-- HIBERNATE -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>4.3.11.Final</version>
         </dependency>
 
         <!-- SERVLETS / JSP -->
@@ -95,6 +108,13 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.48</version>
+        </dependency>
+
+        <!-- LOGGER -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
         </dependency>
 
         <!-- TEST -->
