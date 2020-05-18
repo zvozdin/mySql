@@ -10,18 +10,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import ua.com.juja.config.SpringConfig;
+import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.model.entity.Description;
 import ua.com.juja.service.Service;
 
 import java.util.Arrays;
 
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,6 +34,9 @@ public class RestServiceTest {
 
     @Mock
     private Service service;
+
+    @Mock
+    private DatabaseManager manager;
 
     @InjectMocks
     private RestService restService;
@@ -71,5 +74,27 @@ public class RestServiceTest {
                 .andExpect(jsonPath("$[0].description", is("commandA description")))
                 .andExpect(jsonPath("$[1].command", is("commandB")))
                 .andExpect(jsonPath("$[1].description", is("commandB description")));
+    }
+
+    @Test
+    public void test3_IsConnected() throws Exception {
+        // when
+        when(manager.getUserName()).thenReturn("userName");
+
+        // then
+        mockMvc.perform(get("/connected").sessionAttr("manager", manager))
+                .andExpect(status().isOk())
+                .andExpect(content().string("userName"));
+    }
+
+    @Test
+    public void test4_IsNotConnected() throws Exception {
+        // when
+        when(manager.getUserName()).thenReturn("userName");
+
+        // then
+        mockMvc.perform(get("/connected"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
     }
 }
