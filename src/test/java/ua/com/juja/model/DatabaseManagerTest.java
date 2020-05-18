@@ -82,7 +82,7 @@ public abstract class DatabaseManagerTest {
             manager.createTable("test", getDataForTable().keySet());
             fail("Expected Exception");
         } catch (IllegalArgumentException e) {
-            assertEquals("Table 'test' already exists", e.getMessage());
+            assertEquals("Error! Table 'test' already exists", e.getMessage());
         }
 
         // drop
