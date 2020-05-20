@@ -18,10 +18,12 @@ import java.util.Arrays;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -57,6 +59,7 @@ public class RestServiceTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[*]", hasSize(1)))
                 .andExpect(jsonPath("$", is(Arrays.asList("test"))));
+        verify(service).getCommands();
     }
 
     @Test
@@ -74,6 +77,7 @@ public class RestServiceTest {
                 .andExpect(jsonPath("$[0].description", is("commandA description")))
                 .andExpect(jsonPath("$[1].command", is("commandB")))
                 .andExpect(jsonPath("$[1].description", is("commandB description")));
+        verify(service).getCommandsDescription();
     }
 
     @Test
@@ -85,6 +89,7 @@ public class RestServiceTest {
         mockMvc.perform(get("/connected").sessionAttr("manager", manager))
                 .andExpect(status().isOk())
                 .andExpect(content().string("userName"));
+        verify(manager).getUserName();
     }
 
     @Test
@@ -96,5 +101,6 @@ public class RestServiceTest {
         mockMvc.perform(get("/connected"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
+        verify(manager, never()).getUserName();
     }
 }
