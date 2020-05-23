@@ -21,9 +21,8 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -60,6 +59,7 @@ public class RestServiceTest {
                 .andExpect(jsonPath("$[*]", hasSize(1)))
                 .andExpect(jsonPath("$", is(Arrays.asList("test"))));
         verify(service).getCommands();
+        verifyNoMoreInteractions(service);
     }
 
     @Test
@@ -78,6 +78,7 @@ public class RestServiceTest {
                 .andExpect(jsonPath("$[1].command", is("commandB")))
                 .andExpect(jsonPath("$[1].description", is("commandB description")));
         verify(service).getCommandsDescription();
+        verifyNoMoreInteractions(service);
     }
 
     @Test
@@ -90,17 +91,51 @@ public class RestServiceTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("userName"));
         verify(manager).getUserName();
+        verifyNoMoreInteractions(manager);
     }
 
     @Test
     public void test4_IsNotConnected() throws Exception {
-        // when
-        when(manager.getUserName()).thenReturn("userName");
-
         // then
         mockMvc.perform(get("/connected"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
-        verify(manager, never()).getUserName();
+        verifyNoInteractions(manager);
+    }
+
+    @Test
+    public void test5_Connect() throws Exception {
+        // when
+        when(service.connect("database", "root", "root")).thenReturn(manager);
+
+        // then
+        mockMvc.perform(post("/connect")
+                .param("database", "database")
+                .param("user", "root")
+                .param("password", "root"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+
+        verify(service).connect("database", "root", "root");
+        verify(service).saveUserAction("CONNECT", "root", "database");
+        verifyNoMoreInteractions(service);
+    }
+
+    @Test
+    public void test6_ConnectError() throws Exception {
+        // when
+        when(service.connect("database", "root", "root"))
+                .thenThrow(new RuntimeException("Can't get connection for database: database, user: root"));
+
+        // then
+        mockMvc.perform(post("/connect")
+                .param("database", "database")
+                .param("user", "root")
+                .param("password", "root"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Can't get connection for database: database, user: root"));
+
+        verify(service).connect("database", "root", "root");
+        verifyNoMoreInteractions(service);
     }
 }
