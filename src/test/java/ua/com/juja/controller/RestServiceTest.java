@@ -15,6 +15,8 @@ import ua.com.juja.model.entity.Description;
 import ua.com.juja.service.Service;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -49,7 +51,7 @@ public class RestServiceTest {
     }
 
     @Test
-    public void test1_Menu() throws Exception {
+    public void test1_menu() throws Exception {
         // when
         when(service.getCommands()).thenReturn(Arrays.asList("test"));
 
@@ -63,7 +65,7 @@ public class RestServiceTest {
     }
 
     @Test
-    public void test2_Help() throws Exception {
+    public void test2_help() throws Exception {
         // when
         when(service.getCommandsDescription()).thenReturn(Arrays.asList(
                 new Description("commandA", "commandA description"),
@@ -82,7 +84,7 @@ public class RestServiceTest {
     }
 
     @Test
-    public void test3_IsConnected() throws Exception {
+    public void test3_isConnected() throws Exception {
         // when
         when(manager.getUserName()).thenReturn("userName");
 
@@ -95,7 +97,7 @@ public class RestServiceTest {
     }
 
     @Test
-    public void test4_IsNotConnected() throws Exception {
+    public void test4_isNotConnected() throws Exception {
         // then
         mockMvc.perform(get("/connected"))
                 .andExpect(status().isOk())
@@ -104,7 +106,7 @@ public class RestServiceTest {
     }
 
     @Test
-    public void test5_Connect() throws Exception {
+    public void test5_connect() throws Exception {
         // when
         when(service.connect("database", "root", "root")).thenReturn(manager);
 
@@ -122,7 +124,7 @@ public class RestServiceTest {
     }
 
     @Test
-    public void test6_ConnectError() throws Exception {
+    public void test6_connectError() throws Exception {
         // when
         when(service.connect("database", "root", "root"))
                 .thenThrow(new RuntimeException("Can't get connection for database: database, user: root"));
@@ -136,6 +138,30 @@ public class RestServiceTest {
                 .andExpect(content().string("Can't get connection for database: database, user: root"));
 
         verify(service).connect("database", "root", "root");
+        verifyNoMoreInteractions(service);
+    }
+
+    @Test
+    public void test7_tables() throws Exception {
+        // given
+        List<String> tables = new LinkedList();
+        tables.add("table1");
+        tables.add("table2");
+
+        // when
+        when(manager.getTables()).thenReturn(tables);
+
+        // then
+        mockMvc.perform(get("/tables/content").sessionAttr("manager", manager))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[*]", hasSize(2)))
+                .andExpect(jsonPath("$[0]", is("table1")))
+                .andExpect(jsonPath("$[1]", is("table2")))
+                .andExpect(content().string("[\"table1\",\"table2\"]"));
+
+        verify(manager).getTables();
+        verify(service).saveUserAction("Tables", null, null);
+        verifyNoMoreInteractions(manager);
         verifyNoMoreInteractions(service);
     }
 }
