@@ -15,6 +15,7 @@ import ua.com.juja.model.entity.Description;
 import ua.com.juja.service.Service;
 
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -160,7 +161,35 @@ public class RestServiceTest {
                 .andExpect(content().string("[\"table1\",\"table2\"]"));
 
         verify(manager).getTables();
+
         verify(service).saveUserAction("Tables", null, null);
+        verifyNoMoreInteractions(manager);
+        verifyNoMoreInteractions(service);
+    }
+    @Test
+    public void test8_tableContent() throws Exception {
+        // given
+        List<List<String>> rows = new LinkedList<>();
+        rows.add(new LinkedList<>(Arrays.asList("value1", "value2")));
+
+        // when
+        when(manager.getColumns("test")).thenReturn(new LinkedHashSet<>(Arrays.asList("column1", "column2")));
+        when(manager.getRows("test")).thenReturn(rows);
+
+        // then
+        mockMvc.perform(get("/tables/{table}/content", "test")
+                .sessionAttr("manager", manager))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[*]", hasSize(2)))
+                .andExpect(jsonPath("$[0]", is(Arrays.asList("column1", "column2"))))
+                .andExpect(jsonPath("$[1]", is(Arrays.asList("value1", "value2"))))
+                .andExpect(content().string("[" +
+                        "[\"column1\",\"column2\"]," +
+                        "[\"value1\",\"value2\"]]"));
+
+        verify(manager).getColumns("test");
+        verify(manager).getRows("test");
+        verify(service).saveUserAction("View Table(test)", null, null);
         verifyNoMoreInteractions(manager);
         verifyNoMoreInteractions(service);
     }
