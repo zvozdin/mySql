@@ -2,9 +2,11 @@ package ua.com.juja.service;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Component;
 import ua.com.juja.controller.UserActionLog;
 import ua.com.juja.model.DatabaseConnectionsRepository;
+import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.model.UserActionsRepository;
 import ua.com.juja.model.entity.DatabaseConnection;
 import ua.com.juja.model.entity.Description;
@@ -16,6 +18,8 @@ import java.util.List;
 
 @Component
 public class ServiceImpl implements Service {
+
+    private DatabaseManager manager;
 
     @Autowired
     private UserActionsRepository userActions;
@@ -87,5 +91,17 @@ public class ServiceImpl implements Service {
             result.add(new UserActionLog(action));
         }
         return result;
+    }
+
+    @Override
+    public DatabaseManager connect(String database, String user, String password) {
+        manager = getDatabaseManager();
+        manager.connect(database, user, password);
+        return manager;
+    }
+
+    @Lookup
+    public DatabaseManager getDatabaseManager() {
+        return null;
     }
 }

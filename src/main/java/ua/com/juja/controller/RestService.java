@@ -1,7 +1,6 @@
 package ua.com.juja.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.web.bind.annotation.*;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.model.entity.Description;
@@ -39,12 +38,10 @@ public class RestService {
     @RequestMapping(value = "/connect", method = RequestMethod.POST)
     public String connecting(@ModelAttribute Connection connection, HttpSession session) {
         try {
-            DatabaseManager manager = getDatabaseManager();
             database = connection.getDatabase();
             user = connection.getUser();
-            manager.connect(database, user, connection.getPassword());
+            session.setAttribute("manager", service.connect(database, user, connection.getUser()));
             service.saveUserAction("CONNECT", user, database);
-            session.setAttribute("manager", manager);
             return null;
         } catch (Exception e) {
             return e.getMessage();
@@ -183,11 +180,6 @@ public class RestService {
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public void connecting(HttpSession session) {
         session.removeAttribute("manager");
-    }
-
-    @Lookup
-    public DatabaseManager getDatabaseManager() {
-        return null;
     }
 
     private DatabaseManager getManager(HttpSession session) {
