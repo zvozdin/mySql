@@ -25,6 +25,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -166,6 +167,7 @@ public class RestServiceTest {
         verifyNoMoreInteractions(manager);
         verifyNoMoreInteractions(service);
     }
+
     @Test
     public void test8_tableContent() throws Exception {
         // given
@@ -190,6 +192,20 @@ public class RestServiceTest {
         verify(manager).getColumns("test");
         verify(manager).getRows("test");
         verify(service).saveUserAction("View Table(test)", null, null);
+        verifyNoMoreInteractions(manager);
+        verifyNoMoreInteractions(service);
+    }
+
+    @Test
+    public void test9_newDatabase() throws Exception {
+        // then
+        mockMvc.perform(put("/newDatabase/{name}", "test")
+                .sessionAttr("manager", manager))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Database 'test' is created."));
+
+        verify(manager).createDatabase("test");
+        verify(service).saveUserAction("NewDatabase(test)", null, null);
         verifyNoMoreInteractions(manager);
         verifyNoMoreInteractions(service);
     }
