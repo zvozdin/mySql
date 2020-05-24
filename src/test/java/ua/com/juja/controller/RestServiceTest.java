@@ -23,9 +23,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
@@ -226,5 +224,19 @@ public class RestServiceTest {
 
         verify(manager).getDatabases();
         verifyNoMoreInteractions(manager);
+    }
+
+    @Test
+    public void test11_databasesContent() throws Exception {
+        // then
+        mockMvc.perform(delete("/dropDatabase/{name}", "test")
+                .sessionAttr("manager", manager))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Database 'test' is deleted."));
+
+        verify(manager).dropDatabase("test");
+        verify(service).saveUserAction("DropDatabase(test)", null, null);
+        verifyNoMoreInteractions(manager);
+        verifyNoMoreInteractions(service);
     }
 }
