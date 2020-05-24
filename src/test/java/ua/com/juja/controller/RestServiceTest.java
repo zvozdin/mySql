@@ -256,4 +256,18 @@ public class RestServiceTest {
         verify(manager, atMostOnce()).createTable("test", new LinkedHashSet(queryMap.values()));
         verify(service).saveUserAction("NewTable(test)", null, null);
     }
+
+    @Test
+    public void test13_dropTable() throws Exception {
+        // then
+        mockMvc.perform(delete("/dropTable/{tableName}", "test")
+                .sessionAttr("manager", manager))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Table 'test' is deleted."));
+
+        verify(manager).dropTable("test");
+        verify(service).saveUserAction("DropTable(test)", null, null);
+        verifyNoMoreInteractions(manager);
+        verifyNoMoreInteractions(service);
+    }
 }
