@@ -225,7 +225,7 @@ public class RestServiceTest {
     }
 
     @Test
-    public void test11_databasesContent() throws Exception {
+    public void test11_dropDatabase() throws Exception {
         // then
         mockMvc.perform(delete("/dropDatabase/{name}", "test")
                 .sessionAttr("manager", manager))
@@ -269,5 +269,32 @@ public class RestServiceTest {
         verify(service).saveUserAction("DropTable(test)", null, null);
         verifyNoMoreInteractions(manager);
         verifyNoMoreInteractions(service);
+    }
+
+    @Test
+    public void test14_getContent() throws Exception {
+        // given
+        List<String> crudOperationUrls = Arrays.asList(
+                "/insert/{tableName}/content",
+                "/update/{tableName}/content",
+                "/delete/{tableName}/content");
+
+        // when
+        when(manager.getColumns("test"))
+                .thenReturn(new LinkedHashSet<>(Arrays.asList("column1", "column2")));
+
+        // then
+        for (String crudOperationUrl : crudOperationUrls) {
+            mockMvc.perform(get(crudOperationUrl, "test")
+                    .sessionAttr("manager", manager))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$[*]", hasSize(2)))
+                    .andExpect(jsonPath("$[0]", is("column1")))
+                    .andExpect(jsonPath("$[1]", is("column2")))
+                    .andExpect(content().string("[\"column1\",\"column2\"]"));
+
+            verify(manager, atLeastOnce()).getColumns("test");
+            verifyNoMoreInteractions(manager);
+        }
     }
 }
