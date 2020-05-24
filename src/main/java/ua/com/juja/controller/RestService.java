@@ -102,7 +102,7 @@ public class RestService {
         queryMap.remove("tableName");
 
         try {
-            getManager(session).createTable(tableName, new LinkedHashSet(new LinkedList(queryMap.values())));
+            getManager(session).createTable(tableName, new LinkedHashSet(queryMap.values()));
             service.saveUserAction(String.format("NewTable(%s)", tableName), user, database);
             return String.format(ActionMessages.CREATE.toString(), tableName);
         } catch (Exception e) {

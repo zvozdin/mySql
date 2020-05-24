@@ -9,15 +9,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
 import ua.com.juja.config.SpringConfig;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.model.entity.Description;
 import ua.com.juja.service.Service;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -238,5 +236,24 @@ public class RestServiceTest {
         verify(service).saveUserAction("DropDatabase(test)", null, null);
         verifyNoMoreInteractions(manager);
         verifyNoMoreInteractions(service);
+    }
+
+    @Test
+    public void test12_newTable() throws Exception {
+        // given
+        LinkedMultiValueMap<String, String> queryMap = new LinkedMultiValueMap<>();
+        queryMap.add("tableName", "test");
+        queryMap.add("column1", "value1");
+        queryMap.add("column2", "value2");
+
+        // then
+        mockMvc.perform(post("/newTable")
+                .sessionAttr("manager", manager).queryParams(queryMap))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Table 'test' is created."));
+
+        queryMap.remove("tableName");
+        verify(manager, atMostOnce()).createTable("test", new LinkedHashSet(queryMap.values()));
+        verify(service).saveUserAction("NewTable(test)", null, null);
     }
 }
