@@ -209,4 +209,22 @@ public class RestServiceTest {
         verifyNoMoreInteractions(manager);
         verifyNoMoreInteractions(service);
     }
+
+    @Test
+    public void test10_databasesContent() throws Exception {
+        // when
+        when(manager.getDatabases()).thenReturn(Arrays.asList("database1", "database2"));
+
+        // then
+        mockMvc.perform(get("/dropDatabase/content")
+                .sessionAttr("manager", manager))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[*]", hasSize(2)))
+                .andExpect(jsonPath("$[0]", is("database1")))
+                .andExpect(jsonPath("$[1]", is("database2")))
+                .andExpect(content().string("[\"database1\",\"database2\"]"));
+
+        verify(manager).getDatabases();
+        verifyNoMoreInteractions(manager);
+    }
 }
