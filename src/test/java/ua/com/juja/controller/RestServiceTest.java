@@ -318,6 +318,35 @@ public class RestServiceTest {
         verify(service).saveUserAction("Insert into test", null, null);
     }
 
+    @Test
+    public void test16_update() throws Exception {
+        // given
+        LinkedMultiValueMap<String, String> queryMap = new LinkedMultiValueMap<>();
+        queryMap.add("tableName", "test");
+        queryMap.add("setColumn", "updatingColumn");
+        queryMap.add("setValue", "updatingValue");
+        queryMap.add("whereColumn", "conditionColumn");
+        queryMap.add("whereValue", "conditionValue");
+
+        Map<String, String> input = new LinkedHashMap<>(convertMultiToRegularMap(queryMap));
+
+        Map<String, String> set = new LinkedHashMap<>();
+        set.put(input.get("setColumn"), input.get("setValue"));
+
+        Map<String, String> where = new LinkedHashMap<>();
+        where.put(input.get("whereColumn"), input.get("whereValue"));
+
+        // then
+        mockMvc.perform(post("/update")
+                .sessionAttr("manager", manager).queryParams(queryMap))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Record '{conditionColumn=conditionValue}' is updated."));
+
+        queryMap.remove("tableName");
+        verify(manager, atMostOnce()).update("test", set, where);
+        verify(service).saveUserAction("Update in test", null, null);
+    }
+
     private Map<String, String> convertMultiToRegularMap(MultiValueMap<String, String> m) {
         Map<String, String> map = new HashMap<>();
         if (m == null) {
