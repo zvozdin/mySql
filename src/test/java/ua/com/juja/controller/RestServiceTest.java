@@ -414,6 +414,14 @@ public class RestServiceTest {
         verifyNoMoreInteractions(service);
     }
 
+    @Test
+    public void test20_disconnecting() throws Exception {
+        // then
+        mockMvc.perform(get("/logout")
+                .sessionAttr("manager", manager))
+                .andExpect(status().isOk());
+    }
+
     private Map<String, String> convertMultiToRegularMap(MultiValueMap<String, String> m) {
         Map<String, String> map = new HashMap<>();
         if (m == null) {
