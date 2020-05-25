@@ -374,6 +374,21 @@ public class RestServiceTest {
         verify(service).saveUserAction("DeleteRow in test", null, null);
     }
 
+    @Test
+    public void test18_clear() throws Exception {
+
+        // then
+        mockMvc.perform(delete("/clear/{name}", "test")
+                .sessionAttr("manager", manager))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Table 'test' is cleared!"));
+
+        verify(manager).clear("test");
+        verify(service).saveUserAction("Clear(test)", null, null);
+        verifyNoMoreInteractions(manager);
+        verifyNoMoreInteractions(service);
+    }
+
     private Map<String, String> convertMultiToRegularMap(MultiValueMap<String, String> m) {
         Map<String, String> map = new HashMap<>();
         if (m == null) {
