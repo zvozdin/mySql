@@ -58,5 +58,19 @@ public class ServiceImplTest {
                 "actions]", service.getCommands().toString());
     }
 
+    @Test
+    public void testGetCommandsDescription() {
+        assertEquals("[" +
+                "connect=to connect to the database, " +
+                "newDatabase=to create a new database, " +
+                "dropDatabase=to delete the database, " +
+                "tables=to display a list of tables, " +
+                "newTable=to create a new table, " +
+                "dropTable=to delete the table, " +
+                "insert=to record content to the 'tableName', " +
+                "update=to update the content in the 'tableName' set column1 = value1 where column2 = value2, " +
+                "delete=to delete content where column = value, " +
+                "clear=to delete content from the 'tableName']", service.getCommandsDescription().toString());
+    }
 
 }

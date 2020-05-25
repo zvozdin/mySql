@@ -20,9 +20,6 @@ public class Description {
 
     @Override
     public String toString() {
-        return "Description{" +
-                "command='" + command + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        return command + '=' + description;
     }
 }
