@@ -311,7 +311,8 @@ public class RestServiceTest {
         mockMvc.perform(post("/insert")
                 .sessionAttr("manager", manager).queryParams(queryMap))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Record '{column1=value1, column2=value2}' is added."));
+                .andExpect(content()
+                        .string("Record '{column1=value1, column2=value2}' is added."));
 
         queryMap.remove("tableName");
         verify(manager, atMostOnce()).insert("test", new LinkedHashMap<>(convertMultiToRegularMap(queryMap)));
@@ -340,11 +341,37 @@ public class RestServiceTest {
         mockMvc.perform(post("/update")
                 .sessionAttr("manager", manager).queryParams(queryMap))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Record '{conditionColumn=conditionValue}' is updated."));
+                .andExpect(content()
+                        .string("Record '{conditionColumn=conditionValue}' is updated."));
 
         queryMap.remove("tableName");
         verify(manager, atMostOnce()).update("test", set, where);
         verify(service).saveUserAction("Update in test", null, null);
+    }
+
+    @Test
+    public void test17_delete() throws Exception {
+        // given
+        LinkedMultiValueMap<String, String> queryMap = new LinkedMultiValueMap<>();
+        queryMap.add("tableName", "test");
+        queryMap.add("deleteColumn", "deletingRecordColumn");
+        queryMap.add("deleteValue", "deletingRecordValue");
+
+        Map<String, String> input = new LinkedHashMap<>(convertMultiToRegularMap(queryMap));
+
+        Map<String, String> delete = new LinkedHashMap<>();
+        delete.put(input.get("deleteColumn"), input.get("deleteValue"));
+
+        // then
+        mockMvc.perform(post("/delete")
+                .sessionAttr("manager", manager).queryParams(queryMap))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .string("Record '{deletingRecordColumn=deletingRecordValue}' is deleted."));
+
+        queryMap.remove("tableName");
+        verify(manager, atMostOnce()).deleteRow("test", delete);
+        verify(service).saveUserAction("DeleteRow in test", null, null);
     }
 
     private Map<String, String> convertMultiToRegularMap(MultiValueMap<String, String> m) {
