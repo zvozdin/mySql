@@ -108,30 +108,4 @@ public class ServiceImplTest {
         verifyNoMoreInteractions(databaseConnections);
         verifyNoMoreInteractions(userActions);
     }
-
-    @Test
-    public void testConnect() {
-        // given
-        List<DatabaseConnection> connections = new LinkedList<>();
-        connections.add(connection);
-
-        List<UserAction> actions = new LinkedList<>();
-        actions.add(new UserAction("CONNECT", connections.get(0)));
-        actions.add(new UserAction("TABLES", connections.get(0)));
-
-
-        // when
-        when(connection.getId()).thenReturn("5eb80b1ac866006a990b79f4");
-        when(connection.getUserName()).thenReturn("user");
-        when(connection.getDatabase()).thenReturn("database");
-        when(databaseConnections.findByUserName("user")).thenReturn(connections);
-        when(userActions.findByDatabaseConnectionId(new ObjectId("5eb80b1ac866006a990b79f4")))
-                .thenReturn(actions);
-
-        // then
-        assertEquals("[" +
-                        "userName = user, database = database, action = CONNECT, " +
-                        "userName = user, database = database, action = TABLES]",
-                service.getAllFor("user").toString());
-    }
 }
