@@ -13,7 +13,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import ua.com.juja.config.SpringConfig;
 import ua.com.juja.model.DatabaseManager;
+import ua.com.juja.model.entity.DatabaseConnection;
 import ua.com.juja.model.entity.Description;
+import ua.com.juja.model.entity.UserAction;
 import ua.com.juja.service.Service;
 
 import java.util.*;
@@ -386,6 +388,29 @@ public class RestServiceTest {
         verify(manager).clear("test");
         verify(service).saveUserAction("Clear(test)", null, null);
         verifyNoMoreInteractions(manager);
+        verifyNoMoreInteractions(service);
+    }
+
+    @Test
+    public void test19_getUserActions() throws Exception {
+        // given
+        List<UserActionLog> actions = new LinkedList<>();
+        actions.add(new UserActionLog(new UserAction("connect", new DatabaseConnection(
+                "user", "database"))));
+
+        // when
+        when(service.getAllFor("user")).thenReturn(actions);
+
+        // then
+        mockMvc.perform(get("/actions/{userName}/content", "user")
+                .sessionAttr("manager", manager))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[*]", hasSize(1)))
+                .andExpect(jsonPath("$[0].userName", is("user")))
+                .andExpect(jsonPath("$[0].database", is("database")))
+                .andExpect(jsonPath("$[0].action", is("connect")));
+
+        verify(service).getAllFor("user");
         verifyNoMoreInteractions(service);
     }
 
