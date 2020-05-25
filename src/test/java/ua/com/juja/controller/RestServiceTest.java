@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import ua.com.juja.config.SpringConfig;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.model.entity.Description;
@@ -296,5 +297,39 @@ public class RestServiceTest {
             verify(manager, atLeastOnce()).getColumns("test");
             verifyNoMoreInteractions(manager);
         }
+    }
+
+    @Test
+    public void test15_insert() throws Exception {
+        // given
+        LinkedMultiValueMap<String, String> queryMap = new LinkedMultiValueMap<>();
+        queryMap.add("tableName", "test");
+        queryMap.add("column1", "value1");
+        queryMap.add("column2", "value2");
+
+        // then
+        mockMvc.perform(post("/insert")
+                .sessionAttr("manager", manager).queryParams(queryMap))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Record '{column1=value1, column2=value2}' is added."));
+
+        queryMap.remove("tableName");
+        verify(manager, atMostOnce()).insert("test", new LinkedHashMap<>(convertMultiToRegularMap(queryMap)));
+        verify(service).saveUserAction("Insert into test", null, null);
+    }
+
+    private Map<String, String> convertMultiToRegularMap(MultiValueMap<String, String> m) {
+        Map<String, String> map = new HashMap<>();
+        if (m == null) {
+            return map;
+        }
+        for (Map.Entry<String, List<String>> entry : m.entrySet()) {
+            StringBuilder sb = new StringBuilder();
+            for (String s : entry.getValue()) {
+                sb.append(String.join(",", s));
+            }
+            map.put(entry.getKey(), sb.toString());
+        }
+        return map;
     }
 }
