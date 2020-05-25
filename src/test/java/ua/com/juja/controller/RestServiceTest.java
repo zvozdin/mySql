@@ -31,7 +31,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringConfig.class)
 @WebAppConfiguration
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class RestServiceTest {
 
     private MockMvc mockMvc;
@@ -427,6 +426,7 @@ public class RestServiceTest {
         if (m == null) {
             return map;
         }
+
         for (Map.Entry<String, List<String>> entry : m.entrySet()) {
             StringBuilder sb = new StringBuilder();
             for (String s : entry.getValue()) {
@@ -434,6 +434,7 @@ public class RestServiceTest {
             }
             map.put(entry.getKey(), sb.toString());
         }
+
         return map;
     }
 }
