@@ -1,5 +1,6 @@
 package ua.com.juja.service;
 
+import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -9,14 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ua.com.juja.model.DatabaseConnectionsRepository;
 import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.model.UserActionsRepository;
+import ua.com.juja.model.entity.DatabaseConnection;
+import ua.com.juja.model.entity.UserAction;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(classes = SpringConfig.class)
-//@WebAppConfiguration
 public class ServiceImplTest {
 
     @Mock
@@ -26,15 +30,13 @@ public class ServiceImplTest {
     private DatabaseConnectionsRepository databaseConnections;
 
     @Autowired
-    DatabaseManager manager;
+    private DatabaseManager manager;
+
+    @Mock
+    private DatabaseConnection connection;
 
     @InjectMocks
     private ServiceImpl service;
-
-//    @Before
-//    public void setup() {
-//        initMocks(this);
-//    }
 
     @Test
     public void testAddService() {
@@ -73,4 +75,29 @@ public class ServiceImplTest {
                 "clear=to delete content from the 'tableName']", service.getCommandsDescription().toString());
     }
 
+    @Test
+    public void testGetAllFor() {
+        // given
+        List<DatabaseConnection> connections = new LinkedList<>();
+        connections.add(connection);
+
+        List<UserAction> actions = new LinkedList<>();
+        actions.add(new UserAction("CONNECT", connections.get(0)));
+        actions.add(new UserAction("TABLES", connections.get(0)));
+
+
+        // when
+        when(connection.getId()).thenReturn("5eb80b1ac866006a990b79f4");
+        when(connection.getUserName()).thenReturn("user");
+        when(connection.getDatabase()).thenReturn("database");
+        when(databaseConnections.findByUserName("user")).thenReturn(connections);
+        when(userActions.findByDatabaseConnectionId(new ObjectId("5eb80b1ac866006a990b79f4")))
+                .thenReturn(actions);
+
+        // then
+        assertEquals("[" +
+                "userName = user, database = database, action = CONNECT, " +
+                "userName = user, database = database, action = TABLES]",
+                service.getAllFor("user").toString());
+    }
 }

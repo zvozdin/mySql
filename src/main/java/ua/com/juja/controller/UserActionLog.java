@@ -41,4 +41,11 @@ public class UserActionLog {
     public void setAction(String action) {
         this.action = action;
     }
+
+    @Override
+    public String toString() {
+        return "userName = " + userName + ", " +
+                "database = " + database + ", " +
+                "action = " + action;
+    }
 }
