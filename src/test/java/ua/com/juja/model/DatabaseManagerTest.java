@@ -10,8 +10,6 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-// TODO add plugin MySql for testing from Egor Bugaenko
-// TODO try delete missing test in travis.ci for passing tests
 public abstract class DatabaseManagerTest {
 
     private DatabaseManager manager;
@@ -38,33 +36,6 @@ public abstract class DatabaseManagerTest {
     public void tearDown() {
         manager.dropDatabase(testedDatabaseName);
     }
-
-//    @Test
-//    public void test_CreateDatabase_DropDatabase() {
-//        // create database
-//        manager.createDatabase("_test");
-//        assertTrue(manager.isDatabaseExist("_test"));
-//
-//        // create already existing database
-//        try {
-//            manager.createDatabase("_test");
-//            fail("Expected Exception");
-//        } catch (IllegalArgumentException e) {
-//            assertEquals("Database '_test' already exists", e.getMessage());
-//        }
-//
-//        // drop database
-//        manager.dropDatabase("_test");
-//        assertFalse(manager.isDatabaseExist("_test"));
-//
-//        // drop non existing database
-//        try {
-//            manager.dropDatabase("_test");
-//            fail("Expected Exception");
-//        } catch (IllegalArgumentException e) {
-//            assertEquals("Database '_test' doesn't exist", e.getMessage());
-//        }
-//    }
 
     @Test
     public void test_GetTablesNames_EmptyDatabase() {

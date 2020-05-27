@@ -6,9 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import ua.com.juja.model.DatabaseConnectionsRepository;
-import ua.com.juja.model.DatabaseManager;
 import ua.com.juja.model.UserActionsRepository;
 import ua.com.juja.model.entity.DatabaseConnection;
 import ua.com.juja.model.entity.UserAction;
@@ -18,9 +16,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ServiceImplTest {
@@ -30,9 +26,6 @@ public class ServiceImplTest {
 
     @Mock
     private DatabaseConnectionsRepository databaseConnections;
-
-    @Autowired
-    private DatabaseManager manager;
 
     @Mock
     private DatabaseConnection connection;
