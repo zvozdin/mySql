@@ -6,7 +6,7 @@
 
 ### **Technical task**
 
-Java web application to work with the database 
+Java web 2.0 application to work with the database 
 
    *Requirements*:
 * use MVC pattern; 
