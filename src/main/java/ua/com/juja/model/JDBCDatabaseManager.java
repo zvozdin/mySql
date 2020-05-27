@@ -50,8 +50,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void createDatabase(String databaseName) {
-//        existingDatabaseValidation(databaseName);
-
         template.execute("create database " + databaseName);
     }
 
@@ -75,8 +73,6 @@ public class JDBCDatabaseManager implements DatabaseManager {
 
     @Override
     public void dropDatabase(String databaseName) {
-//        notExistingDatabaseValidation(databaseName);
-
         template.update("drop database " + databaseName);
     }
 
