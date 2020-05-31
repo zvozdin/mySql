@@ -39,13 +39,12 @@ public class ServiceImpl implements Service {
     public List<Description> getCommandsDescription() {
         Properties properties = getProperties();
 
-        LinkedList commands = new LinkedList(properties.stringPropertyNames());
+        List commands = new LinkedList(properties.stringPropertyNames());
         commands.remove("help");
 
         List<Description> commandsDescription = new LinkedList();
-        for (int index = 0; index < commands.size(); index++) {
-            String command = commands.get(index).toString();
-            commandsDescription.add(new Description(command, properties.getProperty(command)));
+        for (Object command : commands) {
+            commandsDescription.add(new Description(command.toString(), properties.getProperty(command.toString())));
         }
 
         return commandsDescription;
