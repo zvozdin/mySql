@@ -67,7 +67,8 @@ public class ServiceImplTest {
                 "insert=to record content to the 'tableName', " +
                 "update=to update the content in the 'tableName' set column1 = value1 where column2 = value2, " +
                 "delete=to delete content where column = value, " +
-                "clear=to delete content from the 'tableName']", service.getCommandsDescription().toString());
+                "clear=to delete content from the 'tableName', " +
+                "actions=to view user actions with the database]", service.getCommandsDescription().toString());
     }
 
     @Test

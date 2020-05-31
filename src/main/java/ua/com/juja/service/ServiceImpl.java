@@ -4,6 +4,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Component;
+import ua.com.juja.config.LinkedProperties;
 import ua.com.juja.controller.UserActionLog;
 import ua.com.juja.model.DatabaseConnectionsRepository;
 import ua.com.juja.model.DatabaseManager;
@@ -12,9 +13,11 @@ import ua.com.juja.model.entity.DatabaseConnection;
 import ua.com.juja.model.entity.Description;
 import ua.com.juja.model.entity.UserAction;
 
-import java.util.Arrays;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 @Component
 public class ServiceImpl implements Service {
@@ -29,38 +32,23 @@ public class ServiceImpl implements Service {
 
     @Override
     public List<String> getCommands() {
-        return Arrays.asList(
-                "help",
-                "connect",
-                "newDatabase",
-                "dropDatabase",
-                "tables",
-                "newTable",
-                "dropTable",
-                "insert",
-                "update",
-                "delete",
-                "clear",
-                "actions"
-        );
+        return new LinkedList(getProperties().stringPropertyNames());
     }
 
     @Override
     public List<Description> getCommandsDescription() {
-        return Arrays.asList(
-                new Description("connect", "to connect to the database"),
-                new Description("newDatabase", "to create a new database"),
-                new Description("dropDatabase", "to delete the database"),
-                new Description("tables", "to display a list of tables"),
-                new Description("newTable", "to create a new table"),
-                new Description("dropTable", "to delete the table"),
-                new Description("insert", "to record content to the 'tableName'"),
-                new Description("update",
-                        "to update the content in the 'tableName' " +
-                                "set column1 = value1 where column2 = value2"),
-                new Description("delete", "to delete content where column = value"),
-                new Description("clear", "to delete content from the 'tableName'")
-        );
+        Properties properties = getProperties();
+
+        LinkedList commands = new LinkedList(properties.stringPropertyNames());
+        commands.remove("help");
+
+        List<Description> commandsDescription = new LinkedList();
+        for (int index = 0; index < commands.size(); index++) {
+            String command = commands.get(index).toString();
+            commandsDescription.add(new Description(command, properties.getProperty(command)));
+        }
+
+        return commandsDescription;
     }
 
     @Override
@@ -103,5 +91,16 @@ public class ServiceImpl implements Service {
     @Lookup
     public DatabaseManager getDatabaseManager() {
         return null;
+    }
+
+    private Properties getProperties() {
+        Properties properties = new LinkedProperties();
+        try {
+            properties.load(new FileInputStream("src\\main\\resources\\commandsDescription"));
+            return properties;
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    "Could not read " + properties + " resource file: " + e);
+        }
     }
 }
