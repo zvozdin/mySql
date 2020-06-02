@@ -1,9 +1,8 @@
 # *Training project* mySql
 ***
-
 ![Build Status](https://travis-ci.com/zvozdin/mySql.svg?branch=master)
 ***
-
+![Запис_2020_06_02_13_48_07_643](https://user-images.githubusercontent.com/57017801/83511782-df547700-a4d7-11ea-9149-11c40ef50435.gif)
 ### **Technical task**
 
 Java web 2.0 application to work with the database 
