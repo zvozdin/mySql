@@ -94,8 +94,8 @@ public class ServiceImpl implements Service {
 
     private Properties getProperties() {
         Properties properties = new LinkedProperties();
-        try {
-            properties.load(new FileInputStream("src\\main\\resources\\commandsDescription"));
+        try (FileInputStream inputStream = new FileInputStream("src\\main\\resources\\commandsDescription")) {
+            properties.load(inputStream);
             return properties;
         } catch (IOException e) {
             throw new RuntimeException(
