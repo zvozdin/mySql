@@ -1,6 +1,6 @@
 # *Training project* mySql
 ***
-
+![Imgur](https://i.imgur.com/hJ7zUG4.gifv)
 ![Build Status](https://travis-ci.com/zvozdin/mySql.svg?branch=master)
 ***
 
