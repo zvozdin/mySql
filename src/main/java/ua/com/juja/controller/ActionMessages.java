@@ -1,4 +1,4 @@
-package ua.com.juja.model.resources;
+package ua.com.juja.controller;
 
 public enum ActionMessages {
 

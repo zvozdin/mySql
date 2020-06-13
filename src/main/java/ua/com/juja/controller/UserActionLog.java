@@ -1,6 +1,6 @@
 package ua.com.juja.controller;
 
-import ua.com.juja.model.entity.UserAction;
+import ua.com.juja.entity.UserAction;
 
 public class UserActionLog {
 

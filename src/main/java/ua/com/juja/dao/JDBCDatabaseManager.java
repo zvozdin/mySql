@@ -1,4 +1,4 @@
-package ua.com.juja.model;
+package ua.com.juja.dao;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.DataAccessException;
@@ -8,8 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import ua.com.juja.model.resources.ActionMessages;
-import ua.com.juja.model.resources.ConnectParameters;
+import ua.com.juja.controller.ActionMessages;
 
 import java.sql.*;
 import java.util.*;

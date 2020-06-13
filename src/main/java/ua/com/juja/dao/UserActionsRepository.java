@@ -1,10 +1,10 @@
-package ua.com.juja.model;
+package ua.com.juja.dao;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-import ua.com.juja.model.entity.UserAction;
+import ua.com.juja.entity.UserAction;
 
 import java.util.List;
 

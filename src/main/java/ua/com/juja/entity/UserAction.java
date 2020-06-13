@@ -1,4 +1,4 @@
-package ua.com.juja.model.entity;
+package ua.com.juja.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;

@@ -1,8 +1,8 @@
 package ua.com.juja.service;
 
 import ua.com.juja.controller.UserActionLog;
-import ua.com.juja.model.DatabaseManager;
-import ua.com.juja.model.entity.Description;
+import ua.com.juja.dao.DatabaseManager;
+import ua.com.juja.dao.Description;
 
 import java.util.List;
 

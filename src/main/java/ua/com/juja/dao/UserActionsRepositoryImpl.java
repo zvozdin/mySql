@@ -1,9 +1,9 @@
-package ua.com.juja.model;
+package ua.com.juja.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import ua.com.juja.model.entity.DatabaseConnection;
-import ua.com.juja.model.entity.UserAction;
+import ua.com.juja.entity.DatabaseConnection;
+import ua.com.juja.entity.UserAction;
 
 public class UserActionsRepositoryImpl implements UserActionsRepositoryCustom {
 

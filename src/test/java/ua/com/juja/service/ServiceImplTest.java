@@ -6,10 +6,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import ua.com.juja.model.DatabaseConnectionsRepository;
-import ua.com.juja.model.UserActionsRepository;
-import ua.com.juja.model.entity.DatabaseConnection;
-import ua.com.juja.model.entity.UserAction;
+import ua.com.juja.dao.DatabaseConnectionsRepository;
+import ua.com.juja.dao.UserActionsRepository;
+import ua.com.juja.entity.DatabaseConnection;
+import ua.com.juja.entity.UserAction;
 
 import java.util.LinkedList;
 import java.util.List;

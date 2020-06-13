@@ -1,4 +1,4 @@
-package ua.com.juja.model.entity;
+package ua.com.juja.dao;
 
 public class Description {
 

@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Component;
 import ua.com.juja.config.LinkedProperties;
 import ua.com.juja.controller.UserActionLog;
-import ua.com.juja.model.DatabaseConnectionsRepository;
-import ua.com.juja.model.DatabaseManager;
-import ua.com.juja.model.UserActionsRepository;
-import ua.com.juja.model.entity.DatabaseConnection;
-import ua.com.juja.model.entity.Description;
-import ua.com.juja.model.entity.UserAction;
+import ua.com.juja.dao.DatabaseConnectionsRepository;
+import ua.com.juja.dao.DatabaseManager;
+import ua.com.juja.dao.UserActionsRepository;
+import ua.com.juja.entity.DatabaseConnection;
+import ua.com.juja.dao.Description;
+import ua.com.juja.entity.UserAction;
 
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -12,10 +12,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import ua.com.juja.config.SpringConfig;
-import ua.com.juja.model.DatabaseManager;
-import ua.com.juja.model.entity.DatabaseConnection;
-import ua.com.juja.model.entity.Description;
-import ua.com.juja.model.entity.UserAction;
+import ua.com.juja.dao.DatabaseManager;
+import ua.com.juja.entity.DatabaseConnection;
+import ua.com.juja.dao.Description;
+import ua.com.juja.entity.UserAction;
 import ua.com.juja.service.Service;
 
 import java.util.*;

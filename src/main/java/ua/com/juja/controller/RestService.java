@@ -2,9 +2,8 @@ package ua.com.juja.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ua.com.juja.model.DatabaseManager;
-import ua.com.juja.model.entity.Description;
-import ua.com.juja.model.resources.ActionMessages;
+import ua.com.juja.dao.DatabaseManager;
+import ua.com.juja.dao.Description;
 import ua.com.juja.service.Service;
 
 import javax.servlet.http.HttpSession;
