@@ -2,8 +2,8 @@ package ua.com.juja.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ua.com.juja.dao.DatabaseManager;
 import ua.com.juja.dao.Action;
+import ua.com.juja.dao.DatabaseManager;
 import ua.com.juja.service.Service;
 
 import javax.servlet.http.HttpSession;
@@ -12,11 +12,14 @@ import java.util.*;
 @RestController
 public class RestService {
 
-    @Autowired
-    private Service service;
-
+    private final Service service;
     private String database;
     private String user;
+
+    @Autowired
+    public RestService(Service service) {
+        this.service = service;
+    }
 
     @GetMapping(value = "/menu/content")
     public List<String> menuItems() {

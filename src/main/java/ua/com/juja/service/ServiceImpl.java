@@ -22,13 +22,15 @@ import java.util.Properties;
 @Component
 public class ServiceImpl implements Service {
 
+    private final UserActionsRepository userActions;
+    private final DatabaseConnectionsRepository databaseConnections;
     private DatabaseManager manager;
 
     @Autowired
-    private UserActionsRepository userActions;
-
-    @Autowired
-    private DatabaseConnectionsRepository databaseConnections;
+    public ServiceImpl(UserActionsRepository userActions, DatabaseConnectionsRepository databaseConnections) {
+        this.userActions = userActions;
+        this.databaseConnections = databaseConnections;
+    }
 
     @Override
     public List<String> getActions() {
