@@ -386,13 +386,13 @@ function init(ctx) {
         var columnsCount = $('#columnsCount').val();
 
         $('#createTableSetColumnsForm .container').empty();
-
+        $("#tableName").remove();
         for(var j = 1; j <= columnsCount; j++){
             $('#createTableSetColumnsForm .container').append('Column#' + j + '<br>');
             $('#createTableSetColumnsForm .container')
                 .append('<input type="text" name="column' + j +'" id="column' + j +'" /><br>');
         }
-        $('#createTableSetColumnsForm').append('<input type="hidden" name="tableName" value="' + tableName + '"/>');
+        $('#createTableSetColumnsForm').append('<input type="hidden" name="tableName" id="tableName" value="' + tableName + '"/>');
 
         $('#createTableSetNameForm').hide();
         $('#createTableSetColumnsForm').show();

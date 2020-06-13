@@ -18,23 +18,23 @@ public class RestService {
     private String database;
     private String user;
 
-    @RequestMapping(value = "/menu/content", method = RequestMethod.GET)
+    @GetMapping(value = "/menu/content")
     public List<String> menuItems() {
         return service.getActions();
     }
 
-    @RequestMapping(value = "/help/content", method = RequestMethod.GET)
+    @GetMapping(value = "/help/content")
     public List<Action> helpItems() {
         return service.getActionsDescription();
     }
 
-    @RequestMapping(value = "/connected", method = RequestMethod.GET)
+    @GetMapping(value = "/connected")
     public String isConnected(HttpSession session) {
         DatabaseManager manager = getManager(session);
         return (manager != null) ? manager.getUserName() : null;
     }
 
-    @RequestMapping(value = "/connect", method = RequestMethod.POST)
+    @PostMapping(value = "/connect")
     public String connecting(@ModelAttribute Connection connection, HttpSession session) {
         try {
             database = connection.getDatabase();
@@ -47,7 +47,7 @@ public class RestService {
         }
     }
 
-    @RequestMapping(value = "/tables/content", method = RequestMethod.GET)
+    @GetMapping(value = "/tables/content")
     public List<String> tables(HttpSession session) {
         DatabaseManager manager = getManager(session);
         if (manager == null) {
@@ -57,7 +57,7 @@ public class RestService {
         return manager.getTables();
     }
 
-    @RequestMapping(value = "/tables/{table}/content", method = RequestMethod.GET)
+    @GetMapping(value = "/tables/{table}/content")
     public List<List<String>> table(@PathVariable(value = "table") String tableName, HttpSession session) {
         DatabaseManager manager = getManager(session);
         if (manager == null) {
@@ -67,7 +67,7 @@ public class RestService {
         return getRows(manager, tableName);
     }
 
-    @RequestMapping(value = "/newDatabase/{name}", method = RequestMethod.PUT)
+    @PutMapping(value = "/newDatabase/{name}")
     public String newDatabase(@PathVariable(value = "name") String databaseName, HttpSession session) {
         try {
             getManager(session).createDatabase(databaseName);
@@ -79,7 +79,7 @@ public class RestService {
         }
     }
 
-    @RequestMapping(value = "/dropDatabase/content", method = RequestMethod.GET)
+    @GetMapping(value = "/dropDatabase/content")
     public List<String> databases(HttpSession session) {
         DatabaseManager manager = getManager(session);
         if (manager == null) {
@@ -88,14 +88,14 @@ public class RestService {
         return manager.getDatabases();
     }
 
-    @RequestMapping(value = "/dropDatabase/{name}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/dropDatabase/{name}")
     public String dropDatabase(@PathVariable(value = "name") String databaseName, HttpSession session) {
         getManager(session).dropDatabase(databaseName);
         service.saveUserAction(String.format("DropDatabase(%s)", databaseName), user, database);
         return String.format(ActionMessages.DROP_DB.toString(), databaseName);
     }
 
-    @RequestMapping(value = "/newTable", method = RequestMethod.POST)
+    @PostMapping(value = "/newTable")
     public String newTable(@RequestParam Map<String, String> queryMap, HttpSession session) {
         String tableName = queryMap.get("tableName");
         queryMap.remove("tableName");
@@ -110,22 +110,22 @@ public class RestService {
         }
     }
 
-    @RequestMapping(value = "/dropTable/{tableName}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/dropTable/{tableName}")
     public String dropTable(@PathVariable(value = "tableName") String tableName, HttpSession session) {
         getManager(session).dropTable(tableName);
         service.saveUserAction(String.format("DropTable(%s)", tableName), user, database);
         return String.format(ActionMessages.DROP.toString(), tableName);
     }
 
-    @RequestMapping(value = {"" +
+    @GetMapping(value = {"" +
             "/insert/{tableName}/content",
             "/update/{tableName}/content",
-            "/delete/{tableName}/content"}, method = RequestMethod.GET)
+            "/delete/{tableName}/content"})
     public Set<String> getContent(@PathVariable(value = "tableName") String tableName, HttpSession session) {
         return getManager(session).getColumns(tableName);
     }
 
-    @RequestMapping(value = "/insert", method = RequestMethod.POST)
+    @PostMapping(value = "/insert")
     public String insert(@RequestParam Map<String, String> queryMap, HttpSession session) {
         String tableName = queryMap.get("tableName");
         queryMap.remove("tableName");
@@ -135,7 +135,7 @@ public class RestService {
         return String.format(ActionMessages.INSERT.toString(), queryMap.toString());
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @PostMapping(value = "/update")
     public String update(@RequestParam Map<String, String> queryMap, HttpSession session) {
         String tableName = queryMap.get("tableName");
         queryMap.remove("tableName");
@@ -151,7 +151,7 @@ public class RestService {
         return String.format(ActionMessages.UPDATE.toString(), where.toString());
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @PostMapping(value = "/delete")
     public String delete(@RequestParam Map<String, String> queryMap, HttpSession session) {
         String tableName = queryMap.get("tableName");
         queryMap.remove("tableName");
@@ -164,19 +164,19 @@ public class RestService {
         return String.format(ActionMessages.DELETE.toString(), delete.toString());
     }
 
-    @RequestMapping(value = "/clear/{name}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/clear/{name}")
     public String clear(@PathVariable(value = "name") String tableName, HttpSession session) {
         getManager(session).clear(tableName);
         service.saveUserAction(String.format("Clear(%s)", tableName), user, database);
         return String.format(ActionMessages.CLEAR.toString(), tableName);
     }
 
-    @RequestMapping(value = "/actions/{userName}/content", method = RequestMethod.GET)
+    @GetMapping(value = "/actions/{userName}/content")
     public List<UserActionLog> actions(@PathVariable(value = "userName") String userName) {
         return service.getAllFor(userName);
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    @GetMapping(value = "/logout")
     public void connecting(HttpSession session) {
         session.removeAttribute("manager");
     }
