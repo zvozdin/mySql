@@ -2,15 +2,15 @@ package ua.com.juja.service;
 
 import ua.com.juja.controller.UserActionLog;
 import ua.com.juja.dao.DatabaseManager;
-import ua.com.juja.dao.Description;
+import ua.com.juja.dao.Action;
 
 import java.util.List;
 
 public interface Service {
 
-    List<String> getCommands();
+    List<String> getActions();
 
-    List<Description> getCommandsDescription();
+    List<Action> getActionsDescription();
 
     List<UserActionLog> getAllFor(String userName);
 

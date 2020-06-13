@@ -1,7 +1,4 @@
-package ua.com.juja.model;
-
-import ua.com.juja.dao.DatabaseManager;
-import ua.com.juja.dao.JDBCDatabaseManager;
+package ua.com.juja.dao;
 
 public class JDBCDatabaseManagerTest extends DatabaseManagerTest {
 

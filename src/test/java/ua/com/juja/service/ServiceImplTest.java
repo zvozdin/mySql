@@ -52,7 +52,7 @@ public class ServiceImplTest {
                 "update, " +
                 "delete, " +
                 "clear, " +
-                "actions]", service.getCommands().toString());
+                "actions]", service.getActions().toString());
     }
 
     @Test
@@ -68,7 +68,7 @@ public class ServiceImplTest {
                 "update=to update the content in the 'tableName' set column1 = value1 where column2 = value2, " +
                 "delete=to delete content where column = value, " +
                 "clear=to delete content from the 'tableName', " +
-                "actions=to view user actions with the database]", service.getCommandsDescription().toString());
+                "actions=to view user actions with the database]", service.getActionsDescription().toString());
     }
 
     @Test

@@ -1,10 +1,8 @@
-package ua.com.juja.model;
+package ua.com.juja.dao;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import ua.com.juja.dao.DatabaseManager;
-import ua.com.juja.dao.ConnectParameters;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

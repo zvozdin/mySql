@@ -3,7 +3,7 @@ package ua.com.juja.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ua.com.juja.dao.DatabaseManager;
-import ua.com.juja.dao.Description;
+import ua.com.juja.dao.Action;
 import ua.com.juja.service.Service;
 
 import javax.servlet.http.HttpSession;
@@ -20,12 +20,12 @@ public class RestService {
 
     @RequestMapping(value = "/menu/content", method = RequestMethod.GET)
     public List<String> menuItems() {
-        return service.getCommands();
+        return service.getActions();
     }
 
     @RequestMapping(value = "/help/content", method = RequestMethod.GET)
-    public List<Description> helpItems() {
-        return service.getCommandsDescription();
+    public List<Action> helpItems() {
+        return service.getActionsDescription();
     }
 
     @RequestMapping(value = "/connected", method = RequestMethod.GET)

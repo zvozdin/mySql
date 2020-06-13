@@ -14,7 +14,7 @@ import org.springframework.util.MultiValueMap;
 import ua.com.juja.config.SpringConfig;
 import ua.com.juja.dao.DatabaseManager;
 import ua.com.juja.entity.DatabaseConnection;
-import ua.com.juja.dao.Description;
+import ua.com.juja.dao.Action;
 import ua.com.juja.entity.UserAction;
 import ua.com.juja.service.Service;
 
@@ -53,33 +53,33 @@ public class RestServiceTest {
     @Test
     public void test1_menu() throws Exception {
         // when
-        when(service.getCommands()).thenReturn(Arrays.asList("test"));
+        when(service.getActions()).thenReturn(Arrays.asList("test"));
 
         // then
         mockMvc.perform(get("/menu/content"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[*]", hasSize(1)))
                 .andExpect(jsonPath("$", is(Arrays.asList("test"))));
-        verify(service).getCommands();
+        verify(service).getActions();
         verifyNoMoreInteractions(service);
     }
 
     @Test
     public void test2_help() throws Exception {
         // when
-        when(service.getCommandsDescription()).thenReturn(Arrays.asList(
-                new Description("commandA", "commandA description"),
-                new Description("commandB", "commandB description")));
+        when(service.getActionsDescription()).thenReturn(Arrays.asList(
+                new Action("commandA", "commandA description"),
+                new Action("commandB", "commandB description")));
 
         // then
         mockMvc.perform(get("/help/content"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[*]", hasSize(2)))
-                .andExpect(jsonPath("$[0].command", is("commandA")))
+                .andExpect(jsonPath("$[0].name", is("commandA")))
                 .andExpect(jsonPath("$[0].description", is("commandA description")))
-                .andExpect(jsonPath("$[1].command", is("commandB")))
+                .andExpect(jsonPath("$[1].name", is("commandB")))
                 .andExpect(jsonPath("$[1].description", is("commandB description")));
-        verify(service).getCommandsDescription();
+        verify(service).getActionsDescription();
         verifyNoMoreInteractions(service);
     }
 

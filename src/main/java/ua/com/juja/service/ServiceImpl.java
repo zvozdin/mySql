@@ -10,7 +10,7 @@ import ua.com.juja.dao.DatabaseConnectionsRepository;
 import ua.com.juja.dao.DatabaseManager;
 import ua.com.juja.dao.UserActionsRepository;
 import ua.com.juja.entity.DatabaseConnection;
-import ua.com.juja.dao.Description;
+import ua.com.juja.dao.Action;
 import ua.com.juja.entity.UserAction;
 
 import java.io.FileInputStream;
@@ -31,23 +31,23 @@ public class ServiceImpl implements Service {
     private DatabaseConnectionsRepository databaseConnections;
 
     @Override
-    public List<String> getCommands() {
+    public List<String> getActions() {
         return new LinkedList(getProperties().stringPropertyNames());
     }
 
     @Override
-    public List<Description> getCommandsDescription() {
+    public List<Action> getActionsDescription() {
         Properties properties = getProperties();
 
-        List commands = new LinkedList(properties.stringPropertyNames());
-        commands.remove("help");
+        List names = new LinkedList(properties.stringPropertyNames());
+        names.remove("help");
 
-        List<Description> commandsDescription = new LinkedList();
-        for (Object command : commands) {
-            commandsDescription.add(new Description(command.toString(), properties.getProperty(command.toString())));
+        List<Action> actions = new LinkedList();
+        for (Object name : names) {
+            actions.add(new Action(name.toString(), properties.getProperty(name.toString())));
         }
 
-        return commandsDescription;
+        return actions;
     }
 
     @Override
